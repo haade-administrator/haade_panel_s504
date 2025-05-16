@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
 
+// Page de contrôle LED avec MQTT + JNI (méthodes natives Android)
 class LedControlPage extends StatefulWidget {
   const LedControlPage({super.key});
 
@@ -10,21 +11,26 @@ class LedControlPage extends StatefulWidget {
 }
 
 class _LedControlPageState extends State<LedControlPage> {
+  // Canal de communication avec la couche native Android via JNI
   static const platform = MethodChannel('com.example.elcapi/led');
 
-  // Controllers pour la config MQTT
+  // Contrôleurs pour les champs de configuration MQTT
   final TextEditingController _brokerController =
       TextEditingController(text: 'test.mosquitto.org');
   final TextEditingController _portController = TextEditingController(text: '1883');
   final TextEditingController _usernameController = TextEditingController(text: '');
   final TextEditingController _passwordController = TextEditingController(text: '');
-  bool _useSSL = false;
+  bool _useSSL = false; // SSL activé ou non
 
+  // Valeurs de couleurs (4 bits: 0–15)
   int red = 0, green = 0, blue = 0;
+
+  // Service MQTT encapsulé dans une classe
   final MQTTService mqttService = MQTTService();
 
   @override
   void dispose() {
+    // Libération des contrôleurs
     _brokerController.dispose();
     _portController.dispose();
     _usernameController.dispose();
@@ -32,6 +38,7 @@ class _LedControlPageState extends State<LedControlPage> {
     super.dispose();
   }
 
+  /// Connexion au broker MQTT
   Future<void> _connectMQTT() async {
     try {
       await mqttService.connect(
@@ -47,23 +54,29 @@ class _LedControlPageState extends State<LedControlPage> {
     }
   }
 
+  /// Envoi de la couleur sélectionnée à la LED via JNI + MQTT
   Future<void> _setLed() async {
     try {
+      // Appel JNI pour changer la couleur
       await platform.invokeMethod('setLed', {"r": red, "g": green, "b": blue});
+      // Publication de l'état LED en MQTT
       _publishLedState();
     } on PlatformException catch (e) {
       print("Erreur JNI: ${e.message}");
     }
   }
 
+  /// Publie l’état actuel de la LED sur le topic `tablette/led/state`
   void _publishLedState() {
     final payload = '{"r": ${red * 17}, "g": ${green * 17}, "b": ${blue * 17}}';
     mqttService.publish('tablette/led/state', payload);
   }
 
+  /// Réagit aux messages MQTT entrants
   void _handleMQTTMessage(String topic, String message) {
     if (topic == 'tablette/led/set') {
       try {
+        // Parsing JSON
         final data = Map<String, dynamic>.from(mqttService.parseJson(message));
         final r255 = data['r'] ?? 0;
         final g255 = data['g'] ?? 0;
@@ -75,6 +88,7 @@ class _LedControlPageState extends State<LedControlPage> {
     }
   }
 
+  /// Met à jour l'interface avec les nouvelles valeurs reçues en MQTT
   void updateFromMQTT(int r255, int g255, int b255) {
     setState(() {
       red = (r255 / 17).round().clamp(0, 15);
@@ -84,6 +98,7 @@ class _LedControlPageState extends State<LedControlPage> {
     _setLed();
   }
 
+  /// Création d’un slider pour chaque composante RGB
   Widget _buildSlider(
       String label, int value, ValueChanged<int> onChanged, Color color) {
     return Column(
@@ -102,6 +117,7 @@ class _LedControlPageState extends State<LedControlPage> {
     );
   }
 
+  /// Construction de l'interface graphique
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,6 +127,7 @@ class _LedControlPageState extends State<LedControlPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Configuration MQTT
             Text('Configuration MQTT', style: Theme.of(context).textTheme.titleLarge),
             TextField(
               controller: _brokerController,
@@ -142,6 +159,7 @@ class _LedControlPageState extends State<LedControlPage> {
               ),
             ),
             Divider(height: 40),
+            // Contrôle LED
             Text('Contrôle des LEDs', style: Theme.of(context).textTheme.titleLarge),
             _buildSlider('Rouge', red, (v) => setState(() => red = v), Colors.red),
             _buildSlider('Vert', green, (v) => setState(() => green = v), Colors.green),
@@ -159,4 +177,5 @@ class _LedControlPageState extends State<LedControlPage> {
     );
   }
 }
+
 
