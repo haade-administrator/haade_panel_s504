@@ -14,14 +14,14 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              child: Text('Contrôle LEDs'),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => LedControlPage())),
-            ),
-            ElevatedButton(
               child: Text('Paramètres MQTT'),
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => SettingsPage())),
+            ),
+            ElevatedButton(
+              child: Text('Contrôle LEDs'),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => LedControlPage())),
             ),
           ],
         ),

@@ -87,8 +87,8 @@ class MQTTService {
 
   void _publishDiscoveryMessage() {
     final configPayload = {
-      "name": "LED Tablette",
-      "unique_id": "led_tablette_rgb",
+      "name": "ELC SMT101",
+      "unique_id": "elc_smt_101",
       "command_topic": "tablette/led/set",
       "state_topic": "tablette/led/state",
       "schema": "json",
@@ -97,7 +97,7 @@ class MQTTService {
       "device": {
         "identifiers": ["tablette_mqtt"],
         "name": "Tablette MQTT",
-        "manufacturer": "Custom",
+        "manufacturer": "ELC",
         "model": "Android LED Control"
       }
     };
