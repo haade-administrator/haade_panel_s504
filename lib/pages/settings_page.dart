@@ -17,8 +17,6 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _useSSL = false;
 
-  final MQTTService mqttService = MQTTService();
-
   @override
   void initState() {
     super.initState();
@@ -53,7 +51,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _connectAndPublishTest() async {
     try {
-      await mqttService.connect(
+      await MQTTService.instance.connect(
         broker: _brokerController.text,
         port: int.parse(_portController.text),
         username: _usernameController.text,
@@ -63,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Connecté au broker MQTT')),
       );
-      mqttService.publish('test/tablette', 'Message test depuis l’application MQTT Tablette');
+      MQTTService.instance.publish('test/tablette', 'Message test depuis l’application MQTT Tablette');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur de connexion MQTT: $e')),
