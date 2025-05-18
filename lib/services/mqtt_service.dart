@@ -48,8 +48,7 @@ class MQTTService {
 
     try {
       await client.connect();
-      _publishDiscoveryMessage();
-      _setupListener();
+      _setupListener(); // ✅ L'appel à _publishDiscoveryMessage a été retiré
     } catch (e) {
       print('❌ Erreur de connexion MQTT : $e');
       client.disconnect();
@@ -107,26 +106,6 @@ class MQTTService {
 
   Map<String, dynamic> parseJson(String message) => jsonDecode(message);
 
-  void _publishDiscoveryMessage() {
-    final configPayload = {
-      "name": "ELC SMT101",
-      "unique_id": "elc_smt_101",
-      "command_topic": "tablette/led/set",
-      "state_topic": "tablette/led/state",
-      "schema": "json",
-      "brightness": true,
-      "rgb": true,
-      "device": {
-        "identifiers": ["tablette_mqtt"],
-        "name": "Tablette MQTT",
-        "manufacturer": "ELC",
-        "model": "Android LED Control"
-      }
-    };
-    final payload = json.encode(configPayload);
-    publish("homeassistant/light/tablette_led/config", payload);
-  }
-
   /// Déconnexion propre
   void disconnect() {
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
@@ -140,3 +119,4 @@ class MQTTService {
   void onDisconnected() => print('❌ Déconnecté du broker MQTT');
   void onSubscribed(String topic) => print('📡 Abonné au topic : $topic');
 }
+
