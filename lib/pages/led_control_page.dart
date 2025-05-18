@@ -15,12 +15,17 @@ class _LedControlPageState extends State<LedControlPage> {
 
   Color _selectedColor = Colors.white;
   double _brightness = 1.0;
+  bool _isOn = true;
 
   @override
   void initState() {
     super.initState();
     _publishDiscoveryConfig();
     MQTTService.instance.subscribe('SMT101/led/set', _handleMQTTMessage);
+
+    // Publication de la disponibilité
+    MQTTService.instance.publish('SMT101/led/state/availability', 'online', retain: true);
+    _publishLedState();
   }
 
   void _publishDiscoveryConfig() {
@@ -28,12 +33,12 @@ class _LedControlPageState extends State<LedControlPage> {
 {
   "name": "SMT 101",
   "unique_id": "smt101_0x12",
-  "object_id": "led_tablette",
+  "object_id": "SMT101",
   "state_topic": "SMT101/led/state",
   "command_topic": "SMT101/led/set",
   "availability": [
     {
-      "topic": "tablette/availability",
+      "topic": "SMT101/led/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     }
@@ -41,7 +46,7 @@ class _LedControlPageState extends State<LedControlPage> {
   "schema": "json",
   "brightness": true,
   "brightness_scale": 255,
-  "color_mode": "rgb",
+  "color_mode": true,
   "supported_color_modes": ["rgb"],
   "device": {
     "identifiers": ["smt101_0x12"],
@@ -52,12 +57,13 @@ class _LedControlPageState extends State<LedControlPage> {
   },
   "effect": false
 }
+
 ''';
     MQTTService.instance.publish(
-      'homeassistant/light/SMT101/light/config',
-      configPayload,
-      retain: true,
-    );
+  'homeassistant/light/SMT101/config',
+  configPayload,
+  retain: true,
+);
   }
 
   Color _applyBrightness(Color color, double brightness) {
@@ -69,32 +75,33 @@ class _LedControlPageState extends State<LedControlPage> {
     );
   }
 
-Future<void> _setLed() async {
-  try {
-    final scaledColor = _applyBrightness(_selectedColor, _brightness);
-
-    final r = (scaledColor.red / 17).round().clamp(0, 15);
-    final g = (scaledColor.green / 17).round().clamp(0, 15);
-    final b = (scaledColor.blue / 17).round().clamp(0, 15);
-
-    await platform.invokeMethod('setLed', {"r": r, "g": g, "b": b});
-    _publishLedState();
-  } on PlatformException catch (e) {
-    print("Erreur JNI: ${e.message}");
+  Future<void> _setLed() async {
+    try {
+      if (!_isOn) {
+        // Éteindre les LEDs
+        await platform.invokeMethod('setLed', {"r": 0, "g": 0, "b": 0});
+      } else {
+        final scaledColor = _applyBrightness(_selectedColor, _brightness);
+        final r = (scaledColor.red / 17).round().clamp(0, 15);
+        final g = (scaledColor.green / 17).round().clamp(0, 15);
+        final b = (scaledColor.blue / 17).round().clamp(0, 15);
+        await platform.invokeMethod('setLed', {"r": r, "g": g, "b": b});
+      }
+      _publishLedState();
+    } on PlatformException catch (e) {
+      print("Erreur JNI: ${e.message}");
+    }
   }
-}
 
-void _publishLedState() {
-  final isOn = _brightness > 0;
-  final scaled = _applyBrightness(_selectedColor, _brightness);
+  void _publishLedState() {
+    final scaled = _applyBrightness(_selectedColor, _brightness);
+    final r = scaled.red;
+    final g = scaled.green;
+    final b = scaled.blue;
 
-  final r = scaled.red;
-  final g = scaled.green;
-  final b = scaled.blue;
-
-  final payload = '''
+    final payload = '''
 {
-  "state": "${isOn ? "ON" : "OFF"}",
+  "state": "${_isOn ? "ON" : "OFF"}",
   "brightness": ${(_brightness * 255).round()},
   "color": {
     "r": $r,
@@ -103,18 +110,20 @@ void _publishLedState() {
   }
 }
 ''';
-    MQTTService.instance.publish('SMT101/led/state', payload);
+    MQTTService.instance.publish('SMT101/led/state', payload, retain: true);
   }
 
   void _handleMQTTMessage(String message) {
     try {
       final data = Map<String, dynamic>.from(MQTTService.instance.parseJson(message));
-      final r = data['color']?['r'] ?? 0;
-      final g = data['color']?['g'] ?? 0;
-      final b = data['color']?['b'] ?? 0;
-      final brightness = (data['brightness'] ?? 255) / 255.0;
+      final state = data['state'];
+      final r = data['color']?['r'] ?? _selectedColor.red;
+      final g = data['color']?['g'] ?? _selectedColor.green;
+      final b = data['color']?['b'] ?? _selectedColor.blue;
+      final brightness = (data['brightness'] ?? (_brightness * 255)) / 255.0;
 
       setState(() {
+        _isOn = (state == null || state.toString().toUpperCase() != "OFF");
         _selectedColor = Color.fromARGB(255, r, g, b);
         _brightness = brightness;
       });
@@ -158,12 +167,26 @@ void _publishLedState() {
               max: 1.0,
               divisions: 20,
             ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                const Text("LED allumée"),
+                Switch(
+                  value: _isOn,
+                  onChanged: (val) {
+                    setState(() => _isOn = val);
+                    _setLed();
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 
 
 

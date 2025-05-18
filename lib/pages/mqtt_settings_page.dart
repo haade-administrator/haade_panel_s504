@@ -61,7 +61,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Connecté au broker MQTT')),
       );
-      MQTTService.instance.publish('test/tablette', 'Message test depuis l’application MQTT Tablette');
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur de connexion MQTT: $e')),

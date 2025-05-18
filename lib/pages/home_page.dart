@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'settings_page.dart';
+import 'mqtt_settings_page.dart';
 import 'led_control_page.dart';
+import 'sensor_reader_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -22,6 +23,11 @@ class HomePage extends StatelessWidget {
               child: Text('Contrôle LEDs'),
               onPressed: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => LedControlPage())),
+            ),
+            ElevatedButton(
+              child: Text('Température & Humidité'),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => SensorReaderPage())),
             ),
           ],
         ),
