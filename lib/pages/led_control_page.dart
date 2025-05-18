@@ -20,7 +20,7 @@ class _LedControlPageState extends State<LedControlPage> {
   void initState() {
     super.initState();
     _publishDiscoveryConfig();
-    MQTTService.instance.subscribe('tablette/led/set', _handleMQTTMessage);
+    MQTTService.instance.subscribe('SMT101/led/set', _handleMQTTMessage);
   }
 
   void _publishDiscoveryConfig() {
@@ -54,7 +54,7 @@ class _LedControlPageState extends State<LedControlPage> {
 }
 ''';
     MQTTService.instance.publish(
-      'homeassistant/light/SMT101',
+      'homeassistant/light/SMT101/light/config',
       configPayload,
       retain: true,
     );
@@ -103,7 +103,7 @@ void _publishLedState() {
   }
 }
 ''';
-    MQTTService.instance.publish('tablette/led/state', payload);
+    MQTTService.instance.publish('SMT101/led/state', payload);
   }
 
   void _handleMQTTMessage(String message) {
