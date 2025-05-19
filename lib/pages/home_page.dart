@@ -24,9 +24,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contrôle MQTT Tablette'),
+        title: Text(
+    'Contrôle MQTT Tablette',
+    style: TextStyle(color: Colors.white),
+  ),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: const Color.fromARGB(255, 61, 61, 61),
         actions: [
           // Voyant de connexion MQTT (vert si connecté, rouge sinon)
           ValueListenableBuilder<bool>(
