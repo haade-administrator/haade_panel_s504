@@ -7,7 +7,7 @@ class LedControlPage extends StatefulWidget {
   const LedControlPage({super.key});
 
   @override
-  _LedControlPageState createState() => _LedControlPageState();
+  State<LedControlPage> createState() => _LedControlPageState();
 }
 
 class _LedControlPageState extends State<LedControlPage> {
@@ -21,10 +21,14 @@ class _LedControlPageState extends State<LedControlPage> {
   void initState() {
     super.initState();
     _publishDiscoveryConfig();
+
+    // Subscribe to control topic
     MQTTService.instance.subscribe('SMT101/led/set', _handleMQTTMessage);
 
-    // Publication de la disponibilité
-    MQTTService.instance.publish('SMT101/led/state/availability', 'online', retain: true);
+    // Publish availability
+    MQTTService.instance.publish('SMT101/led/availability', 'online', retain: true);
+
+    // Publish initial state
     _publishLedState();
   }
 
@@ -49,7 +53,7 @@ class _LedControlPageState extends State<LedControlPage> {
   "color_mode": true,
   "supported_color_modes": ["rgb"],
   "device": {
-    "identifiers": ["smt101_0x12"],
+    "identifiers": ["elc_smt101"],
     "manufacturer": "ELC",
     "model": "SMT 101",
     "name": "SMT 101",
@@ -57,13 +61,13 @@ class _LedControlPageState extends State<LedControlPage> {
   },
   "effect": false
 }
-
 ''';
+
     MQTTService.instance.publish(
-  'homeassistant/light/SMT101/config',
-  configPayload,
-  retain: true,
-);
+      'homeassistant/light/elc_smt101/config',
+      configPayload,
+      retain: true,
+    );
   }
 
   Color _applyBrightness(Color color, double brightness) {
@@ -78,7 +82,6 @@ class _LedControlPageState extends State<LedControlPage> {
   Future<void> _setLed() async {
     try {
       if (!_isOn) {
-        // Éteindre les LEDs
         await platform.invokeMethod('setLed', {"r": 0, "g": 0, "b": 0});
       } else {
         final scaledColor = _applyBrightness(_selectedColor, _brightness);
@@ -87,6 +90,7 @@ class _LedControlPageState extends State<LedControlPage> {
         final b = (scaledColor.blue / 17).round().clamp(0, 15);
         await platform.invokeMethod('setLed', {"r": r, "g": g, "b": b});
       }
+
       _publishLedState();
     } on PlatformException catch (e) {
       print("Erreur JNI: ${e.message}");
@@ -110,6 +114,7 @@ class _LedControlPageState extends State<LedControlPage> {
   }
 }
 ''';
+
     MQTTService.instance.publish('SMT101/led/state', payload, retain: true);
   }
 
@@ -123,7 +128,7 @@ class _LedControlPageState extends State<LedControlPage> {
       final brightness = (data['brightness'] ?? (_brightness * 255)) / 255.0;
 
       setState(() {
-        _isOn = (state == null || state.toString().toUpperCase() != "OFF");
+        _isOn = state == null || state.toString().toUpperCase() != "OFF";
         _selectedColor = Color.fromARGB(255, r, g, b);
         _brightness = brightness;
       });
@@ -186,6 +191,7 @@ class _LedControlPageState extends State<LedControlPage> {
     );
   }
 }
+
 
 
 

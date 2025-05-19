@@ -16,11 +16,41 @@ class _SensorReaderPageState extends State<SensorReaderPage> {
   bool _isLoading = false;
 
   @override
-  void initState() {
-    super.initState();
-    _publishDiscoveryConfigs();
-    _readSensorsPeriodically();
-  }
+void initState() {
+  super.initState();
+  _publishDiscoveryConfigs();
+  _setupSensorChannel();
+}
+
+void _setupSensorChannel() {
+  platform.setMethodCallHandler((call) async {
+    switch (call.method) {
+      case "onTemperature":
+        final double temp = (call.arguments as num).toDouble();
+        setState(() => _temperature = temp);
+        MQTTService.instance.publish('SMT101/sensor/temperature', temp.toStringAsFixed(1), retain: true);
+        break;
+
+      case "onHumidity":
+        final double hum = (call.arguments as num).toDouble();
+        setState(() => _humidity = hum);
+        MQTTService.instance.publish('SMT101/sensor/humidity', hum.toStringAsFixed(1), retain: true);
+        break;
+
+      case "onSensorError":
+        _showSnackBar("Erreur capteur : ${call.arguments}");
+        break;
+
+      default:
+        _showSnackBar("Méthode non reconnue : ${call.method}");
+        break;
+    }
+  });
+
+  // Déclarer en ligne que le capteur est disponible
+  MQTTService.instance.publish('SMT101/availability', 'online', retain: true);
+}
+
 
 void _publishDiscoveryConfigs() {
   final tempConfig = '''
@@ -53,7 +83,7 @@ void _publishDiscoveryConfigs() {
   "payload_available": "online",
   "payload_not_available": "offline",
   "device": {
-    "identifiers": ["smt101_0x12"],
+    "identifiers": ["elc_smt101"],
     "manufacturer": "ELC",
     "model": "SMT 101",
     "name": "SMT 101"
@@ -61,8 +91,8 @@ void _publishDiscoveryConfigs() {
 }
 ''';
 
-  MQTTService.instance.publish('homeassistant/sensor/SMT101/temperature/config', tempConfig, retain: true);
-  MQTTService.instance.publish('homeassistant/sensor/SMT101/humidity/config', humConfig, retain: true);
+  MQTTService.instance.publish('homeassistant/sensor/elc_smt101/temperature/config', tempConfig, retain: true);
+  MQTTService.instance.publish('homeassistant/sensor/elc_smt101/humidity/config', humConfig, retain: true);
 
   // Une seule publication pour l'état de disponibilité
   MQTTService.instance.publish('SMT101/availability', 'online', retain: true);
