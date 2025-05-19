@@ -16,6 +16,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _useSSL = false;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -43,13 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setBool('mqtt_ssl', _useSSL);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Paramètres enregistrés')),
+      const SnackBar(content: Text('Paramètres enregistrés')),
     );
-
-    await _connectAndPublishTest();
   }
 
-  Future<void> _connectAndPublishTest() async {
+  Future<void> _connect() async {
     try {
       await MQTTService.instance.connect(
         broker: _brokerController.text,
@@ -59,7 +58,7 @@ class _SettingsPageState extends State<SettingsPage> {
         useSSL: _useSSL,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Connecté au broker MQTT')),
+        const SnackBar(content: Text('Connecté au broker MQTT')),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -68,10 +67,20 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  Future<void> _saveAndConnect() async {
+    await _saveSettings();
+    await _connect();
+  }
+
+  Future<void> _reconnect() async {
+    await _saveSettings(); // Assure que les paramètres sont à jour avant reconnect
+    await _connect();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Paramètres MQTT')),
+      appBar: AppBar(title: const Text('Paramètres MQTT')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -80,31 +89,47 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               TextFormField(
                 controller: _brokerController,
-                decoration: InputDecoration(labelText: 'Adresse du broker'),
+                decoration: const InputDecoration(labelText: 'Adresse du broker'),
               ),
               TextFormField(
                 controller: _portController,
-                decoration: InputDecoration(labelText: 'Port'),
+                decoration: const InputDecoration(labelText: 'Port'),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: _usernameController,
-                decoration: InputDecoration(labelText: 'Nom d’utilisateur'),
+                decoration: const InputDecoration(labelText: 'Nom d’utilisateur'),
               ),
               TextFormField(
                 controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Mot de passe'),
-                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Mot de passe',
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () => setState(() => _passwordVisible = !_passwordVisible),
+                  ),
+                ),
+                obscureText: !_passwordVisible,
               ),
               SwitchListTile(
-                title: Text('Connexion SSL'),
+                title: const Text('Connexion SSL'),
                 value: _useSSL,
                 onChanged: (value) => setState(() => _useSSL = value),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _saveSettings,
-                child: Text('Enregistrer et connecter'),
+                onPressed: _saveAndConnect,
+                child: const Text('Enregistrer et connecter'),
+              ),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: _reconnect,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                ),
+                child: const Text('Reconnecter'),
               ),
             ],
           ),
