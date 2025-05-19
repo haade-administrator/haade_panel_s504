@@ -129,7 +129,7 @@ class MQTTService {
   void publish(String topic, String message, {bool retain = false}) {
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
+    client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!, retain: retain,);
   }
 
   /// Souscription à un topic
