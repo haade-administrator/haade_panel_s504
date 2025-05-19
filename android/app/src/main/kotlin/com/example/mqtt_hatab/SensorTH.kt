@@ -41,7 +41,7 @@ object SensorTH {
 
                 while (running) {
                     val line = reader.readLine() ?: break
-                    Log.i(TAG, "lineData: $line")
+                    // Log.i(TAG, "lineData: $line")
 
                     if (!TextUtils.isEmpty(line)) {
                         // Humidité : on cherche "event{hum}" + "EV_ABS" dans la ligne
