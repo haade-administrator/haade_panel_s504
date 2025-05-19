@@ -1,17 +1,17 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'dart:convert';
 
 typedef MessageHandler = void Function(String topic, String message);
 
 class MQTTService {
-  // 🔁 Singleton standard
+  // 🔁 Singleton
   static final MQTTService _instance = MQTTService._internal();
   factory MQTTService() => _instance;
-
-  // ➕ Pour accéder via MQTTService.instance
   static MQTTService get instance => _instance;
-
   MQTTService._internal();
 
   late MqttServerClient client;
@@ -19,6 +19,10 @@ class MQTTService {
   bool _isListening = false;
   MessageHandler? _onMessage;
 
+  /// 🟢/🔴 État de connexion pour affichage UI
+  final ValueNotifier<bool> isConnected = ValueNotifier(false);
+
+  /// Connexion principale
   Future<void> connect({
     required String broker,
     required int port,
@@ -48,7 +52,7 @@ class MQTTService {
 
     try {
       await client.connect();
-      _setupListener(); // ✅ L'appel à _publishDiscoveryMessage a été retiré
+      _setupListener();
     } catch (e) {
       print('❌ Erreur de connexion MQTT : $e');
       client.disconnect();
@@ -56,6 +60,7 @@ class MQTTService {
     }
   }
 
+  /// Connexion avec callback obligatoire
   Future<void> connectWithCallback({
     required String broker,
     required int port,
@@ -74,6 +79,34 @@ class MQTTService {
     );
   }
 
+  /// Connexion automatique si les paramètres sont disponibles
+  Future<void> autoConnectIfConfigured() async {
+    final prefs = await SharedPreferences.getInstance();
+    final broker = prefs.getString('mqtt_broker');
+    final port = prefs.getInt('mqtt_port');
+    final username = prefs.getString('mqtt_username');
+    final password = prefs.getString('mqtt_password');
+    final useSSL = prefs.getBool('mqtt_ssl') ?? false;
+
+    if (broker != null &&
+        port != null &&
+        username != null &&
+        password != null) {
+      try {
+        await connect(
+          broker: broker,
+          port: port,
+          username: username,
+          password: password,
+          useSSL: useSSL,
+        );
+      } catch (e) {
+        print('⚠️ Connexion automatique échouée : $e');
+      }
+    }
+  }
+
+  /// Mise en place de l'écouteur global
   void _setupListener() {
     if (!_isListening && client.updates != null) {
       client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
@@ -92,18 +125,21 @@ class MQTTService {
     }
   }
 
+  /// Publication sur un topic
   void publish(String topic, String message, {bool retain = false}) {
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
     client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
   }
 
+  /// Souscription à un topic
   void subscribe(String topic, void Function(String) onMessage) {
     client.subscribe(topic, MqttQos.atMostOnce);
     _listeners[topic] = onMessage;
-    _setupListener(); // Assure que le listener est actif
+    _setupListener(); // Toujours assurer que l'écouteur est en place
   }
 
+  /// Décode un message JSON
   Map<String, dynamic> parseJson(String message) => jsonDecode(message);
 
   /// Déconnexion propre
@@ -112,11 +148,24 @@ class MQTTService {
       client.disconnect();
       print('🔌 Déconnecté proprement');
     }
+    isConnected.value = false;
     _isListening = false;
   }
 
-  void onConnected() => print('✅ Connecté au broker MQTT');
-  void onDisconnected() => print('❌ Déconnecté du broker MQTT');
-  void onSubscribed(String topic) => print('📡 Abonné au topic : $topic');
+  /// Callbacks MQTT
+  void onConnected() {
+    print('✅ Connecté au broker MQTT');
+    isConnected.value = true;
+  }
+
+  void onDisconnected() {
+    print('❌ Déconnecté du broker MQTT');
+    isConnected.value = false;
+  }
+
+  void onSubscribed(String topic) {
+    print('📡 Abonné au topic : $topic');
+  }
 }
+
 
