@@ -23,10 +23,10 @@ class _LedControlPageState extends State<LedControlPage> {
     _publishDiscoveryConfig();
 
     // Subscribe to control topic
-    MQTTService.instance.subscribe('SMT101/led/set', _handleMQTTMessage);
+    MQTTService.instance.subscribe('elc_s504007700001/led/set', _handleMQTTMessage);
 
     // Publish availability
-    MQTTService.instance.publish('SMT101/led/availability', 'online', retain: true);
+    MQTTService.instance.publish('elc_s504007700001/led/availability', 'online', retain: true);
 
     // Publish initial state
     _publishLedState();
@@ -36,13 +36,13 @@ class _LedControlPageState extends State<LedControlPage> {
     const configPayload = '''
 {
   "name": "SMT 101",
-  "unique_id": "smt101_0x12",
-  "object_id": "SMT101",
-  "state_topic": "SMT101/led/state",
-  "command_topic": "SMT101/led/set",
+  "object_id": "elc_s504007700001_led",
+  "unique_id": "elc_s504007700001_led",
+  "state_topic": "elc_s504007700001/led/state",
+  "command_topic": "elc_s504007700001/led/set",
   "availability": [
     {
-      "topic": "SMT101/led/availability",
+      "topic": "elc_s504007700001/led/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     }
@@ -53,10 +53,10 @@ class _LedControlPageState extends State<LedControlPage> {
   "color_mode": true,
   "supported_color_modes": ["rgb"],
   "device": {
-    "identifiers": ["elc_smt101"],
+    "identifiers": ["elc_s504007700001"],
+    "name": "Tablette SMT",
+    "model": "SMT101",
     "manufacturer": "ELC",
-    "model": "SMT 101",
-    "name": "SMT 101",
     "sw_version": "1.0"
   },
   "effect": false
@@ -64,7 +64,7 @@ class _LedControlPageState extends State<LedControlPage> {
 ''';
 
     MQTTService.instance.publish(
-      'homeassistant/light/elc_smt101/config',
+      'homeassistant/light/elc_s504007700001_led/config',
       configPayload,
       retain: true,
     );
@@ -115,7 +115,7 @@ class _LedControlPageState extends State<LedControlPage> {
 }
 ''';
 
-    MQTTService.instance.publish('SMT101/led/state', payload, retain: true);
+    MQTTService.instance.publish('elc_s504007700001/led/state', payload, retain: true);
   }
 
   void _handleMQTTMessage(String message) {

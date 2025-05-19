@@ -18,8 +18,8 @@ class _SensorReaderPageState extends State<SensorReaderPage> {
   @override
 void initState() {
   super.initState();
-  _publishDiscoveryConfigs();
   _setupSensorChannel();
+  _publishDiscoveryConfigs();
 }
 
 void _setupSensorChannel() {
@@ -28,13 +28,13 @@ void _setupSensorChannel() {
       case "onTemperature":
         final double temp = (call.arguments as num).toDouble();
         setState(() => _temperature = temp);
-        MQTTService.instance.publish('SMT101/sensor/temperature', temp.toStringAsFixed(1), retain: true);
+        MQTTService.instance.publish('elc_s504007700001/sensor/temperature', temp.toStringAsFixed(1), retain: true);
         break;
 
       case "onHumidity":
         final double hum = (call.arguments as num).toDouble();
         setState(() => _humidity = hum);
-        MQTTService.instance.publish('SMT101/sensor/humidity', hum.toStringAsFixed(1), retain: true);
+        MQTTService.instance.publish('elc_s504007700001/sensor/humidity', hum.toStringAsFixed(1), retain: true);
         break;
 
       case "onSensorError":
@@ -48,55 +48,64 @@ void _setupSensorChannel() {
   });
 
   // Déclarer en ligne que le capteur est disponible
-  MQTTService.instance.publish('SMT101/availability', 'online', retain: true);
+  MQTTService.instance.publish('elc_s504007700001/sensor/availability', 'online', retain: true);
 }
 
 
 void _publishDiscoveryConfigs() {
 final tempConfig = '''
 {
-  "name": "SMT101 Temperature",
-  "unique_id": "smt101_temperature",
-  "state_topic": "SMT101/sensor/temperature",
-  "availability_topic": "SMT101/availability",
+  "name": "Temperature",
+  "object_id": "elc_s504007700001_temp",
+  "unique_id": "elc_s504007700001_temp",
+  "state_topic": "elc_s504007700001/sensor/temperature",
+    "availability": [
+    {
+      "topic": "elc_s504007700001/sensor/availability",
+      "payload_available": "online",
+      "payload_not_available": "offline"
+    }
+  ],
   "device_class": "temperature",
-  "unit_of_measurement": "°C",
-  "payload_available": "online",
-  "payload_not_available": "offline",
+  "unit_of_measurement": "C",
   "device": {
-    "identifiers": ["smt101"],
-    "name": "SMT 1016",
+    "identifiers": ["elc_s504007700001"],
+    "name": "Tablette SMT",
+    "model": "SMT101",
     "manufacturer": "ELC",
-    "model": "SMT 1018"
+    "sw_version": "1.0"
   }
 }
 ''';
 
 final humConfig = '''
 {
-  "name": "SMT101 Humidity",
-  "unique_id": "smt101_humidity",
-  "state_topic": "SMT101/sensor/humidity",
-  "availability_topic": "SMT101/availability",
+  "name": "Humidity",
+  "object_id": "elc_s504007700001_humidity",
+  "unique_id": "elc_s504007700001_humidity",
+  "state_topic": "elc_s504007700001/sensor/humidity",
+  "availability": [
+    {
+      "topic": "elc_s504007700001/sensor/availability",
+      "payload_available": "online",
+      "payload_not_available": "offline"
+    }
+  ],
   "device_class": "humidity",
   "unit_of_measurement": "%",
-  "payload_available": "online",
-  "payload_not_available": "offline",
   "device": {
-    "identifiers": ["smt101"],
-    "name": "SMT 1016",
+    "identifiers": ["elc_s504007700001"],
+    "name": "Tablette SMT",
+    "model": "SMT101",
     "manufacturer": "ELC",
-    "model": "SMT 1018"
+    "sw_version": "1.0"
   }
 }
 ''';
 
-MQTTService.instance.publish('homeassistant/sensor/smt101_temperature/config', tempConfig, retain: true);
-MQTTService.instance.publish('homeassistant/sensor/smt101_humidity/config', humConfig, retain: true);
+MQTTService.instance.publish('homeassistant/sensor/elc_s504007700001_temp/config', tempConfig, retain: true);
+MQTTService.instance.publish('homeassistant/sensor/elc_s504007700001_humidity/config', humConfig, retain: true);
 
-
-  // Une seule publication pour l'état de disponibilité
-  MQTTService.instance.publish('SMT101/availability', 'online', retain: true);
 }
 
 
@@ -117,8 +126,8 @@ Future<void> _readSensors() async {
         _humidity = humidity;
       });
 
-      MQTTService.instance.publish('SMT101/sensor/temperature', temperature.toStringAsFixed(1), retain: true);
-      MQTTService.instance.publish('SMT101/sensor/humidity', humidity.toStringAsFixed(1), retain: true);
+      MQTTService.instance.publish('elc_s504007700001/sensor/temperature', temperature.toStringAsFixed(1), retain: true);
+      MQTTService.instance.publish('elc_s504007700001/sensor/humidity', humidity.toStringAsFixed(1), retain: true);
     } else {
       _showSnackBar("Valeurs capteurs invalides ou absentes.");
     }
@@ -135,7 +144,7 @@ Future<void> _readSensors() async {
       await Future.delayed(const Duration(seconds: 30));
       return true;
     });
-  }
+}
 
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
