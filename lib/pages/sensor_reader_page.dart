@@ -53,46 +53,47 @@ void _setupSensorChannel() {
 
 
 void _publishDiscoveryConfigs() {
-  final tempConfig = '''
+final tempConfig = '''
 {
-  "name": "Temperature SMT101",
-  "unique_id": "smt101_temp",
-  "device_class": "temperature",
-  "unit_of_measurement": "°C",
+  "name": "SMT101 Temperature",
+  "unique_id": "smt101_temperature",
   "state_topic": "SMT101/sensor/temperature",
   "availability_topic": "SMT101/availability",
+  "device_class": "temperature",
+  "unit_of_measurement": "°C",
   "payload_available": "online",
   "payload_not_available": "offline",
   "device": {
-    "identifiers": ["smt101_0x12"],
+    "identifiers": ["smt101"],
+    "name": "SMT 1016",
     "manufacturer": "ELC",
-    "model": "SMT 101",
-    "name": "SMT 101"
+    "model": "SMT 1018"
   }
 }
 ''';
 
-  final humConfig = '''
+final humConfig = '''
 {
-  "name": "Humidity SMT101",
+  "name": "SMT101 Humidity",
   "unique_id": "smt101_humidity",
-  "device_class": "humidity",
-  "unit_of_measurement": "%",
   "state_topic": "SMT101/sensor/humidity",
   "availability_topic": "SMT101/availability",
+  "device_class": "humidity",
+  "unit_of_measurement": "%",
   "payload_available": "online",
   "payload_not_available": "offline",
   "device": {
-    "identifiers": ["elc_smt101"],
+    "identifiers": ["smt101"],
+    "name": "SMT 1016",
     "manufacturer": "ELC",
-    "model": "SMT 101",
-    "name": "SMT 101"
+    "model": "SMT 1018"
   }
 }
 ''';
 
-  MQTTService.instance.publish('homeassistant/sensor/elc_smt101/temperature/config', tempConfig, retain: true);
-  MQTTService.instance.publish('homeassistant/sensor/elc_smt101/humidity/config', humConfig, retain: true);
+MQTTService.instance.publish('homeassistant/sensor/smt101_temperature/config', tempConfig, retain: true);
+MQTTService.instance.publish('homeassistant/sensor/smt101_humidity/config', humConfig, retain: true);
+
 
   // Une seule publication pour l'état de disponibilité
   MQTTService.instance.publish('SMT101/availability', 'online', retain: true);
@@ -150,25 +151,79 @@ Future<void> _readSensors() async {
     return Scaffold(
       appBar: AppBar(title: const Text("Température & Humidité")),
       body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (_isLoading)
-              const CircularProgressIndicator()
-            else ...[
-              Text(
-                "🌡 Température : ${_temperature.toStringAsFixed(1)} °C",
-                style: Theme.of(context).textTheme.headlineMedium,
+      padding: const EdgeInsets.all(24.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (_isLoading)
+            const CircularProgressIndicator()
+          else
+            Card(
+              color: const Color.fromARGB(255, 255, 255, 255),
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
-              const SizedBox(height: 20),
-              Text(
-                "💧 Humidité : ${_humidity.toStringAsFixed(1)} %",
-                style: Theme.of(context).textTheme.headlineMedium,
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(Icons.thermostat, color: Colors.teal),
+                        SizedBox(width: 10),
+                        Text(
+                          'Température :',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 58, 58, 58),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_temperature.toStringAsFixed(1)} °C",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 58, 58, 58),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: const [
+                        Icon(Icons.water_drop, color: Colors.teal),
+                        SizedBox(width: 10),
+                        Text(
+                          'Humidité :',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Color.fromARGB(255, 58, 58, 58),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "${_humidity.toStringAsFixed(1)} %",
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 58, 58, 58),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ],
-        ),
+            ),
+        ],
+      ),
+    ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: _readSensors,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
