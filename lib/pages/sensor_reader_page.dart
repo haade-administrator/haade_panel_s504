@@ -1,240 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:mqtt_hatab/services/sensor_service.dart';
 
-class SensorReaderPage extends StatefulWidget {
+class SensorReaderPage extends StatelessWidget {
   const SensorReaderPage({super.key});
 
   @override
-  State<SensorReaderPage> createState() => _SensorReaderPageState();
-}
-
-class _SensorReaderPageState extends State<SensorReaderPage> {
-  static const platform = MethodChannel('com.example.elcapi/sensor');
-  double _temperature = 0;
-  double _humidity = 0;
-  bool _isLoading = false;
-
-  @override
-void initState() {
-  super.initState();
-  _setupSensorChannel();
-  _publishDiscoveryConfigs();
-}
-
-void _setupSensorChannel() {
-  platform.setMethodCallHandler((call) async {
-    switch (call.method) {
-      case "onTemperature":
-        final double temp = (call.arguments as num).toDouble();
-        setState(() => _temperature = temp);
-        MQTTService.instance.publish('elc_s504007700001/sensor/temperature', temp.toStringAsFixed(1), retain: true);
-        break;
-
-      case "onHumidity":
-        final double hum = (call.arguments as num).toDouble();
-        setState(() => _humidity = hum);
-        MQTTService.instance.publish('elc_s504007700001/sensor/humidity', hum.toStringAsFixed(1), retain: true);
-        break;
-
-      case "onSensorError":
-        _showSnackBar("Erreur capteur : ${call.arguments}");
-        break;
-
-      default:
-        _showSnackBar("Méthode non reconnue : ${call.method}");
-        break;
-    }
-  });
-
-  // Déclarer en ligne que le capteur est disponible
-  MQTTService.instance.publish('elc_s504007700001/sensor/availability', 'online', retain: true);
-}
-
-
-void _publishDiscoveryConfigs() {
-final tempConfig = '''
-{
-  "name": "Temperature",
-  "object_id": "elc_s504007700001_temp",
-  "unique_id": "elc_s504007700001_temp",
-  "state_topic": "elc_s504007700001/sensor/temperature",
-    "availability": [
-    {
-      "topic": "elc_s504007700001/sensor/availability",
-      "payload_available": "online",
-      "payload_not_available": "offline"
-    }
-  ],
-  "device_class": "temperature",
-  "unit_of_measurement": "C",
-  "device": {
-    "identifiers": ["elc_s504007700001"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
-    "manufacturer": "ELC",
-    "sw_version": "1.0"
-  }
-}
-''';
-
-final humConfig = '''
-{
-  "name": "Humidity",
-  "object_id": "elc_s504007700001_humidity",
-  "unique_id": "elc_s504007700001_humidity",
-  "state_topic": "elc_s504007700001/sensor/humidity",
-  "availability": [
-    {
-      "topic": "elc_s504007700001/sensor/availability",
-      "payload_available": "online",
-      "payload_not_available": "offline"
-    }
-  ],
-  "device_class": "humidity",
-  "unit_of_measurement": "%",
-  "device": {
-    "identifiers": ["elc_s504007700001"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
-    "manufacturer": "ELC",
-    "sw_version": "1.0"
-  }
-}
-''';
-
-MQTTService.instance.publish('homeassistant/sensor/elc_s504007700001_temp/config', tempConfig, retain: true);
-MQTTService.instance.publish('homeassistant/sensor/elc_s504007700001_humidity/config', humConfig, retain: true);
-
-}
-
-
-Future<void> _readSensors() async {
-  setState(() => _isLoading = true);
-
-  try {
-    final result = await platform.invokeMethod<Map>('readSensors');
-
-    if (result != null &&
-        result['temperature'] is num &&
-        result['humidity'] is num) {
-      final temperature = result['temperature'].toDouble();
-      final humidity = result['humidity'].toDouble();
-
-      setState(() {
-        _temperature = temperature;
-        _humidity = humidity;
-      });
-
-      MQTTService.instance.publish('elc_s504007700001/sensor/temperature', temperature.toStringAsFixed(1), retain: true);
-      MQTTService.instance.publish('elc_s504007700001/sensor/humidity', humidity.toStringAsFixed(1), retain: true);
-    } else {
-      _showSnackBar("Valeurs capteurs invalides ou absentes.");
-    }
-  } on PlatformException catch (e) {
-    _showSnackBar("Erreur de lecture capteur : ${e.message}");
-  } finally {
-    setState(() => _isLoading = false);
-  }
-}
-
-  void _readSensorsPeriodically() {
-    Future.doWhile(() async {
-      await _readSensors();
-      await Future.delayed(const Duration(seconds: 30));
-      return true;
-    });
-}
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final sensorService = SensorService();
+
     return Scaffold(
       appBar: AppBar(title: const Text("Température & Humidité")),
       body: Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (_isLoading)
-            const CircularProgressIndicator()
-          else
-            Card(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              elevation: 6,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(Icons.thermostat, color: Colors.teal),
-                        SizedBox(width: 10),
-                        Text(
-                          'Température :',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 58, 58, 58),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "${_temperature.toStringAsFixed(1)} °C",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 58, 58, 58),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: const [
-                        Icon(Icons.water_drop, color: Colors.teal),
-                        SizedBox(width: 10),
-                        Text(
-                          'Humidité :',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Color.fromARGB(255, 58, 58, 58),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "${_humidity.toStringAsFixed(1)} %",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 58, 58, 58),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
+        padding: const EdgeInsets.all(24.0),
+        child: Center(
+          child: ValueListenableBuilder<double>(
+            valueListenable: sensorService.temperature,
+            builder: (context, temp, _) {
+              return ValueListenableBuilder<double>(
+                valueListenable: sensorService.humidity,
+                builder: (context, hum, _) {
+                  return _buildSensorCard(temp, hum);
+                },
+              );
+            },
+          ),
+        ),
       ),
-    ),
-
       floatingActionButton: FloatingActionButton(
-        onPressed: _readSensors,
+        onPressed: () => sensorService.readSensors(),
         child: const Icon(Icons.refresh),
       ),
     );
   }
+
+  Widget _buildSensorCard(double temp, double hum) {
+    return Card(
+      elevation: 6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildRow(Icons.thermostat, 'Température', '$temp °C'),
+            const SizedBox(height: 20),
+            _buildRow(Icons.water_drop, 'Humidité', '$hum %'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRow(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.teal),
+        const SizedBox(width: 10),
+        Text(
+          '$label : ',
+          style: const TextStyle(fontSize: 20),
+        ),
+        const Spacer(),
+        Text(
+          value,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ],
+    );
+  }
 }
+
 

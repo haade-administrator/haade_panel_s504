@@ -3,6 +3,7 @@ import 'mqtt_settings_page.dart';
 import 'led_control_page.dart';
 import 'sensor_reader_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:mqtt_hatab/services/sensor_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     mqtt.autoConnectIfConfigured();
+    SensorService().initialize(); // Active les capteurs au démarrage
   }
 
   @override

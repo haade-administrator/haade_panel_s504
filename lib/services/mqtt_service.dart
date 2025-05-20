@@ -14,7 +14,14 @@ class MQTTService {
   static MQTTService get instance => _instance;
   MQTTService._internal();
 
-  late MqttServerClient client;
+  MqttServerClient? _client;
+  MqttServerClient get client {
+    if (_client == null) {
+      throw Exception('MQTT client not initialized. Call connect() first.');
+    }
+    return _client!;
+  }
+
   final Map<String, void Function(String)> _listeners = {};
   bool _isListening = false;
   MessageHandler? _onMessage;
@@ -33,14 +40,14 @@ class MQTTService {
   }) async {
     _onMessage = onMessage;
 
-    client = MqttServerClient(broker, 'tablette_flutter_client');
-    client.port = port;
-    client.logging(on: true);
-    client.secure = useSSL;
-    client.keepAlivePeriod = 20;
-    client.onDisconnected = onDisconnected;
-    client.onConnected = onConnected;
-    client.onSubscribed = onSubscribed;
+    _client = MqttServerClient(broker, 'tablette_flutter_client');
+    _client!.port = port;
+    _client!.logging(on: true);
+    _client!.secure = useSSL;
+    _client!.keepAlivePeriod = 20;
+    _client!.onDisconnected = onDisconnected;
+    _client!.onConnected = onConnected;
+    _client!.onSubscribed = onSubscribed;
 
     final connMessage = MqttConnectMessage()
         .withClientIdentifier('tablette_flutter_client')
@@ -48,14 +55,14 @@ class MQTTService {
         .startClean()
         .withWillQos(MqttQos.atLeastOnce);
 
-    client.connectionMessage = connMessage;
+    _client!.connectionMessage = connMessage;
 
     try {
-      await client.connect();
+      await _client!.connect();
       _setupListener();
     } catch (e) {
       print('❌ Erreur de connexion MQTT : $e');
-      client.disconnect();
+      _client!.disconnect();
       rethrow;
     }
   }
@@ -108,33 +115,45 @@ class MQTTService {
 
   /// Mise en place de l'écouteur global
   void _setupListener() {
-    if (!_isListening && client.updates != null) {
-      client.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
-        final recMess = c[0].payload as MqttPublishMessage;
-        final payload =
-            MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-        final topic = c[0].topic;
+    if (_isListening || _client?.updates == null) return;
 
-        if (_listeners.containsKey(topic)) {
-          _listeners[topic]!(payload);
-        } else {
-          _onMessage?.call(topic, payload);
-        }
-      });
-      _isListening = true;
-    }
+    _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> c) {
+      final recMess = c[0].payload as MqttPublishMessage;
+      final payload =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      final topic = c[0].topic;
+
+      if (_listeners.containsKey(topic)) {
+        _listeners[topic]!(payload);
+      } else {
+        _onMessage?.call(topic, payload);
+      }
+    });
+
+    _isListening = true;
   }
 
   /// Publication sur un topic
   void publish(String topic, String message, {bool retain = false}) {
+    if (_client == null) {
+      print('❌ MQTT client not initialized. Cannot publish to $topic');
+      return;
+    }
+
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    client.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!, retain: retain,);
+    _client!.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!,
+        retain: retain);
   }
 
   /// Souscription à un topic
   void subscribe(String topic, void Function(String) onMessage) {
-    client.subscribe(topic, MqttQos.atMostOnce);
+    if (_client == null) {
+      print('❌ MQTT client not initialized. Cannot subscribe to $topic');
+      return;
+    }
+
+    _client!.subscribe(topic, MqttQos.atMostOnce);
     _listeners[topic] = onMessage;
     _setupListener(); // Toujours assurer que l'écouteur est en place
   }
@@ -144,8 +163,8 @@ class MQTTService {
 
   /// Déconnexion propre
   void disconnect() {
-    if (client.connectionStatus?.state == MqttConnectionState.connected) {
-      client.disconnect();
+    if (_client?.connectionStatus?.state == MqttConnectionState.connected) {
+      _client!.disconnect();
       print('🔌 Déconnecté proprement');
     }
     isConnected.value = false;
@@ -167,5 +186,6 @@ class MQTTService {
     print('📡 Abonné au topic : $topic');
   }
 }
+
 
 
