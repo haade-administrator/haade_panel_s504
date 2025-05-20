@@ -140,6 +140,11 @@ class MQTTService {
       return;
     }
 
+    if (_client!.connectionStatus?.state != MqttConnectionState.connected) {
+      print('❌ MQTT client not connected. Cannot publish to $topic');
+      return;
+    }
+
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
     _client!.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!,
@@ -186,6 +191,7 @@ class MQTTService {
     print('📡 Abonné au topic : $topic');
   }
 }
+
 
 
 

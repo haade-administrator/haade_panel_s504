@@ -23,10 +23,10 @@ class _LedControlPageState extends State<LedControlPage> {
     _publishDiscoveryConfig();
 
     // Subscribe to control topic
-    MQTTService.instance.subscribe('elc_s8504007700001/led/set', _handleMQTTMessage);
+    MQTTService.instance.subscribe('elc_s504007700001/led/set', _handleMQTTMessage);
 
     // Publish availability
-    MQTTService.instance.publish('elc_s8504007700001/led/availability', 'online', retain: true);
+    MQTTService.instance.publish('elc_s504007700001/led/availability', 'online', retain: true);
 
     // Publish initial state
     _publishLedState();
@@ -38,11 +38,11 @@ class _LedControlPageState extends State<LedControlPage> {
   "name": "SMT 101",
   "object_id": "elc_s504007700001_led",
   "unique_id": "elc_s504007700001_led",
-  "state_topic": "elc_s504007700001/state",
-  "command_topic": "elc_s504007700001/set",
+  "state_topic": "elc_s504007700001/led/state",
+  "command_topic": "elc_s504007700001/led/set",
   "availability": [
     {
-      "topic": "elc_s504007700001/availability",
+      "topic": "elc_s504007700001/led/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     }
@@ -115,7 +115,7 @@ class _LedControlPageState extends State<LedControlPage> {
 }
 ''';
 
-    MQTTService.instance.publish('elc_s8504007700001/led/state', payload, retain: true);
+    MQTTService.instance.publish('elc_s504007700001/led/state', payload, retain: true);
   }
 
   void _handleMQTTMessage(String message) {
