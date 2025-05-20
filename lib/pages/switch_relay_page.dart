@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mqtt_hatab/services/switch_service.dart';
 
 class SwitchRelayPage extends StatefulWidget {
   const SwitchRelayPage({Key? key}) : super(key: key);
@@ -9,20 +9,19 @@ class SwitchRelayPage extends StatefulWidget {
 }
 
 class _SwitchRelayPageState extends State<SwitchRelayPage> {
-  static const platform = MethodChannel('com.example.relaycontrol/relay');
+  bool relay1State = SwitchService.instance.relay1State;
+  bool relay2State = SwitchService.instance.relay2State;
 
-  bool relay1State = false;
-  bool relay2State = false;
+  void _onToggleRelay(int relayNumber, bool newState) {
+    setState(() {
+      if (relayNumber == 1) {
+        relay1State = newState;
+      } else {
+        relay2State = newState;
+      }
+    });
 
-  Future<void> toggleRelay(int relayNumber, bool state) async {
-    try {
-      await platform.invokeMethod(
-        'setRelayState',
-        {'relay': relayNumber, 'state': state},
-      );
-    } on PlatformException catch (e) {
-      debugPrint("Erreur lors du changement d'état du relais $relayNumber: ${e.message}");
-    }
+    SwitchService.instance.setRelayState(relayNumber, newState);
   }
 
   Widget _buildRelaySwitch(String title, int relayNumber, bool currentState) {
@@ -33,14 +32,7 @@ class _SwitchRelayPageState extends State<SwitchRelayPage> {
         title: Text(title, style: const TextStyle(fontSize: 18)),
         value: currentState,
         onChanged: (bool newValue) {
-          setState(() {
-            if (relayNumber == 1) {
-              relay1State = newValue;
-            } else {
-              relay2State = newValue;
-            }
-          });
-          toggleRelay(relayNumber, newValue);
+          _onToggleRelay(relayNumber, newValue);
         },
         secondary: Icon(
           currentState ? Icons.power : Icons.power_off,
@@ -70,3 +62,4 @@ class _SwitchRelayPageState extends State<SwitchRelayPage> {
     );
   }
 }
+

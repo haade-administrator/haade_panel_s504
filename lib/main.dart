@@ -3,6 +3,7 @@ import 'pages/home_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
+import 'package:mqtt_hatab/services/switch_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +12,7 @@ Future<void> main() async {
   await MQTTService.instance.autoConnectIfConfigured();
   SensorService().initialize();
   LedService().initialize();
+  SwitchService.instance.initialize();
 
   runApp(const MyApp());
 }
