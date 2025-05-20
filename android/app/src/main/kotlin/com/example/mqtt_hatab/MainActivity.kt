@@ -7,12 +7,20 @@ import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import com.sys.gpio.gpioJni  // Assure-toi que cette classe existe bien
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL_LED = "com.example.elcapi/led"
     private val CHANNEL_SENSOR = "com.example.elcapi/sensor"
+    private val CHANNEL_RELAY = "com.example.relaycontrol/relay"  // <-- nouveau channel
 
     private lateinit var sensorChannel: MethodChannel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        // Test GPIO RELAY 2 supprimé
+    }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -63,8 +71,34 @@ class MainActivity : FlutterActivity() {
                 }
             }
         })
+
+        // RELAY Channel - nouveau handler
+        MethodChannel(messenger, CHANNEL_RELAY).setMethodCallHandler { call, result ->
+            if (call.method == "setRelayState") {
+                val relay = call.argument<Int>("relay") ?: 1
+                val state = call.argument<Boolean>("state") ?: false
+                Log.d("MainActivity", "setRelayState: relay=$relay state=$state")
+
+                try {
+                    if (state) {
+                        SwitchRelay.turnOn(this, relay)
+                    } else {
+                        SwitchRelay.turnOff(this, relay)
+                    }
+                    result.success(null)
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Erreur contrôle relais", e)
+                    result.error("RELAY_ERROR", e.message, null)
+                }
+            } else {
+                result.notImplemented()
+            }
+        }
     }
 }
+
+
+
 
 
 
