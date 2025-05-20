@@ -4,6 +4,7 @@ import 'led_control_page.dart';
 import 'sensor_reader_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
+import 'package:mqtt_hatab/services/led_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,22 +15,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final MQTTService mqtt = MQTTService.instance;
+  final LedService ledService = LedService();
 
   @override
   void initState() {
     super.initState();
-    mqtt.autoConnectIfConfigured();
-    SensorService().initialize(); // Active les capteurs au démarrage
+    // Suppression de l'init LedService ici (fait dans main.dart)
+    SensorService().initialize();
+    // mqtt.autoConnectIfConfigured() aussi dans main.dart, donc optionnel ici
+  }
+
+  @override
+  void dispose() {
+    ledService.dispose();  // On garde le dispose pour bien détacher les listeners
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-    'Contrôle MQTT Tablette',
-    style: TextStyle(color: Colors.white),
-  ),
+        title: const Text(
+          'Contrôle MQTT Tablette',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 61, 61, 61),
         actions: [
@@ -106,5 +115,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 

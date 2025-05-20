@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
+import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:mqtt_hatab/services/sensor_service.dart';
+import 'package:mqtt_hatab/services/led_service.dart';
 
-void main() {
-  runApp(MaterialApp(
-    title: 'MQTT Tablette',
-    home: HomePage(),
-    debugShowCheckedModeBanner: false,
-  ));
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialisations nécessaires avant de lancer l'app
+  await MQTTService.instance.autoConnectIfConfigured();
+  SensorService().initialize();
+  LedService().initialize();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,8 +25,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
-      home: HomePage(),
+      home: const HomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
+
 

@@ -13,9 +13,9 @@ class LedService {
   static const _platform = MethodChannel('com.example.elcapi/led');
 
   // États exposés pour UI
-  final ValueNotifier<Color> selectedColor = ValueNotifier<Color>(Colors.white);
+  final ValueNotifier<Color> selectedColor = ValueNotifier<Color>(const Color.fromARGB(255, 7, 39, 223));
   final ValueNotifier<double> brightness = ValueNotifier<double>(1.0);
-  final ValueNotifier<bool> isOn = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> isOn = ValueNotifier<bool>(false);
 
   bool _initialized = false;
 
@@ -58,7 +58,8 @@ class LedService {
   void _publishDiscoveryConfig() {
     const configPayload = '''
 {
-  "name": "SMT 101",
+  "name": "Led SMT101",
+  "friendly_name": "Led",
   "object_id": "elc_s504007700001_led",
   "unique_id": "elc_s504007700001_led",
   "state_topic": "elc_s504007700001/led/state",

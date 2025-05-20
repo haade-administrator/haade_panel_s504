@@ -106,7 +106,8 @@ class SensorService {
 
     const tempConfig = '''
 {
-  "name": "Temperature",
+  "name": "Temperature SMT101",
+  "friendly_name": "Temperature",
   "object_id": "elc_s504007700001_temperature",
   "unique_id": "elc_s504007700001_temperature",
   "state_topic": "elc_s504007700001/sensor/temperature",
@@ -130,7 +131,8 @@ class SensorService {
 
     const humConfig = '''
 {
-  "name": "Humidity",
+  "name": "Humidity SMT101",
+  "friendly_name": "Humidity",
   "object_id": "elc_s504007700001_humidity",
   "unique_id": "elc_s504007700001_humidity",
   "state_topic": "elc_s504007700001/sensor/humidity",
