@@ -10,8 +10,6 @@ class LedControlPage extends StatefulWidget {
   State<LedControlPage> createState() => _LedControlPageState();
 }
 
-final String baseTopic = 'elc_s8504007700001/led';
-
 class _LedControlPageState extends State<LedControlPage> {
   static const platform = MethodChannel('com.example.elcapi/led');
 
@@ -25,10 +23,10 @@ class _LedControlPageState extends State<LedControlPage> {
     _publishDiscoveryConfig();
 
     // Subscribe to control topic
-    MQTTService.instance.subscribe('$baseTopic/set', _handleMQTTMessage);
+    MQTTService.instance.subscribe('elc_s8504007700001/led/set', _handleMQTTMessage);
 
     // Publish availability
-    MQTTService.instance.publish('$baseTopic/availability', 'online', retain: true);
+    MQTTService.instance.publish('elc_s8504007700001/led/availability', 'online', retain: true);
 
     // Publish initial state
     _publishLedState();
@@ -117,7 +115,7 @@ class _LedControlPageState extends State<LedControlPage> {
 }
 ''';
 
-    MQTTService.instance.publish('$baseTopic/state', payload, retain: true);
+    MQTTService.instance.publish('elc_s8504007700001/led/state', payload, retain: true);
   }
 
   void _handleMQTTMessage(String message) {
