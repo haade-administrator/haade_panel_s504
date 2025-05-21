@@ -9,35 +9,30 @@ class SwitchRelayPage extends StatefulWidget {
 }
 
 class _SwitchRelayPageState extends State<SwitchRelayPage> {
-  bool relay1State = SwitchService.instance.relay1State;
-  bool relay2State = SwitchService.instance.relay2State;
 
   void _onToggleRelay(int relayNumber, bool newState) {
-    setState(() {
-      if (relayNumber == 1) {
-        relay1State = newState;
-      } else {
-        relay2State = newState;
-      }
-    });
-
     SwitchService.instance.setRelayState(relayNumber, newState);
   }
 
-  Widget _buildRelaySwitch(String title, int relayNumber, bool currentState) {
+  Widget _buildRelaySwitch(String title, int relayNumber, ValueNotifier<bool> notifier) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: SwitchListTile(
-        title: Text(title, style: const TextStyle(fontSize: 18)),
-        value: currentState,
-        onChanged: (bool newValue) {
-          _onToggleRelay(relayNumber, newValue);
+      child: ValueListenableBuilder<bool>(
+        valueListenable: notifier,
+        builder: (context, currentState, _) {
+          return SwitchListTile(
+            title: Text(title, style: const TextStyle(fontSize: 18)),
+            value: currentState,
+            onChanged: (bool newValue) {
+              _onToggleRelay(relayNumber, newValue);
+            },
+            secondary: Icon(
+              currentState ? Icons.power : Icons.power_off,
+              color: currentState ? Colors.green : Colors.grey,
+            ),
+          );
         },
-        secondary: Icon(
-          currentState ? Icons.power : Icons.power_off,
-          color: currentState ? Colors.green : Colors.grey,
-        ),
       ),
     );
   }
@@ -53,9 +48,9 @@ class _SwitchRelayPageState extends State<SwitchRelayPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildRelaySwitch('Relais 1 (IN1)', 1, relay1State),
+            _buildRelaySwitch('Relais 1 (IN1)', 1, SwitchService.instance.relay1StateNotifier),
             const SizedBox(height: 20),
-            _buildRelaySwitch('Relais 2 (IN2)', 2, relay2State),
+            _buildRelaySwitch('Relais 2 (IN2)', 2, SwitchService.instance.relay2StateNotifier),
           ],
         ),
       ),
