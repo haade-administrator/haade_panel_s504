@@ -12,7 +12,9 @@ import com.sys.gpio.gpioJni  // Assure-toi que cette classe existe bien
 class MainActivity : FlutterActivity() {
     private val CHANNEL_LED = "com.example.elcapi/led"
     private val CHANNEL_SENSOR = "com.example.elcapi/sensor"
-    private val CHANNEL_RELAY = "com.example.relaycontrol/relay"  // <-- nouveau channel
+    private val CHANNEL_RELAY = "com.example.relaycontrol/relay"
+    private val CHANNEL_IO = "com.example.iocontrol/io"
+
 
     private lateinit var sensorChannel: MethodChannel
 
@@ -94,6 +96,40 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
+        // IO Channel - handler pour setHigh, setLow, getState, readState
+MethodChannel(messenger, CHANNEL_IO).setMethodCallHandler { call, result ->
+    val ioNumber = call.argument<Int>("io") ?: -1
+    if (ioNumber < 0) {
+        result.error("INVALID_IO", "Numéro IO invalide", null)
+        return@setMethodCallHandler
+    }
+
+    try {
+        when (call.method) {
+            "setHigh" -> {
+                SwitchIO.setHigh(this, ioNumber)
+                result.success(null)
+            }
+            "setLow" -> {
+                SwitchIO.setLow(this, ioNumber)
+                result.success(null)
+            }
+            "getState" -> {
+                val state = SwitchIO.getIOState(this, ioNumber)
+                result.success(state)
+            }
+            "readState" -> {
+                val state = SwitchIO.readIOState(ioNumber)
+                result.success(state)
+            }
+            else -> result.notImplemented()
+        }
+    } catch (e: Exception) {
+        Log.e("MainActivity", "Erreur IO $ioNumber", e)
+        result.error("IO_ERROR", e.message, null)
+    }
+}
+
     }
 }
 
