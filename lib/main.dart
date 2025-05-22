@@ -6,6 +6,7 @@ import 'package:mqtt_hatab/services/led_service.dart';
 import 'package:mqtt_hatab/services/switch_service.dart';
 import 'package:mqtt_hatab/services/io_service.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -15,7 +16,7 @@ Future<void> main() async {
   LedService().initialize();
   SwitchService.instance.initialize();
   IoService.instance.initialize();
-
+  // IoOutputService.instance.setHigh(1); si tu veux forcer une sortie
   runApp(const MyApp());
 }
 

@@ -9,32 +9,37 @@ class IoService {
 
   IoService._internal();
 
-  // IMPORTANT : correspond au channel défini en Kotlin MainActivity
+  // ↪️ Canal de communication avec la couche native (Android -> Kotlin)
   static const _platform = MethodChannel('com.example.iocontrol/io');
 
+  // 🔌 MQTT topics des capteurs d’entrées IO1 et IO2
   final String _io1TopicState = 'elc_s504007700001/binary_sensor/io1/state';
   final String _io2TopicState = 'elc_s504007700001/binary_sensor/io2/state';
   final String _availabilityTopic = 'elc_s504007700001/binary_sensor/availability';
 
+  // 📡 Notifiers pour refléter l’état en UI ou logique Flutter
   final ValueNotifier<bool> io1StateNotifier = ValueNotifier(false);
   final ValueNotifier<bool> io2StateNotifier = ValueNotifier(false);
 
   bool _discoveryPublished = false;
   Timer? _pollingTimer;
 
+  /// 🔧 Initialise les IO :
+  /// - publie config MQTT discovery (Home Assistant)
+  /// - publie "online"
+  /// - lit les états initiaux des IO
+  /// - démarre le polling régulier
   Future<void> initialize() async {
     _publishDiscoveryConfigs();
-
-    // Disponibilité MQTT
     MQTTService.instance.publish(_availabilityTopic, 'online', retain: true);
 
-    // Publier initialement les états réels des IO (forcePublish=true)
     await _checkAndUpdateState(1, forcePublish: true);
     await _checkAndUpdateState(2, forcePublish: true);
 
     _startPolling();
   }
 
+  /// 🔁 Démarre un polling tous les 500ms pour lire les entrées physiques
   void _startPolling() {
     _pollingTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
       await _checkAndUpdateState(1);
@@ -42,29 +47,40 @@ class IoService {
     });
   }
 
+  /// 🧠 Lit l’état de l’IO via JNI et publie son état MQTT si changement
+  /// Si un bouton physique est pressé (niveau haut), on déclenche aussi un relais MQTT
   Future<void> _checkAndUpdateState(int ioNumber, {bool forcePublish = false}) async {
-  try {
-    // 🔁 Utilise bien la lecture réelle de l’état GPIO
-    final bool isPressed = await _platform.invokeMethod('readState', {
-      'io': ioNumber,
-    });
+    try {
+      final bool isPressed = await _platform.invokeMethod('readState', {
+        'io': ioNumber,
+      });
 
-    final ValueNotifier<bool> notifier = (ioNumber == 1) ? io1StateNotifier : io2StateNotifier;
-    final String topic = (ioNumber == 1) ? _io1TopicState : _io2TopicState;
+      final ValueNotifier<bool> notifier = (ioNumber == 1) ? io1StateNotifier : io2StateNotifier;
+      final String topic = (ioNumber == 1) ? _io1TopicState : _io2TopicState;
 
-    if (notifier.value != isPressed || forcePublish) {
-      notifier.value = isPressed;
-      final payload = isPressed ? 'ON' : 'OFF';
+      if (notifier.value != isPressed || forcePublish) {
+        notifier.value = isPressed;
+        final payload = isPressed ? 'ON' : 'OFF';
 
-      print('MQTT → $topic = $payload (retain: true)');
-      MQTTService.instance.publish(topic, payload, retain: true);
+        print('MQTT → $topic = $payload (retain: true)');
+        MQTTService.instance.publish(topic, payload, retain: true);
+
+        // 💡 Optionnel : déclenche un relais si appui bouton détecté
+        if (isPressed) {
+          final String relayTopic = (ioNumber == 1)
+              ? 'elc_s504007700001/switch/relay1/set'
+              : 'elc_s504007700001/switch/relay2/set';
+
+          print('MQTT → $relayTopic = ON (triggered by IO$ioNumber)');
+          MQTTService.instance.publish(relayTopic, 'ON', retain: false);
+        }
+      }
+    } on PlatformException catch (e) {
+      print('Erreur readState($ioNumber): $e');
     }
-  } on PlatformException catch (e) {
-    print('Erreur readState($ioNumber): $e');
   }
-}
 
-
+  /// ⚙️ Utilise `CallIO.setHigh()` en natif → met une sortie à HIGH (3.3V)
   Future<void> setIoHigh(int ioNumber) async {
     try {
       await _platform.invokeMethod('setHigh', {'io': ioNumber});
@@ -73,6 +89,7 @@ class IoService {
     }
   }
 
+  /// ⚙️ Utilise `CallIO.setLow()` en natif → met une sortie à LOW (0V)
   Future<void> setIoLow(int ioNumber) async {
     try {
       await _platform.invokeMethod('setLow', {'io': ioNumber});
@@ -81,6 +98,7 @@ class IoService {
     }
   }
 
+  /// 🏠 Publie les topics `config` pour Home Assistant Discovery (1 par IO)
   void _publishDiscoveryConfigs() {
     if (_discoveryPublished) return;
     _discoveryPublished = true;
@@ -133,15 +151,19 @@ class IoService {
     MQTTService.instance.publish('homeassistant/binary_sensor/elc_s504007700001_io2/config', io2Config, retain: true);
   }
 
+  /// ↩️ Met à jour l’état "online/offline" dans MQTT (ex: à l’extinction de l’app)
   Future<void> setAvailability(bool online) async {
     MQTTService.instance.publish(_availabilityTopic, online ? 'online' : 'offline', retain: true);
   }
 
+  /// 🧹 Arrête le polling et publie "offline"
   void dispose() {
     _pollingTimer?.cancel();
     MQTTService.instance.publish(_availabilityTopic, 'offline', retain: true);
   }
 }
+
+
 
 
 
