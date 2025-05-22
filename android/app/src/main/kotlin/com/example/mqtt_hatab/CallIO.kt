@@ -4,16 +4,16 @@ import android.content.Context
 import android.util.Log
 import com.sys.gpio.gpioJni
 
-object SwitchIO {
+object CallIO {
     private const val PREF_NAME = "ioPrefs"
 
     fun setHigh(context: Context, ioNumber: Int) {
         try {
             gpioJni.ioctl_gpio(ioNumber, 0, 1)  // Set HIGH
             saveState(context, ioNumber, true)
-            Log.d("SwitchIO", "IO $ioNumber HIGH")
+            Log.d("CallIO", "IO $ioNumber HIGH")
         } catch (e: Exception) {
-            Log.e("SwitchIO", "Erreur en mettant IO $ioNumber HIGH", e)
+            Log.e("CallIO", "Erreur en mettant IO $ioNumber HIGH", e)
         }
     }
 
@@ -21,9 +21,9 @@ object SwitchIO {
         try {
             gpioJni.ioctl_gpio(ioNumber, 0, 0)  // Set LOW
             saveState(context, ioNumber, false)
-            Log.d("SwitchIO", "IO $ioNumber LOW")
+            Log.d("CallIO", "IO $ioNumber LOW")
         } catch (e: Exception) {
-            Log.e("SwitchIO", "Erreur en mettant IO $ioNumber LOW", e)
+            Log.e("CallIO", "Erreur en mettant IO $ioNumber LOW", e)
         }
     }
 
@@ -35,10 +35,10 @@ object SwitchIO {
     fun readIOState(ioNumber: Int): Boolean {
         return try {
             val value = gpioJni.ioctl_gpio(ioNumber, 1, 1)  // Read state
-            Log.d("SwitchIO", "Lecture réelle IO $ioNumber = ${value == 1}")
+            Log.d("CallIO", "Lecture réelle IO $ioNumber = ${value == 1}")
             value == 1
         } catch (e: Exception) {
-            Log.e("SwitchIO", "Erreur lors de la lecture IO $ioNumber", e)
+            Log.e("CallIO", "Erreur lors de la lecture IO $ioNumber", e)
             false
         }
     }

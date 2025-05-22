@@ -62,11 +62,11 @@ class SwitchService {
       "command_topic": "elc_s504007700001/switch/relay1/set",
       "object_id": "elc_s504007700001_relay1",
       "unique_id": "elc_s504007700001_relay1",
-      "availability": [{
+      "availability": {
         "topic": "elc_s504007700001/switch/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
-      }],
+      },
       "payload_on": "ON",
       "payload_off": "OFF",
       "state_on": "ON",
@@ -86,11 +86,11 @@ class SwitchService {
       "command_topic": "elc_s504007700001/switch/relay2/set",
       "object_id": "elc_s504007700001_relay2",
       "unique_id": "elc_s504007700001_relay2",
-      "availability": [{
+      "availability": {
         "topic": "elc_s504007700001/switch/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
-      }],
+      },
       "payload_on": "ON",
       "payload_off": "OFF",
       "state_on": "ON",

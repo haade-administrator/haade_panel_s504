@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
-import 'package:flutter/foundation.dart'; // pour ValueNotifier
 
 class IoService {
   static final IoService instance = IoService._internal();
@@ -9,64 +9,95 @@ class IoService {
 
   IoService._internal();
 
-  static const _platform = MethodChannel('com.example.gpiocontrol/io');
+  // IMPORTANT : correspond au channel défini en Kotlin MainActivity
+  static const _platform = MethodChannel('com.example.iocontrol/io');
 
-  final String _out1TopicSet = 'elc_s504007700001/switch/out1/set';
-  final String _out1TopicState = 'elc_s504007700001/switch/out1/state';
-  final String _out2TopicSet = 'elc_s504007700001/switch/out2/set';
-  final String _out2TopicState = 'elc_s504007700001/switch/out2/state';
+  final String _io1TopicState = 'elc_s504007700001/binary_sensor/io1/state';
+  final String _io2TopicState = 'elc_s504007700001/binary_sensor/io2/state';
+  final String _availabilityTopic = 'elc_s504007700001/binary_sensor/availability';
 
-  final String _availabilityTopic = 'elc_s504007700001/switch/availability';
-
-  // ValueNotifier pour suivre l’état des sorties en temps réel
-  final ValueNotifier<bool> out1StateNotifier = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> out2StateNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> io1StateNotifier = ValueNotifier(false);
+  final ValueNotifier<bool> io2StateNotifier = ValueNotifier(false);
 
   bool _discoveryPublished = false;
+  Timer? _pollingTimer;
 
   Future<void> initialize() async {
-    out1StateNotifier.value = false;
-    out2StateNotifier.value = false;
-
     _publishDiscoveryConfigs();
-    MQTTService.instance.publish(_availabilityTopic, 'online', retain: true);
-    _publishIoStates(retain: true);
 
-    MQTTService.instance.subscribe(_out1TopicSet, (String message) {
-      _onMessage(_out1TopicSet, message);
-    });
-    MQTTService.instance.subscribe(_out2TopicSet, (String message) {
-      _onMessage(_out2TopicSet, message);
+    // Disponibilité MQTT
+    MQTTService.instance.publish(_availabilityTopic, 'online', retain: true);
+
+    // Publier initialement les états réels des IO (forcePublish=true)
+    await _checkAndUpdateState(1, forcePublish: true);
+    await _checkAndUpdateState(2, forcePublish: true);
+
+    _startPolling();
+  }
+
+  void _startPolling() {
+    _pollingTimer = Timer.periodic(const Duration(milliseconds: 500), (_) async {
+      await _checkAndUpdateState(1);
+      await _checkAndUpdateState(2);
     });
   }
 
-  void _publishIoStates({bool retain = false}) {
-    final payloadOut1 = out1StateNotifier.value ? 'ON' : 'OFF';
-    final payloadOut2 = out2StateNotifier.value ? 'ON' : 'OFF';
+  Future<void> _checkAndUpdateState(int ioNumber, {bool forcePublish = false}) async {
+  try {
+    // 🔁 Utilise bien la lecture réelle de l’état GPIO
+    final bool isPressed = await _platform.invokeMethod('readState', {
+      'io': ioNumber,
+    });
 
-    MQTTService.instance.publish(_out1TopicState, payloadOut1, retain: retain);
-    MQTTService.instance.publish(_out2TopicState, payloadOut2, retain: retain);
+    final ValueNotifier<bool> notifier = (ioNumber == 1) ? io1StateNotifier : io2StateNotifier;
+    final String topic = (ioNumber == 1) ? _io1TopicState : _io2TopicState;
+
+    if (notifier.value != isPressed || forcePublish) {
+      notifier.value = isPressed;
+      final payload = isPressed ? 'ON' : 'OFF';
+
+      print('MQTT → $topic = $payload (retain: true)');
+      MQTTService.instance.publish(topic, payload, retain: true);
+    }
+  } on PlatformException catch (e) {
+    print('Erreur readState($ioNumber): $e');
+  }
+}
+
+
+  Future<void> setIoHigh(int ioNumber) async {
+    try {
+      await _platform.invokeMethod('setHigh', {'io': ioNumber});
+    } on PlatformException catch (e) {
+      print('Erreur setHigh($ioNumber): $e');
+    }
+  }
+
+  Future<void> setIoLow(int ioNumber) async {
+    try {
+      await _platform.invokeMethod('setLow', {'io': ioNumber});
+    } on PlatformException catch (e) {
+      print('Erreur setLow($ioNumber): $e');
+    }
   }
 
   void _publishDiscoveryConfigs() {
     if (_discoveryPublished) return;
     _discoveryPublished = true;
 
-    const out1Config = '''{
-      "name": "Sortie OUT1 SMT101",
-      "state_topic": "elc_s504007700001/switch/out1/state",
-      "command_topic": "elc_s504007700001/switch/out1/set",
-      "object_id": "elc_s504007700001_out1",
-      "unique_id": "elc_s504007700001_out1",
-      "availability": [{
-        "topic": "elc_s504007700001/switch/availability",
-        "payload_available": "online",
-        "payload_not_available": "offline"
-      }],
+    const io1Config = '''{
+      "name": "IO1 (Bouton 1)",
+      "state_topic": "elc_s504007700001/binary_sensor/io1/state",
+      "object_id": "elc_s504007700001_io1",
+      "unique_id": "elc_s504007700001_io1",
+      "device_class": "occupancy",
       "payload_on": "ON",
       "payload_off": "OFF",
-      "state_on": "ON",
-      "state_off": "OFF",
+      "availability": {
+        "topic": "elc_s504007700001/binary_sensor/availability",
+        "payload_available": "online",
+        "payload_not_available": "offline"
+      },
       "device": {
         "identifiers": ["elc_s504007700001"],
         "name": "Tablette SMT",
@@ -76,21 +107,19 @@ class IoService {
       }
     }''';
 
-    const out2Config = '''{
-      "name": "Sortie OUT2 SMT101",
-      "state_topic": "elc_s504007700001/switch/out2/state",
-      "command_topic": "elc_s504007700001/switch/out2/set",
-      "object_id": "elc_s504007700001_out2",
-      "unique_id": "elc_s504007700001_out2",
-      "availability": [{
-        "topic": "elc_s504007700001/switch/availability",
-        "payload_available": "online",
-        "payload_not_available": "offline"
-      }],
+    const io2Config = '''{
+      "name": "IO2 (Bouton 2)",
+      "state_topic": "elc_s504007700001/binary_sensor/io2/state",
+      "object_id": "elc_s504007700001_io2",
+      "unique_id": "elc_s504007700001_io2",
+      "device_class": "occupancy",
       "payload_on": "ON",
       "payload_off": "OFF",
-      "state_on": "ON",
-      "state_off": "OFF",
+      "availability": {
+        "topic": "elc_s504007700001/binary_sensor/availability",
+        "payload_available": "online",
+        "payload_not_available": "offline"
+      },
       "device": {
         "identifiers": ["elc_s504007700001"],
         "name": "Tablette SMT",
@@ -100,44 +129,8 @@ class IoService {
       }
     }''';
 
-    MQTTService.instance.publish('homeassistant/switch/elc_s504007700001_out1/config', out1Config, retain: true);
-    MQTTService.instance.publish('homeassistant/switch/elc_s504007700001_out2/config', out2Config, retain: true);
-  }
-
-  Future<void> _onMessage(String topic, String message) async {
-    print('IoService MQTT received: $topic => $message');
-    final isOn = (message.toUpperCase() == 'ON');
-
-    if (topic == _out1TopicSet) {
-      await setOutputState(1, isOn, publishState: true);
-    } else if (topic == _out2TopicSet) {
-      await setOutputState(2, isOn, publishState: true);
-    }
-  }
-
-  Future<void> setOutputState(int outputNumber, bool state, {bool publishState = true}) async {
-    try {
-      await _platform.invokeMethod('setOutputState', {
-        'output': outputNumber,
-        'state': state,
-      });
-
-      final payload = state ? 'ON' : 'OFF';
-
-      if (outputNumber == 1) {
-        out1StateNotifier.value = state;
-        if (publishState) {
-          MQTTService.instance.publish(_out1TopicState, payload, retain: true);
-        }
-      } else if (outputNumber == 2) {
-        out2StateNotifier.value = state;
-        if (publishState) {
-          MQTTService.instance.publish(_out2TopicState, payload, retain: true);
-        }
-      }
-    } on PlatformException catch (e) {
-      print('Erreur IoService setOutputState: $e');
-    }
+    MQTTService.instance.publish('homeassistant/binary_sensor/elc_s504007700001_io1/config', io1Config, retain: true);
+    MQTTService.instance.publish('homeassistant/binary_sensor/elc_s504007700001_io2/config', io2Config, retain: true);
   }
 
   Future<void> setAvailability(bool online) async {
@@ -145,7 +138,15 @@ class IoService {
   }
 
   void dispose() {
+    _pollingTimer?.cancel();
     MQTTService.instance.publish(_availabilityTopic, 'offline', retain: true);
   }
 }
+
+
+
+
+
+
+
 

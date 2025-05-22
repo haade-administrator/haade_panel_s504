@@ -64,13 +64,12 @@ class LedService {
   "unique_id": "elc_s504007700001_led",
   "state_topic": "elc_s504007700001/led/state",
   "command_topic": "elc_s504007700001/led/set",
-  "availability": [
+  "availability": 
     {
       "topic": "elc_s504007700001/led/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
-    }
-  ],
+    },
   "schema": "json",
   "brightness": true,
   "brightness_scale": 255,

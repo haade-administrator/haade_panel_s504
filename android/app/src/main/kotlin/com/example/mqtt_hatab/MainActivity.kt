@@ -107,19 +107,19 @@ MethodChannel(messenger, CHANNEL_IO).setMethodCallHandler { call, result ->
     try {
         when (call.method) {
             "setHigh" -> {
-                SwitchIO.setHigh(this, ioNumber)
+                CallIO.setHigh(this, ioNumber)
                 result.success(null)
             }
             "setLow" -> {
-                SwitchIO.setLow(this, ioNumber)
+                CallIO.setLow(this, ioNumber)
                 result.success(null)
             }
             "getState" -> {
-                val state = SwitchIO.getIOState(this, ioNumber)
+                val state = CallIO.getIOState(this, ioNumber)
                 result.success(state)
             }
             "readState" -> {
-                val state = SwitchIO.readIOState(ioNumber)
+                val state = CallIO.readIOState(ioNumber)
                 result.success(state)
             }
             else -> result.notImplemented()

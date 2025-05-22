@@ -111,13 +111,12 @@ class SensorService {
   "object_id": "elc_s504007700001_temperature",
   "unique_id": "elc_s504007700001_temperature",
   "state_topic": "elc_s504007700001/sensor/temperature",
-  "availability": [
+  "availability": 
     {
       "topic": "elc_s504007700001/sensor/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
-    }
-  ],
+    },
   "device_class": "temperature",
   "unit_of_measurement": "C",
   "device": {
@@ -136,13 +135,12 @@ class SensorService {
   "object_id": "elc_s504007700001_humidity",
   "unique_id": "elc_s504007700001_humidity",
   "state_topic": "elc_s504007700001/sensor/humidity",
-  "availability": [
+  "availability": 
     {
       "topic": "elc_s504007700001/sensor/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
-    }
-  ],
+    },
   "device_class": "humidity",
   "unit_of_measurement": "%",
   "device": {

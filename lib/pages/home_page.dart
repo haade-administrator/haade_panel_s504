@@ -99,9 +99,9 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
-              icon: Icons.power_rounded,
-              title: 'IO Relay',
-              subtitle: 'Control IO relay in live',
+              icon: Icons.radio_button_checked,
+              title: 'IO Button Control',
+              subtitle: 'Control IO Button in live',
               page: const IoPage(),
             ),
           ],
