@@ -52,7 +52,7 @@ Widget _buildIoCard({
           subtitle: Text(isOutput ? 'Mode : Sortie (Poussoir)' : 'Mode : Entrée'),
           trailing: isOutput
               ? IconButton(
-                  icon: const Icon(Icons.circle, color: Colors.green),
+                  icon: const Icon(Icons.radio_button_checked, color: Colors.blueGrey),
                   iconSize: 32,
                   tooltip: 'Déclencher IO$ioNumber',
                   onPressed: () async {
