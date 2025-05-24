@@ -45,4 +45,4 @@ jobs:
           tag_name: ${{ github.ref_name }}
           files: build/app/outputs/flutter-apk/app-release-${{ github.ref_name }}.apk
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
