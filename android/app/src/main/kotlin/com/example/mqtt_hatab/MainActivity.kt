@@ -7,26 +7,31 @@ import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import com.sys.gpio.gpioJni  // Assure-toi que cette classe existe bien
+import com.sys.gpio.gpioJni
+import com.example.mqtt_hatab.LightSensorService
+import io.flutter.plugin.common.EventChannel
 
 class MainActivity : FlutterActivity() {
     private val CHANNEL_LED = "com.example.elcapi/led"
     private val CHANNEL_SENSOR = "com.example.elcapi/sensor"
     private val CHANNEL_RELAY = "com.example.relaycontrol/relay"
     private val CHANNEL_IO = "com.example.iocontrol/io"
-
+    private val CHANNEL_LIGHT = "light_sensor_channel"
+    private var lightEventSink: EventChannel.EventSink? = null
 
     private lateinit var sensorChannel: MethodChannel
+    private lateinit var lightSensorService: LightSensorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Test GPIO RELAY 2 supprimé
+        // Initialisation du capteur de luminosité
+        lightSensorService = LightSensorService(this)
+        lightSensorService.startListening()
     }
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-
         val messenger = flutterEngine.dartExecutor.binaryMessenger
 
         // LED Channel
@@ -47,7 +52,7 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        // Capteurs : Température & Humidité
+        // Capteurs température/humidité
         sensorChannel = MethodChannel(messenger, CHANNEL_SENSOR)
         val handler = Handler(Looper.getMainLooper())
 
@@ -74,7 +79,7 @@ class MainActivity : FlutterActivity() {
             }
         })
 
-        // RELAY Channel - nouveau handler
+        // RELAY Channel
         MethodChannel(messenger, CHANNEL_RELAY).setMethodCallHandler { call, result ->
             if (call.method == "setRelayState") {
                 val relay = call.argument<Int>("relay") ?: 1
@@ -96,40 +101,77 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
-        // IO Channel - handler pour setHigh, setLow, getState, readState
-MethodChannel(messenger, CHANNEL_IO).setMethodCallHandler { call, result ->
-    val ioNumber = call.argument<Int>("io") ?: -1
-    if (ioNumber < 0) {
-        result.error("INVALID_IO", "Numéro IO invalide", null)
-        return@setMethodCallHandler
-    }
 
-    try {
-        when (call.method) {
-            "setHigh" -> {
-                CallIO.setHigh(this, ioNumber)
-                result.success(null)
+        // IO Channel
+        MethodChannel(messenger, CHANNEL_IO).setMethodCallHandler { call, result ->
+            val ioNumber = call.argument<Int>("io") ?: -1
+            if (ioNumber < 0) {
+                result.error("INVALID_IO", "Numéro IO invalide", null)
+                return@setMethodCallHandler
             }
-            "setLow" -> {
-                CallIO.setLow(this, ioNumber)
-                result.success(null)
+
+            try {
+                when (call.method) {
+                    "setHigh" -> {
+                        CallIO.setHigh(this, ioNumber)
+                        result.success(null)
+                    }
+                    "setLow" -> {
+                        CallIO.setLow(this, ioNumber)
+                        result.success(null)
+                    }
+                    "getState" -> {
+                        val state = CallIO.getIOState(this, ioNumber)
+                        result.success(state)
+                    }
+                    "readState" -> {
+                        val state = CallIO.readIOState(ioNumber)
+                        result.success(state)
+                    }
+                    else -> result.notImplemented()
+                }
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Erreur IO $ioNumber", e)
+                result.error("IO_ERROR", e.message, null)
             }
-            "getState" -> {
-                val state = CallIO.getIOState(this, ioNumber)
-                result.success(state)
-            }
-            "readState" -> {
-                val state = CallIO.readIOState(ioNumber)
-                result.success(state)
-            }
-            else -> result.notImplemented()
         }
-    } catch (e: Exception) {
-        Log.e("MainActivity", "Erreur IO $ioNumber", e)
-        result.error("IO_ERROR", e.message, null)
-    }
-}
 
+        // LIGHT SENSOR CHANNEL
+        MethodChannel(messenger, CHANNEL_LIGHT).setMethodCallHandler { call, result ->
+            when (call.method) {
+                "startListening" -> {
+                    lightSensorService.startListening()
+                    result.success(null)
+                }
+                "stopListening" -> {
+                    lightSensorService.stopListening()
+                    result.success(null)
+                }
+                "setThreshold" -> {
+                    val threshold = call.argument<Double>("threshold")?.toFloat() ?: 30.0f
+                    lightSensorService.setThreshold(threshold)
+                    result.success(null)
+                }
+                else -> result.notImplemented()
+            }
+        }
+        // EventChannel pour envoyer les valeurs de luminosité à Flutter
+        EventChannel(messenger, "com.example.mqtt_hatab/LightSensorService").setStreamHandler(
+            object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    lightEventSink = events
+                    Log.d("MainActivity", "Light sensor stream listener attached")
+                }
+
+                override fun onCancel(arguments: Any?) {
+                    lightEventSink = null
+                    Log.d("MainActivity", "Light sensor stream listener detached")
+                }
+            }
+        )
+    }
+    fun sendLightToFlutter(lux: Float) {
+        lightEventSink?.success(lux)
     }
 }
 

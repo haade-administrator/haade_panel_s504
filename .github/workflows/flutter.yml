@@ -1,0 +1,48 @@
+name: Flutter Android Release
+
+on:
+  push:
+    branches:
+      - stable  # Déclenche seulement sur la branche 'stable'
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate tag format
+        run: |
+          if [[ ! "${GITHUB_REF##*/}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid tag format. Use vX.Y.Z (e.g., v1.2.3)"
+            exit 1
+          fi
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Rename APK with tag
+        run: |
+          TAG_NAME="${GITHUB_REF##*/}"
+          mv build/app/outputs/flutter-apk/app-release.apk "build/app/outputs/flutter-apk/app-release-${TAG_NAME}.apk"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: build/app/outputs/flutter-apk/app-release-${{ github.ref_name }}.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

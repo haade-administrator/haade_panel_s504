@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
-import 'package:mqtt_hatab/services/sensor_service.dart';
 
 class LedControlPage extends StatefulWidget {
   const LedControlPage({super.key});
@@ -12,13 +11,11 @@ class LedControlPage extends StatefulWidget {
 
 class _LedControlPageState extends State<LedControlPage> {
   final LedService _ledService = LedService();
-  final SensorService _sensorService = SensorService();
 
   @override
   void initState() {
     super.initState();
     _ledService.initialize();
-    _sensorService.initialize();
   }
 
   @override
@@ -36,8 +33,6 @@ class _LedControlPageState extends State<LedControlPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Température : ${_sensorService.temperature.value.toStringAsFixed(1)} °C'),
-            Text('Humidité : ${_sensorService.humidity.value.toStringAsFixed(1)} %'),
             const SizedBox(height: 20),
 
             Text('Couleur des LEDs', style: Theme.of(context).textTheme.titleLarge),

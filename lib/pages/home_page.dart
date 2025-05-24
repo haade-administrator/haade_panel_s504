@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mqtt_settings_page.dart';
 import 'led_control_page.dart';
-import 'sensor_reader_page.dart';
+import 'parameter_information.dart';
 import 'switch_relay_page.dart';
 import 'io_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
@@ -83,14 +83,6 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
-              icon: Icons.thermostat_outlined,
-              title: 'Température & Humidité',
-              subtitle: 'Lire les capteurs en temps réel',
-              page: const SensorReaderPage(),
-            ),
-            const SizedBox(height: 20),
-            _buildNavigationCard(
-              context,
               icon: Icons.power_rounded,
               title: 'Relay switch',
               subtitle: 'Control switch relay in live',
@@ -103,6 +95,14 @@ class _HomePageState extends State<HomePage> {
               title: 'IO Button Control',
               subtitle: 'Control IO Button in live',
               page: const IoPage(),
+            ),
+            const SizedBox(height: 20),
+            _buildNavigationCard(
+              context,
+              icon: Icons.settings,
+              title: 'Parameter and Information',
+              subtitle: 'temp, humidity, lux',
+              page: const ParameterInformationPage(),
             ),
           ],
         ),

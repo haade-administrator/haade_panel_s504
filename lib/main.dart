@@ -5,6 +5,7 @@ import 'package:mqtt_hatab/services/sensor_service.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
 import 'package:mqtt_hatab/services/switch_service.dart';
 import 'package:mqtt_hatab/services/io_service.dart';
+import 'package:mqtt_hatab/services/light_service.dart';
 
 
 Future<void> main() async {
@@ -16,6 +17,8 @@ Future<void> main() async {
   LedService().initialize();
   SwitchService.instance.initialize();
   IoService.instance.initialize();
+  LightService.instance.startSensor();
+  LightService.instance.publishDiscoveryConfig();
   // IoOutputService.instance.setHigh(1); si tu veux forcer une sortie
   runApp(const MyApp());
 }

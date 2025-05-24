@@ -26,10 +26,6 @@ class SensorReaderPage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => sensorService.readSensors(),
-        child: const Icon(Icons.refresh),
-      ),
     );
   }
 
