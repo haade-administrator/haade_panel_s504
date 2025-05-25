@@ -43,6 +43,10 @@ jobs:
           FILE_NAME="$(basename "${APK_PATH}")"
           EXT="${FILE_NAME##*.}"
           BASE="${FILE_NAME%.*}"
+          
+          # Remplacer 'app-release' par 'mqtt_hatab' dans BASE
+          BASE="${BASE/app-release/mqtt_hatab}"
+          
           NEW_NAME="${BASE}-${TAG}.${EXT}"
           mv "${APK_PATH}" "build/app/outputs/flutter-apk/${NEW_NAME}"
           echo "FINAL_APK_PATH=build/app/outputs/flutter-apk/${NEW_NAME}" >> $GITHUB_ENV
