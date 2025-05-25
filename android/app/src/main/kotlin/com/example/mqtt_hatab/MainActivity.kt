@@ -164,6 +164,18 @@ class MainActivity : FlutterActivity() {
                 else -> result.notImplemented()
             }
         }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.mqtt_hatab/background")
+    .setMethodCallHandler { call, result ->
+        if (call.method == "minimizeApp") {
+            moveTaskToBack(true)
+            result.success(null)
+        } else {
+            result.notImplemented()
+        }
+    }
+
+
         // EventChannel pour envoyer les valeurs de luminosité à Flutter
         EventChannel(messenger, "com.example.mqtt_hatab/LightSensorService").setStreamHandler(
             object : EventChannel.StreamHandler {

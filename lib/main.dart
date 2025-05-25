@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'pages/home_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
@@ -6,7 +7,6 @@ import 'package:mqtt_hatab/services/led_service.dart';
 import 'package:mqtt_hatab/services/switch_service.dart';
 import 'package:mqtt_hatab/services/io_service.dart';
 import 'package:mqtt_hatab/services/light_service.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,12 +19,22 @@ Future<void> main() async {
   IoService.instance.initialize();
   LightService.instance.startSensor();
   LightService.instance.publishDiscoveryConfig();
-  // IoOutputService.instance.setHigh(1); si tu veux forcer une sortie
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  static const platform = MethodChannel('com.example.mqtt_hatab/background');
+
+  /// Fonction pour minimiser l'application
+  static Future<void> minimizeApp() async {
+    try {
+      await platform.invokeMethod('minimizeApp');
+    } on PlatformException catch (e) {
+      debugPrint("Erreur lors de la tentative de minimisation : ${e.message}");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,5 +48,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 

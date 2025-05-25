@@ -7,6 +7,7 @@ import 'io_page.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
+import '../main.dart'; // Import pour accéder à MyApp.minimizeApp()
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,14 +23,12 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Suppression de l'init LedService ici (fait dans main.dart)
     SensorService().initialize();
-    // mqtt.autoConnectIfConfigured() aussi dans main.dart, donc optionnel ici
   }
 
   @override
   void dispose() {
-    ledService.dispose();  // On garde le dispose pour bien détacher les listeners
+    ledService.dispose();
     super.dispose();
   }
 
@@ -37,29 +36,44 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Contrôle MQTT Tablette',
-          style: TextStyle(color: Colors.white),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 61, 61, 61),
-        actions: [
-          // Voyant de connexion MQTT (vert si connecté, rouge sinon)
-          ValueListenableBuilder<bool>(
-            valueListenable: mqtt.isConnected,
-            builder: (context, connected, child) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: Icon(
-                  Icons.circle,
-                  color: connected ? Colors.green : Colors.red,
-                  size: 18,
-                ),
-              );
-            },
-          ),
-        ],
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_drop_down_circle, color: Colors.white),
+        tooltip: 'Minimiser l\'application',
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('L\'application va se minimiser'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          Future.delayed(const Duration(seconds: 2), () {
+            MyApp.minimizeApp();
+          });
+        },
       ),
+      title: const Text(
+        'Contrôle MQTT Tablette',
+        style: TextStyle(color: Colors.white),
+      ),
+      centerTitle: true,
+      backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+      actions: [
+        ValueListenableBuilder<bool>(
+          valueListenable: mqtt.isConnected,
+          builder: (context, connected, child) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(
+                Icons.circle,
+                color: connected ? Colors.green : Colors.red,
+                size: 18,
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -133,6 +147,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 
 
