@@ -1,0 +1,18 @@
+tag: v1.0.0
+name: "Version 1.0.0"
+body: |
+  # Initial release
+
+  ✨ News :
+  - Configure MQTT Parameter
+  - Control led of SMT101
+  - Control relay switch
+  - Control relay iO
+  - Parameter &Information ( temperature, humidity, lux )
+
+
+  🐛 Bug Fix :
+  
+
+  
+apk_path: build/app/outputs/flutter-apk/app-release.apk

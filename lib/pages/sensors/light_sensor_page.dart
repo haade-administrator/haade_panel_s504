@@ -18,7 +18,7 @@ class _LightSensorPageState extends State<LightSensorPage> {
       return "Sombre";
     } else if (lux < 640) {
       return "Lumière légère";
-    } else if (lux < 1280) {
+    } else if (lux < 1600) {
       return "Lumière modérée";
     } else if (lux < 2560) {
       return "Lumière forte";

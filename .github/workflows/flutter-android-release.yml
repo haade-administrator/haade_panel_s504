@@ -1,0 +1,58 @@
+name: Flutter Android Release
+
+on:
+  push:
+    paths:
+      - release.yml
+    branches:
+      - stable
+
+jobs:
+  build:
+    name: Build APK and Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Read release config
+        id: release_config
+        run: |
+          echo "TAG=$(yq '.tag' release.yml)" >> $GITHUB_ENV
+          echo "RELEASE_NAME=$(yq '.name' release.yml)" >> $GITHUB_ENV
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          yq '.body' release.yml >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+          echo "APK_PATH=$(yq '.apk_path' release.yml)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Rename APK with tag
+        run: |
+          FILE_NAME="$(basename "${APK_PATH}")"
+          EXT="${FILE_NAME##*.}"
+          BASE="${FILE_NAME%.*}"
+          NEW_NAME="${BASE}-${TAG}.${EXT}"
+          mv "${APK_PATH}" "build/app/outputs/flutter-apk/${NEW_NAME}"
+          echo "FINAL_APK_PATH=build/app/outputs/flutter-apk/${NEW_NAME}" >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          name: ${{ env.RELEASE_NAME }}
+          body: ${{ env.RELEASE_BODY }}
+          files: ${{ env.FINAL_APK_PATH }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}

@@ -5,7 +5,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.PowerManager
 import android.util.Log
 
 class LightSensorService(private val context: Context) : SensorEventListener {
@@ -45,26 +44,12 @@ class LightSensorService(private val context: Context) : SensorEventListener {
         (context as? MainActivity)?.sendLightToFlutter(value)
 
         if (value > threshold) {
-            Log.d("LightSensorService", "Light level above threshold ($threshold lx), waking tablet.")
-            wakeTablet()
+            Log.d("LightSensorService", "Light level above threshold ($threshold lx)")
+            // Action à définir si besoin, le WakeLock est supprimé
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
         // Optionnel : rien à faire ici
-    }
-
-    private fun wakeTablet() {
-        try {
-            val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-            val wakeLock = powerManager.newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK or PowerManager.ACQUIRE_CAUSES_WAKEUP,
-                "mqtt_hatab::LightSensorWakeLock"
-            )
-            wakeLock.acquire(3000) // Réveille l'écran pendant 3 secondes max
-            Log.d("LightSensorService", "WakeLock acquired for 3 seconds.")
-        } catch (e: SecurityException) {
-            Log.e("LightSensorService", "WakeLock permission missing: ${e.message}")
-        }
     }
 }
