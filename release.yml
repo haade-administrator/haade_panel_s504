@@ -13,6 +13,6 @@ body: |
 
   🐛 Bug Fix :
   
-
+  - Fix bug with MQTT connection
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
