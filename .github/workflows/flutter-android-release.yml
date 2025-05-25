@@ -5,7 +5,7 @@ on:
     paths:
       - release.yml
     branches:
-      - stable
+      - main
 
 jobs:
   build:
