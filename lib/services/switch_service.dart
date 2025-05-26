@@ -76,7 +76,7 @@ class SwitchService {
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
-        "sw_version": "1.0.3"
+        "sw_version": "1.0.2"
       }
     }''';
 
@@ -100,7 +100,7 @@ class SwitchService {
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
-        "sw_version": "1.0.3"
+        "sw_version": "1.0.2"
       }
     }''';
 
