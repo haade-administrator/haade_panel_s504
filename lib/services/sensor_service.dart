@@ -24,20 +24,22 @@ class SensorService {
     _platform.setMethodCallHandler((call) async {
       switch (call.method) {
         case "onTemperature":
-          final double temp = (call.arguments as num).toDouble();
-          temperature.value = temp;
+          final double rawTemp = (call.arguments as num).toDouble();
+          final double roundedTemp = (rawTemp * 2).roundToDouble() / 2.0; // pas de 0.5
+          temperature.value = roundedTemp;
           MQTTService.instance.publish(
             'elc_s504007700001/sensor/temperature',
-            temp.toStringAsFixed(1),
+            roundedTemp.toStringAsFixed(1),
             retain: true,
           );
           break;
         case "onHumidity":
-          final double hum = (call.arguments as num).toDouble();
-          humidity.value = hum;
+          final double rawHum = (call.arguments as num).toDouble();
+          final int roundedHum = rawHum.round(); // pas de décimale
+          humidity.value = roundedHum.toDouble();
           MQTTService.instance.publish(
             'elc_s504007700001/sensor/humidity',
-            hum.toStringAsFixed(1),
+            roundedHum.toString(),
             retain: true,
           );
           break;
@@ -81,17 +83,21 @@ class SensorService {
       if (result != null) {
         final t = (result['temperature'] as num).toDouble();
         final h = (result['humidity'] as num).toDouble();
-        temperature.value = t;
-        humidity.value = h;
+
+        final roundedTemp = (t * 2).roundToDouble() / 2.0;
+        final roundedHum = h.round();
+
+        temperature.value = roundedTemp;
+        humidity.value = roundedHum.toDouble();
 
         MQTTService.instance.publish(
           'elc_s504007700001/sensor/temperature',
-          t.toStringAsFixed(1),
+          roundedTemp.toStringAsFixed(1),
           retain: true,
         );
         MQTTService.instance.publish(
           'elc_s504007700001/sensor/humidity',
-          h.toStringAsFixed(1),
+          roundedHum.toString(),
           retain: true,
         );
       }
@@ -166,17 +172,19 @@ class SensorService {
 
     // Republier les dernières valeurs si disponibles (différent de 0)
     if (temperature.value != 0) {
+      final temp = (temperature.value * 2).roundToDouble() / 2.0;
       MQTTService.instance.publish(
         'elc_s504007700001/sensor/temperature',
-        temperature.value.toStringAsFixed(1),
+        temp.toStringAsFixed(1),
         retain: true,
       );
     }
 
     if (humidity.value != 0) {
+      final hum = humidity.value.round();
       MQTTService.instance.publish(
         'elc_s504007700001/sensor/humidity',
-        humidity.value.toStringAsFixed(1),
+        hum.toString(),
         retain: true,
       );
     }
