@@ -11,23 +11,28 @@ import 'package:mqtt_hatab/services/light_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialisations nécessaires avant de lancer l'app
-  await MQTTService.instance.autoConnectIfConfigured();
+  await MQTTService.instance.autoConnectIfConfigured(
+    onConnectedCallback: reinitializeServices,
+  );
+
+  runApp(const MyApp());
+}
+
+/// Relance tous les services dépendant du MQTT
+void reinitializeServices() {
   SensorService().initialize();
   LedService().initialize();
   SwitchService.instance.initialize();
   IoService.instance.initialize();
   LightService.instance.startSensor();
   LightService.instance.publishDiscoveryConfig();
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   static const platform = MethodChannel('com.example.mqtt_hatab/background');
 
-  /// Fonction pour minimiser l'application
+  /// Fonction pour minimiser l'application (Android)
   static Future<void> minimizeApp() async {
     try {
       await platform.invokeMethod('minimizeApp');
@@ -48,6 +53,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 
 

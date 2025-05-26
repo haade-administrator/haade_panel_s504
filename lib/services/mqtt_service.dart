@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -25,6 +24,7 @@ class MQTTService {
   final Map<String, void Function(String)> _listeners = {};
   bool _isListening = false;
   MessageHandler? _onMessage;
+  VoidCallback? _onConnectedCallback;
 
   /// 🟢/🔴 État de connexion pour affichage UI
   final ValueNotifier<bool> isConnected = ValueNotifier(false);
@@ -37,8 +37,10 @@ class MQTTService {
     required String password,
     required bool useSSL,
     MessageHandler? onMessage,
+    VoidCallback? onConnectedCallback,
   }) async {
     _onMessage = onMessage;
+    _onConnectedCallback = onConnectedCallback;
 
     _client = MqttServerClient(broker, 'tablette_flutter_client');
     _client!.port = port;
@@ -87,7 +89,7 @@ class MQTTService {
   }
 
   /// Connexion automatique si les paramètres sont disponibles
-  Future<void> autoConnectIfConfigured() async {
+  Future<void> autoConnectIfConfigured({VoidCallback? onConnectedCallback}) async {
     final prefs = await SharedPreferences.getInstance();
     final broker = prefs.getString('mqtt_broker');
     final port = prefs.getInt('mqtt_port');
@@ -106,6 +108,7 @@ class MQTTService {
           username: username,
           password: password,
           useSSL: useSSL,
+          onConnectedCallback: onConnectedCallback,
         );
       } catch (e) {
         print('⚠️ Connexion automatique échouée : $e');
@@ -180,6 +183,7 @@ class MQTTService {
   void onConnected() {
     print('✅ Connecté au broker MQTT');
     isConnected.value = true;
+    _onConnectedCallback?.call();
   }
 
   void onDisconnected() {
@@ -191,6 +195,7 @@ class MQTTService {
     print('📡 Abonné au topic : $topic');
   }
 }
+
 
 
 

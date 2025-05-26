@@ -9,7 +9,7 @@ class LightSensorPage extends StatefulWidget {
 }
 
 class _LightSensorPageState extends State<LightSensorPage> {
-  double _threshold = 50.0; // tu peux garder si besoin en interne
+  final double _threshold = 50.0; // tu peux garder si besoin en interne
 
   String _getLightDescription(double lux) {
     if (lux < 0) {

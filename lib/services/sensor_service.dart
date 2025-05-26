@@ -123,7 +123,7 @@ class SensorService {
     "identifiers": ["elc_s504007700001"],
     "name": "Tablette SMT",
     "model": "SMT101",
-    "sw_version": "1.0"
+    "sw_version": "1.0.3"
   }
 }
 ''';
@@ -147,7 +147,7 @@ class SensorService {
     "identifiers": ["elc_s504007700001"],
     "name": "Tablette SMT",
     "model": "SMT101",
-    "sw_version": "1.0"
+    "sw_version": "1.0.3"
   }
 }
 ''';

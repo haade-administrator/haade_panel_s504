@@ -80,7 +80,7 @@ class LedService {
     "name": "Tablette SMT",
     "model": "SMT101",
     "manufacturer": "ELC",
-    "sw_version": "1.0"
+    "sw_version": "1.0.3"
   },
   "effect": false
 }

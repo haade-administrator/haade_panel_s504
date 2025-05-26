@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:mqtt_hatab/main.dart' show reinitializeServices; // 👈 Import ici
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -56,6 +57,7 @@ class _SettingsPageState extends State<SettingsPage> {
         username: _usernameController.text,
         password: _passwordController.text,
         useSSL: _useSSL,
+        onConnectedCallback: reinitializeServices, // 👈 Reinit services après connexion
       );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Connecté au broker MQTT')),
@@ -73,8 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _reconnect() async {
-    await _saveSettings(); // Assure que les paramètres sont à jour avant reconnect
-    await _connect();
+    await _saveAndConnect();
   }
 
   @override
@@ -138,3 +139,4 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
