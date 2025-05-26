@@ -9,7 +9,6 @@ class SensorReaderPage extends StatelessWidget {
     final sensorService = SensorService();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Température & Humidité")),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(

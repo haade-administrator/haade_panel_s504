@@ -83,7 +83,6 @@ Widget _buildLuxCard() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Capteur de Luminosité')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
