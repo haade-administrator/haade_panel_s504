@@ -1,10 +1,10 @@
-tag: v1.0.1
-name: "Version 1.0.1"
+tag: v1.0.2
+name: "Version 1.0.2"
 body: |
   ✨ News :
-  - Add minimize buton top left
 
 
   🐛 Bug Fix :
+  - Fixed an issue with first mqtt connection and Home Assistant
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
