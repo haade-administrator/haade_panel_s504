@@ -1,30 +1,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mqtt_hatab">
 
-    <!-- Permissions nécessaires -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application 
         android:usesCleartextTraffic="true"
         android:label="mqtt_hatab"
         android:allowBackup="true"
-        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- Receiver pour démarrer l'appli au boot -->
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <!-- Activité principale -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,20 +42,23 @@
             </intent-filter>
         </activity>
 
-        <!-- Foreground service principal de l'app -->
+        <service
+            android:name=".BootService"
+            android:exported="true"
+            android:enabled="true"
+            android:foregroundServiceType="location" />
+
         <service
             android:name=".AppForegroundService"
-            android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="camera|location|connectedDevice|dataSync" />
+            android:enabled="true"
+            android:foregroundServiceType="connectedDevice|dataSync" />
 
-        <!-- Meta-data pour Flutter -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
-    <!-- Requêtes pour accès aux activités tierces -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
@@ -66,4 +67,5 @@
     </queries>
 
 </manifest>
+
 
