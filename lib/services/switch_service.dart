@@ -76,7 +76,7 @@ class SwitchService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.0.3"
+        "sw_version": "1.0"
       }
     }''';
 
@@ -100,7 +100,7 @@ class SwitchService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.0.3"
+        "sw_version": "1.0"
       }
     }''';
 
