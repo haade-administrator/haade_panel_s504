@@ -5,6 +5,15 @@
   "minimizeAppTooltip": "Minimize the application",
   "appWillMinimize": "The application will minimize",
 
+  "updateLaunchFailed": "Update launch failed",
+  "newVersionAvailable": "New version available",
+  "checkUpdateTooltip": "Check for update",
+  "updateAvailableTitle": "Update available",
+  "updateAvailableContent": "A new version of the application is available. Would you like to download it?",
+  "cancel": "Cancel",
+  "download": "Download",
+  "noUpdateAvailable": "No update available",
+
   "mqttSettingsTitle": "MQTT Settings",
   "mqttSettingsSubtitle": "Configure the broker connection",
   "ledControlTitle": "LED Control",

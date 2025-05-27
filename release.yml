@@ -1,18 +1,10 @@
-tag: v1.0.3
-name: "Version 1.0.3"
+tag: v1.0.4
+name: "Version 1.0.4"
 body: |
   ✨ News :
-  - Change decimals of temperature to 0.5
-  - Change decimals to humidity ( no decimals after, )
-  - App translate (en, fr)
-  - Add automatic minimize app if connected with MQTT after reboot
-  - Add new logo
-  - Init Documentation README.md
+  - Add button News update app
 
 
   🐛 Bug Fix :
-  - Remove 2nd title of temp and luminosity
-  - Fix first connection to mqtt with home assistant
-  - Improved boot management
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk

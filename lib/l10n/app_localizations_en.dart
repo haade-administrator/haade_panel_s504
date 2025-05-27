@@ -18,6 +18,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appWillMinimize => 'The application will minimize';
 
   @override
+  String get updateLaunchFailed => 'Update launch failed';
+
+  @override
+  String get newVersionAvailable => 'New version available';
+
+  @override
+  String get checkUpdateTooltip => 'Check for update';
+
+  @override
+  String get updateAvailableTitle => 'Update available';
+
+  @override
+  String get updateAvailableContent => 'A new version of the application is available. Would you like to download it?';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get download => 'Download';
+
+  @override
+  String get noUpdateAvailable => 'No update available';
+
+  @override
   String get mqttSettingsTitle => 'MQTT Settings';
 
   @override

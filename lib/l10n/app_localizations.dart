@@ -113,6 +113,54 @@ abstract class AppLocalizations {
   /// **'The application will minimize'**
   String get appWillMinimize;
 
+  /// No description provided for @updateLaunchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Update launch failed'**
+  String get updateLaunchFailed;
+
+  /// No description provided for @newVersionAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'New version available'**
+  String get newVersionAvailable;
+
+  /// No description provided for @checkUpdateTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for update'**
+  String get checkUpdateTooltip;
+
+  /// No description provided for @updateAvailableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Update available'**
+  String get updateAvailableTitle;
+
+  /// No description provided for @updateAvailableContent.
+  ///
+  /// In en, this message translates to:
+  /// **'A new version of the application is available. Would you like to download it?'**
+  String get updateAvailableContent;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download;
+
+  /// No description provided for @noUpdateAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No update available'**
+  String get noUpdateAvailable;
+
   /// No description provided for @mqttSettingsTitle.
   ///
   /// In en, this message translates to:

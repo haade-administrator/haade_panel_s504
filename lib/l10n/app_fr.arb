@@ -4,6 +4,16 @@
 
   "minimizeAppTooltip": "Minimiser l'application",
   "appWillMinimize": "L'application va se minimiser",
+
+  "updateLaunchFailed": "Échec du lancement de la mise à jour",
+  "newVersionAvailable": "Nouvelle version dispo",
+  "checkUpdateTooltip": "Vérifier mise à jour",
+  "updateAvailableTitle": "Mise à jour disponible",
+  "updateAvailableContent": "Une nouvelle version de l'application est disponible.\nSouhaitez-vous la télécharger ?",
+  "cancel": "Annuler",
+  "download": "Télécharger",
+  "noUpdateAvailable": "Aucune mise à jour disponible",
+
   "mqttSettingsTitle": "Paramètres MQTT",
   "mqttSettingsSubtitle": "Configurer la connexion au broker",
   "ledControlTitle": "Contrôle LEDs",

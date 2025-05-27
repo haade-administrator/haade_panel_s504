@@ -9,6 +9,8 @@ import 'package:haade_panel_s504/services/sensor_service.dart';
 import 'package:haade_panel_s504/services/led_service.dart';
 import '../main.dart'; // Import pour accéder à MyApp.minimizeApp()
 import '../l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:haade_panel_s504/services/update_checker.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,16 +23,88 @@ class _HomePageState extends State<HomePage> {
   final MQTTService mqtt = MQTTService.instance;
   final LedService ledService = LedService();
 
+  // État local pour savoir si une mise à jour est dispo et URL correspondante
+  bool _updateAvailable = false;
+  String? _updateUrl;
+
   @override
   void initState() {
     super.initState();
     SensorService().initialize();
+    _checkUpdateOnStart();
   }
 
   @override
   void dispose() {
     ledService.dispose();
     super.dispose();
+  }
+
+  // Vérification initiale de la mise à jour dès le lancement
+  Future<void> _checkUpdateOnStart() async {
+    final url = await UpdateChecker.checkForUpdate();
+    if (mounted) {
+      setState(() {
+        _updateAvailable = url != null;
+        _updateUrl = url;
+      });
+    }
+  }
+
+  // Méthode pour lancer l'URL externe
+  Future<void> _launchUpdateUrl() async {
+    if (_updateUrl == null) return;
+    final uri = Uri.parse(_updateUrl!);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.updateLaunchFailed)),
+        );
+      }
+    }
+  }
+
+  // Re-vérifier la mise à jour manuellement
+  Future<void> _manualCheckUpdate() async {
+    final url = await UpdateChecker.checkForUpdate();
+    if (!mounted) return;
+
+    if (url != null) {
+      setState(() {
+        _updateAvailable = true;
+        _updateUrl = url;
+      });
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text(AppLocalizations.of(context)!.updateAvailableTitle),
+          content: Text(AppLocalizations.of(context)!.updateAvailableContent),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(AppLocalizations.of(context)!.cancel),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _launchUpdateUrl();
+              },
+              child: Text(AppLocalizations.of(context)!.download),
+            ),
+          ],
+        ),
+      );
+    } else {
+      setState(() {
+        _updateAvailable = false;
+        _updateUrl = null;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.noUpdateAvailable)),
+      );
+    }
   }
 
   @override
@@ -61,6 +135,24 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 61, 61, 61),
         actions: [
+          if (_updateAvailable)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Center(
+                child: Text(
+                  loc.newVersionAvailable,
+                  style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          IconButton(
+            icon: Icon(
+              Icons.system_update,
+              color: _updateAvailable ? Colors.red : Colors.white,
+            ),
+            tooltip: loc.checkUpdateTooltip,
+            onPressed: _manualCheckUpdate,
+          ),
           ValueListenableBuilder<bool>(
             valueListenable: mqtt.isConnected,
             builder: (context, connected, child) {
@@ -149,6 +241,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 
 

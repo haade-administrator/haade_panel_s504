@@ -18,6 +18,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get appWillMinimize => 'L\'application va se minimiser';
 
   @override
+  String get updateLaunchFailed => 'Échec du lancement de la mise à jour';
+
+  @override
+  String get newVersionAvailable => 'Nouvelle version dispo';
+
+  @override
+  String get checkUpdateTooltip => 'Vérifier mise à jour';
+
+  @override
+  String get updateAvailableTitle => 'Mise à jour disponible';
+
+  @override
+  String get updateAvailableContent => 'Une nouvelle version de l\'application est disponible.\nSouhaitez-vous la télécharger ?';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get download => 'Télécharger';
+
+  @override
+  String get noUpdateAvailable => 'Aucune mise à jour disponible';
+
+  @override
   String get mqttSettingsTitle => 'Paramètres MQTT';
 
   @override
