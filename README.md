@@ -1,5 +1,6 @@
-## 🚀 Connect ELC SMT to HomeAssistant via MQTT connect
+## 🚀 Connect Haade Panel s504 to HomeAssistant via MQTT connect
 
+![Haade Panel s504](assets/description/haade-panel-s504.png)
 
 ### Bug Fixes Gallery app
 connect to tablet:
