@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_hatab/services/light_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class LightSensorPage extends StatefulWidget {
   const LightSensorPage({super.key});
@@ -9,21 +10,23 @@ class LightSensorPage extends StatefulWidget {
 }
 
 class _LightSensorPageState extends State<LightSensorPage> {
-  final double _threshold = 50.0; // tu peux garder si besoin en interne
+  final double _threshold = 50.0;
 
-  String _getLightDescription(double lux) {
+  String _getLightDescription(BuildContext context, double lux) {
+    final loc = AppLocalizations.of(context)!;
+
     if (lux < 0) {
-      return "Valeur invalide";
+      return loc.luxErrorValue;
     } else if (lux < 320) {
-      return "Sombre";
+      return loc.luxDark;
     } else if (lux < 640) {
-      return "Lumière légère";
+      return loc.luxDim;
     } else if (lux < 1600) {
-      return "Lumière modérée";
+      return loc.luxModerate;
     } else if (lux < 2560) {
-      return "Lumière forte";
+      return loc.luxBright;
     } else {
-      return "Très forte luminosité";
+      return loc.luxVeryBright;
     }
   }
 
@@ -41,44 +44,47 @@ class _LightSensorPageState extends State<LightSensorPage> {
     super.dispose();
   }
 
-Widget _buildLuxCard() {
-  return Card(
-    elevation: 4,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-    child: ValueListenableBuilder<double>(
-      valueListenable: LightService.instance.luxNotifier,
-      builder: (context, lux, _) {
-        final hasValidLux = lux > 0;
-        final description = hasValidLux ? _getLightDescription(lux) : "Mesure en cours...";
+  Widget _buildLuxCard(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
 
-        return ListTile(
-          leading: Icon(
-            Icons.light_mode,
-            color: Colors.amber.shade700,
-            size: 32,
-          ),
-          title: const Text(
-            'Luminosité Ambiante',
-            style: TextStyle(fontSize: 18),
-          ),
-          subtitle: Text(
-            description,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-          ),
-          trailing: Text(
-            hasValidLux ? '${lux.toStringAsFixed(1)} lx' : '-',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: hasValidLux && lux > _threshold ? Colors.green : Colors.grey,
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ValueListenableBuilder<double>(
+        valueListenable: LightService.instance.luxNotifier,
+        builder: (context, lux, _) {
+          final hasValidLux = lux > 0;
+          final description = hasValidLux
+              ? _getLightDescription(context, lux)
+              : loc.luxMeasuring;
+
+          return ListTile(
+            leading: Icon(
+              Icons.light_mode,
+              color: Colors.amber.shade700,
+              size: 32,
             ),
-          ),
-        );
-      },
-    ),
-  );
-}
-
+            title: Text(
+              loc.luxAmbientTitle,
+              style: const TextStyle(fontSize: 18),
+            ),
+            subtitle: Text(
+              description,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            trailing: Text(
+              hasValidLux ? '${lux.toStringAsFixed(1)} lx' : '-',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: hasValidLux && lux > _threshold ? Colors.green : Colors.grey,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,12 +93,12 @@ Widget _buildLuxCard() {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            _buildLuxCard(),
+            _buildLuxCard(context),
             const SizedBox(height: 20),
-            // Plus de slider ni texte ici
           ],
         ),
       ),
     );
   }
 }
+

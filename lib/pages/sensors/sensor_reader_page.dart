@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
+import '../../l10n/app_localizations.dart'; // import localisation
 
 class SensorReaderPage extends StatelessWidget {
   const SensorReaderPage({super.key});
@@ -18,7 +19,7 @@ class SensorReaderPage extends StatelessWidget {
               return ValueListenableBuilder<double>(
                 valueListenable: sensorService.humidity,
                 builder: (context, hum, _) {
-                  return _buildSensorCard(temp, hum);
+                  return _buildSensorCard(context, temp, hum);
                 },
               );
             },
@@ -28,7 +29,8 @@ class SensorReaderPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSensorCard(double temp, double hum) {
+  Widget _buildSensorCard(BuildContext context, double temp, double hum) {
+    final loc = AppLocalizations.of(context)!;
     return Card(
       elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -37,16 +39,16 @@ class SensorReaderPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildRow(Icons.thermostat, 'Température', '$temp °C'),
+            _buildRow(context, Icons.thermostat, loc.temperature, '$temp °C'),
             const SizedBox(height: 20),
-            _buildRow(Icons.water_drop, 'Humidité', '$hum %'),
+            _buildRow(context, Icons.water_drop, loc.humidity, '$hum %'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildRow(IconData icon, String label, String value) {
+  Widget _buildRow(BuildContext context, IconData icon, String label, String value) {
     return Row(
       children: [
         Icon(icon, color: Colors.teal),
@@ -64,5 +66,6 @@ class SensorReaderPage extends StatelessWidget {
     );
   }
 }
+
 
 

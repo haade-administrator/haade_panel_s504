@@ -1,0 +1,29 @@
+{
+  "@@locale": "fr",
+
+  "minimizeAppTooltip": "Minimiser l'application",
+  "appWillMinimize": "L'application va se minimiser",
+  "mqttTabletControlTitle": "Contrôle MQTT Tablette",
+  "mqttSettingsTitle": "Paramètres MQTT",
+  "mqttSettingsSubtitle": "Configurer la connexion au broker",
+  "ledControlTitle": "Contrôle LEDs",
+  "ledControlSubtitle": "Allumer/Éteindre et changer la couleur",
+  "relaySwitchTitle": "Interrupteurs Relais",
+  "relaySwitchSubtitle": "Contrôle les interrupteurs relais",
+  "ioButtonControlTitle": "Bouton I/O",
+  "ioButtonControlSubtitle": "Contrôle des boutons in/out",
+  "parameterInformationTitle": "Paramètres et Informatons",
+  "parameterInformationSubtitle": "Capteurs de températures, humidités, luminosités",
+
+  "temperature": "Température",
+  "humidity": "Humidité",
+
+  "luxErrorValue": "Valeur de lux invalide",
+  "luxDark": "Sombre",
+  "luxDim": "Lumière légère",
+  "luxModerate": "Lumière modérée",
+  "luxBright": "Lumière forte",
+  "luxVeryBright": "Très forte luminosité",
+  "luxMeasuring": "Mesure en cours...",
+  "luxAmbientTitle": "Luminosité Ambiante"
+}

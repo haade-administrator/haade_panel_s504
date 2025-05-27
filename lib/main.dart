@@ -7,6 +7,9 @@ import 'package:mqtt_hatab/services/led_service.dart';
 import 'package:mqtt_hatab/services/switch_service.dart';
 import 'package:mqtt_hatab/services/io_service.dart';
 import 'package:mqtt_hatab/services/light_service.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import '../l10n/app_localizations.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,9 +53,30 @@ class MyApp extends StatelessWidget {
       ),
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
+
+      // 🔤 Configuration de la localisation
+      localizationsDelegates: const [
+        AppLocalizations.delegate, // ton fichier généré automatiquement
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // anglais
+        Locale('fr'), // français
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        for (final supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale?.languageCode) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
     );
   }
 }
+
 
 
 

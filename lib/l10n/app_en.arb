@@ -1,0 +1,29 @@
+{
+  "@@locale": "en",
+
+  "minimizeAppTooltip": "Minimize the application",
+  "appWillMinimize": "The application will minimize",
+  "mqttTabletControlTitle": "MQTT Tablet Control",
+  "mqttSettingsTitle": "MQTT Settings",
+  "mqttSettingsSubtitle": "Configure the broker connection",
+  "ledControlTitle": "LED Control",
+  "ledControlSubtitle": "Turn on/off and change the color",
+  "relaySwitchTitle": "Relay Switches",
+  "relaySwitchSubtitle": "Controls relay switches",
+  "ioButtonControlTitle": "I/O Button",
+  "ioButtonControlSubtitle": "Controls the in/out buttons",
+  "parameterInformationTitle": "Settings and Information",
+  "parameterInformationSubtitle": "Temperature, Humidity, and Brightness Sensors",
+
+  "temperature": "Temperature",
+  "humidity": "Humidity",
+
+  "luxErrorValue": "Invalid lux value",
+  "luxDark": "Dark",
+  "luxDim": "Dim light",
+  "luxModerate": "Moderate light",
+  "luxBright": "Bright light",
+  "luxVeryBright": "Very bright light",
+  "luxMeasuring": "Measuring...",
+  "luxAmbientTitle": "Ambient Brightness"
+}
