@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 import 'package:mqtt_hatab/pages/sensors/light_sensor_page.dart';
 import 'package:mqtt_hatab/pages/sensors/sensor_reader_page.dart';
 
@@ -7,15 +8,17 @@ class ParameterInformationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Paramètres Capteurs'),
-          bottom: const TabBar(
+          title: Text(loc.sensorSettings),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Temp/Humidité', icon: Icon(Icons.thermostat)),
-              Tab(text: 'Luminosité', icon: Icon(Icons.light_mode)),
+              Tab(text: loc.tempHumidity, icon: const Icon(Icons.thermostat)),
+              Tab(text: loc.brightness, icon: const Icon(Icons.light_mode)),
             ],
           ),
         ),
@@ -29,3 +32,4 @@ class ParameterInformationPage extends StatelessWidget {
     );
   }
 }
+

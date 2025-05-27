@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart'; // Import de la classe de localisation
 import 'package:mqtt_hatab/services/switch_service.dart';
 
 class SwitchRelayPage extends StatefulWidget {
-  const SwitchRelayPage({Key? key}) : super(key: key);
+  const SwitchRelayPage({super.key});
 
   @override
   State<SwitchRelayPage> createState() => _SwitchRelayPageState();
 }
 
 class _SwitchRelayPageState extends State<SwitchRelayPage> {
-
   void _onToggleRelay(int relayNumber, bool newState) {
     SwitchService.instance.setRelayState(relayNumber, newState);
   }
@@ -39,22 +39,25 @@ class _SwitchRelayPageState extends State<SwitchRelayPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Contrôle des relais'),
+        title: Text(loc.relayControl), // Traduction
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildRelaySwitch('Relais 1 (IN1)', 1, SwitchService.instance.relay1StateNotifier),
+            _buildRelaySwitch(loc.relay1Label, 1, SwitchService.instance.relay1StateNotifier),
             const SizedBox(height: 20),
-            _buildRelaySwitch('Relais 2 (IN2)', 2, SwitchService.instance.relay2StateNotifier),
+            _buildRelaySwitch(loc.relay2Label, 2, SwitchService.instance.relay2StateNotifier),
           ],
         ),
       ),
     );
   }
 }
+
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_hatab/services/mqtt_service.dart';
-import 'package:mqtt_hatab/main.dart' show reinitializeServices; // 👈 Import ici
+import 'package:mqtt_hatab/main.dart' show reinitializeServices;
+import '../l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -45,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await prefs.setBool('mqtt_ssl', _useSSL);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Paramètres enregistrés')),
+      SnackBar(content: Text(AppLocalizations.of(context)!.settingsSaved)),
     );
   }
 
@@ -57,14 +58,14 @@ class _SettingsPageState extends State<SettingsPage> {
         username: _usernameController.text,
         password: _passwordController.text,
         useSSL: _useSSL,
-        onConnectedCallback: reinitializeServices, // 👈 Reinit services après connexion
+        onConnectedCallback: reinitializeServices,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Connecté au broker MQTT')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur de connexion MQTT: $e')),
+        SnackBar(content: Text('${AppLocalizations.of(context)!.mqttConnectionError}: $e')),
       );
     }
   }
@@ -80,8 +81,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Paramètres MQTT')),
+      appBar: AppBar(title: Text(loc.mqttSettings)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -90,21 +93,21 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               TextFormField(
                 controller: _brokerController,
-                decoration: const InputDecoration(labelText: 'Adresse du broker'),
+                decoration: InputDecoration(labelText: loc.brokerAddress),
               ),
               TextFormField(
                 controller: _portController,
-                decoration: const InputDecoration(labelText: 'Port'),
+                decoration: InputDecoration(labelText: loc.port),
                 keyboardType: TextInputType.number,
               ),
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Nom d’utilisateur'),
+                decoration: InputDecoration(labelText: loc.username),
               ),
               TextFormField(
                 controller: _passwordController,
                 decoration: InputDecoration(
-                  labelText: 'Mot de passe',
+                  labelText: loc.password,
                   suffixIcon: IconButton(
                     icon: Icon(
                       _passwordVisible ? Icons.visibility : Icons.visibility_off,
@@ -115,14 +118,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 obscureText: !_passwordVisible,
               ),
               SwitchListTile(
-                title: const Text('Connexion SSL'),
+                title: Text(loc.sslConnection),
                 value: _useSSL,
                 onChanged: (value) => setState(() => _useSSL = value),
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _saveAndConnect,
-                child: const Text('Enregistrer et connecter'),
+                child: Text(loc.saveAndConnect),
               ),
               const SizedBox(height: 12),
               ElevatedButton(
@@ -130,7 +133,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orange,
                 ),
-                child: const Text('Reconnecter'),
+                child: Text(loc.reconnect),
               ),
             ],
           ),
@@ -139,4 +142,5 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
 
