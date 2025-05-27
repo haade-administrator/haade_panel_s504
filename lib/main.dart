@@ -15,11 +15,19 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await MQTTService.instance.autoConnectIfConfigured(
-    onConnectedCallback: reinitializeServices,
+    onConnectedCallback: () {
+      reinitializeServices();
+
+      // 🔽 Délai pour laisser Flutter rendre au moins un frame avant de minimiser
+      Future.delayed(const Duration(seconds: 2), () {
+        MyApp.minimizeApp();
+      });
+    },
   );
 
   runApp(const MyApp());
 }
+
 
 /// Relance tous les services dépendant du MQTT
 void reinitializeServices() {
