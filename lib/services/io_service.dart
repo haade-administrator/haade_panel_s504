@@ -13,9 +13,9 @@ class IoService {
   static const _platform = MethodChannel('com.example.iocontrol/io');
 
   // 🔌 MQTT topics des capteurs d’entrées IO1 et IO2
-  final String _io1TopicState = 'elc_s504007700001/binary_sensor/io1/state';
-  final String _io2TopicState = 'elc_s504007700001/binary_sensor/io2/state';
-  final String _availabilityTopic = 'elc_s504007700001/binary_sensor/availability';
+  final String _io1TopicState = 'haade_panel_s504/binary_sensor/io1/state';
+  final String _io2TopicState = 'haade_panel_s504/binary_sensor/io2/state';
+  final String _availabilityTopic = 'haade_panel_s504/binary_sensor/availability';
 
   // 📡 Notifiers pour refléter l’état en UI ou logique Flutter
   final ValueNotifier<bool> io1StateNotifier = ValueNotifier(false);
@@ -68,8 +68,8 @@ class IoService {
         // 💡 Optionnel : déclenche un relais si appui bouton détecté
         if (isPressed) {
           final String relayTopic = (ioNumber == 1)
-              ? 'elc_s504007700001/switch/relay1/set'
-              : 'elc_s504007700001/switch/relay2/set';
+              ? 'haade_panel_s504/switch/relay1/set'
+              : 'haade_panel_s504/switch/relay2/set';
 
           print('MQTT → $relayTopic = ON (triggered by IO$ioNumber)');
           MQTTService.instance.publish(relayTopic, 'ON', retain: false);
@@ -105,19 +105,19 @@ class IoService {
 
     const io1Config = '''{
       "name": "IO1 (Bouton 1)",
-      "state_topic": "elc_s504007700001/binary_sensor/io1/state",
-      "object_id": "elc_s504007700001_io1",
-      "unique_id": "elc_s504007700001_io1",
+      "state_topic": "haade_panel_s504/binary_sensor/io1/state",
+      "object_id": "haade_panel_s504_io1",
+      "unique_id": "haade_panel_s504_io1",
       "device_class": "occupancy",
       "payload_on": "ON",
       "payload_off": "OFF",
       "availability": {
-        "topic": "elc_s504007700001/binary_sensor/availability",
+        "topic": "haade_panel_s504/binary_sensor/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
       "device": {
-        "identifiers": ["elc_s504007700001"],
+        "identifiers": ["haade_panel_s504"],
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
@@ -127,19 +127,19 @@ class IoService {
 
     const io2Config = '''{
       "name": "IO2 (Bouton 2)",
-      "state_topic": "elc_s504007700001/binary_sensor/io2/state",
-      "object_id": "elc_s504007700001_io2",
-      "unique_id": "elc_s504007700001_io2",
+      "state_topic": "haade_panel_s504/binary_sensor/io2/state",
+      "object_id": "haade_panel_s504_io2",
+      "unique_id": "haade_panel_s504_io2",
       "device_class": "occupancy",
       "payload_on": "ON",
       "payload_off": "OFF",
       "availability": {
-        "topic": "elc_s504007700001/binary_sensor/availability",
+        "topic": "haade_panel_s504/binary_sensor/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
       "device": {
-        "identifiers": ["elc_s504007700001"],
+        "identifiers": ["haade_panel_s504"],
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
@@ -147,8 +147,8 @@ class IoService {
       }
     }''';
 
-    MQTTService.instance.publish('homeassistant/binary_sensor/elc_s504007700001_io1/config', io1Config, retain: true);
-    MQTTService.instance.publish('homeassistant/binary_sensor/elc_s504007700001_io2/config', io2Config, retain: true);
+    MQTTService.instance.publish('homeassistant/binary_sensor/haade_panel_s504_io1/config', io1Config, retain: true);
+    MQTTService.instance.publish('homeassistant/binary_sensor/haade_panel_s504_io2/config', io2Config, retain: true);
   }
 
   /// ↩️ Met à jour l’état "online/offline" dans MQTT (ex: à l’extinction de l’app)

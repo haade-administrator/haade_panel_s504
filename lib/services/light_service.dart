@@ -36,7 +36,7 @@ class LightService {
     luxNotifier.value = lux;
 
     MQTTService.instance.publish(
-      'elc_s504007700001/sensor/lux',
+      'haade_panel_s504/sensor/lux',
       lux.toStringAsFixed(1),
       retain: true,
     );
@@ -52,23 +52,23 @@ class LightService {
   }
 
   void publishDiscoveryConfig() {
-    const topic = 'homeassistant/sensor/elc_s504007700001_lux/config';
+    const topic = 'homeassistant/sensor/haade_panel_s504_lux/config';
     const payload = '''
 {
   "name": "Lux SMT101",
   "friendly_name": "Luminosity",
-  "state_topic": "elc_s504007700001/sensor/lux",
+  "state_topic": "haade_panel_s504/sensor/lux",
   "unit_of_measurement": "lx",
   "device_class": "illuminance",
-  "unique_id": "elc_s504007700001_lux",
-  "object_id": "elc_s504007700001_lux",
+  "unique_id": "haade_panel_s504_lux",
+  "object_id": "haade_panel_s504_lux",
   "availability": {
-    "topic": "elc_s504007700001/sensor/availability",
+    "topic": "haade_panel_s504/sensor/availability",
     "payload_available": "online",
     "payload_not_available": "offline"
   },
   "device": {
-    "identifiers": ["elc_s504007700001"],
+    "identifiers": ["haade_panel_s504"],
     "name": "Tablette SMT",
     "model": "SMT101",
     "sw_version": "1.0.3"

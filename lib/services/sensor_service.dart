@@ -28,7 +28,7 @@ class SensorService {
           final double roundedTemp = (rawTemp * 2).roundToDouble() / 2.0; // pas de 0.5
           temperature.value = roundedTemp;
           MQTTService.instance.publish(
-            'elc_s504007700001/sensor/temperature',
+            'haade_panel_s504/sensor/temperature',
             roundedTemp.toStringAsFixed(1),
             retain: true,
           );
@@ -38,7 +38,7 @@ class SensorService {
           final int roundedHum = rawHum.round(); // pas de décimale
           humidity.value = roundedHum.toDouble();
           MQTTService.instance.publish(
-            'elc_s504007700001/sensor/humidity',
+            'haade_panel_s504/sensor/humidity',
             roundedHum.toString(),
             retain: true,
           );
@@ -70,7 +70,7 @@ class SensorService {
 
   void publishAvailability() {
     MQTTService.instance.publish(
-      'elc_s504007700001/sensor/availability',
+      'haade_panel_s504/sensor/availability',
       'online',
       retain: true,
     );
@@ -91,12 +91,12 @@ class SensorService {
         humidity.value = roundedHum.toDouble();
 
         MQTTService.instance.publish(
-          'elc_s504007700001/sensor/temperature',
+          'haade_panel_s504/sensor/temperature',
           roundedTemp.toStringAsFixed(1),
           retain: true,
         );
         MQTTService.instance.publish(
-          'elc_s504007700001/sensor/humidity',
+          'haade_panel_s504/sensor/humidity',
           roundedHum.toString(),
           retain: true,
         );
@@ -114,19 +114,19 @@ class SensorService {
 {
   "name": "Temperature SMT101",
   "friendly_name": "Temperature",
-  "object_id": "elc_s504007700001_temperature",
-  "unique_id": "elc_s504007700001_temperature",
-  "state_topic": "elc_s504007700001/sensor/temperature",
+  "object_id": "haade_panel_s504_temperature",
+  "unique_id": "haade_panel_s504_temperature",
+  "state_topic": "haade_panel_s504/sensor/temperature",
   "availability": 
     {
-      "topic": "elc_s504007700001/sensor/availability",
+      "topic": "haade_panel_s504/sensor/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     },
   "device_class": "temperature",
   "unit_of_measurement": "C",
   "device": {
-    "identifiers": ["elc_s504007700001"],
+    "identifiers": ["haade_panel_s504"],
     "name": "Tablette SMT",
     "model": "SMT101",
     "sw_version": "1.0.3"
@@ -138,19 +138,19 @@ class SensorService {
 {
   "name": "Humidity SMT101",
   "friendly_name": "Humidity",
-  "object_id": "elc_s504007700001_humidity",
-  "unique_id": "elc_s504007700001_humidity",
-  "state_topic": "elc_s504007700001/sensor/humidity",
+  "object_id": "haade_panel_s504_humidity",
+  "unique_id": "haade_panel_s504_humidity",
+  "state_topic": "haade_panel_s504/sensor/humidity",
   "availability": 
     {
-      "topic": "elc_s504007700001/sensor/availability",
+      "topic": "haade_panel_s504/sensor/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     },
   "device_class": "humidity",
   "unit_of_measurement": "%",
   "device": {
-    "identifiers": ["elc_s504007700001"],
+    "identifiers": ["haade_panel_s504"],
     "name": "Tablette SMT",
     "model": "SMT101",
     "sw_version": "1.0.3"
@@ -159,13 +159,13 @@ class SensorService {
 ''';
 
     MQTTService.instance.publish(
-      'homeassistant/sensor/elc_s504007700001_temperature/config',
+      'homeassistant/sensor/haade_panel_s504_temperature/config',
       tempConfig,
       retain: true,
     );
 
     MQTTService.instance.publish(
-      'homeassistant/sensor/elc_s504007700001_humidity/config',
+      'homeassistant/sensor/haade_panel_s504_humidity/config',
       humConfig,
       retain: true,
     );
@@ -174,7 +174,7 @@ class SensorService {
     if (temperature.value != 0) {
       final temp = (temperature.value * 2).roundToDouble() / 2.0;
       MQTTService.instance.publish(
-        'elc_s504007700001/sensor/temperature',
+        'haade_panel_s504/sensor/temperature',
         temp.toStringAsFixed(1),
         retain: true,
       );
@@ -183,7 +183,7 @@ class SensorService {
     if (humidity.value != 0) {
       final hum = humidity.value.round();
       MQTTService.instance.publish(
-        'elc_s504007700001/sensor/humidity',
+        'haade_panel_s504/sensor/humidity',
         hum.toString(),
         retain: true,
       );

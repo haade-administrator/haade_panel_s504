@@ -11,12 +11,12 @@ class SwitchService {
 
   static const _platform = MethodChannel('com.example.relaycontrol/relay');
 
-  final String _relay1TopicSet = 'elc_s504007700001/switch/relay1/set';
-  final String _relay1TopicState = 'elc_s504007700001/switch/relay1/state';
-  final String _relay2TopicSet = 'elc_s504007700001/switch/relay2/set';
-  final String _relay2TopicState = 'elc_s504007700001/switch/relay2/state';
+  final String _relay1TopicSet = 'haade_panel_s504/switch/relay1/set';
+  final String _relay1TopicState = 'haade_panel_s504/switch/relay1/state';
+  final String _relay2TopicSet = 'haade_panel_s504/switch/relay2/set';
+  final String _relay2TopicState = 'haade_panel_s504/switch/relay2/state';
 
-  final String _availabilityTopic = 'elc_s504007700001/switch/availability';
+  final String _availabilityTopic = 'haade_panel_s504/switch/availability';
 
   // ValueNotifier pour suivre l’état des relais en temps réel
   final ValueNotifier<bool> relay1StateNotifier = ValueNotifier<bool>(false);
@@ -58,12 +58,12 @@ class SwitchService {
 
     const relay1Config = '''{
       "name": "Relais 1 SMT101",
-      "state_topic": "elc_s504007700001/switch/relay1/state",
-      "command_topic": "elc_s504007700001/switch/relay1/set",
-      "object_id": "elc_s504007700001_relay1",
-      "unique_id": "elc_s504007700001_relay1",
+      "state_topic": "haade_panel_s504/switch/relay1/state",
+      "command_topic": "haade_panel_s504/switch/relay1/set",
+      "object_id": "haade_panel_s504_relay1",
+      "unique_id": "haade_panel_s504_relay1",
       "availability": {
-        "topic": "elc_s504007700001/switch/availability",
+        "topic": "haade_panel_s504/switch/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -72,7 +72,7 @@ class SwitchService {
       "state_on": "ON",
       "state_off": "OFF",
       "device": {
-        "identifiers": ["elc_s504007700001"],
+        "identifiers": ["haade_panel_s504"],
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
@@ -82,12 +82,12 @@ class SwitchService {
 
     const relay2Config = '''{
       "name": "Relais 2 SMT101",
-      "state_topic": "elc_s504007700001/switch/relay2/state",
-      "command_topic": "elc_s504007700001/switch/relay2/set",
-      "object_id": "elc_s504007700001_relay2",
-      "unique_id": "elc_s504007700001_relay2",
+      "state_topic": "haade_panel_s504/switch/relay2/state",
+      "command_topic": "haade_panel_s504/switch/relay2/set",
+      "object_id": "haade_panel_s504_relay2",
+      "unique_id": "haade_panel_s504_relay2",
       "availability": {
-        "topic": "elc_s504007700001/switch/availability",
+        "topic": "haade_panel_s504/switch/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -96,7 +96,7 @@ class SwitchService {
       "state_on": "ON",
       "state_off": "OFF",
       "device": {
-        "identifiers": ["elc_s504007700001"],
+        "identifiers": ["haade_panel_s504"],
         "name": "Tablette SMT",
         "model": "SMT101",
         "manufacturer": "ELC",
@@ -104,8 +104,8 @@ class SwitchService {
       }
     }''';
 
-    MQTTService.instance.publish('homeassistant/switch/elc_s504007700001_relay1/config', relay1Config, retain: true);
-    MQTTService.instance.publish('homeassistant/switch/elc_s504007700001_relay2/config', relay2Config, retain: true);
+    MQTTService.instance.publish('homeassistant/switch/haade_panel_s504_relay1/config', relay1Config, retain: true);
+    MQTTService.instance.publish('homeassistant/switch/haade_panel_s504_relay2/config', relay2Config, retain: true);
   }
 
   Future<void> _onMessage(String topic, String message) async {
