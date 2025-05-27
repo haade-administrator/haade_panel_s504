@@ -19,6 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _useSSL = false;
   bool _passwordVisible = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -39,44 +40,45 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('mqtt_broker', _brokerController.text);
-    await prefs.setInt('mqtt_port', int.parse(_portController.text));
-    await prefs.setString('mqtt_username', _usernameController.text);
+    await prefs.setString('mqtt_broker', _brokerController.text.trim());
+    await prefs.setInt('mqtt_port', int.parse(_portController.text.trim()));
+    await prefs.setString('mqtt_username', _usernameController.text.trim());
     await prefs.setString('mqtt_password', _passwordController.text);
     await prefs.setBool('mqtt_ssl', _useSSL);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocalizations.of(context)!.settingsSaved)),
-    );
   }
 
-  Future<void> _connect() async {
+  Future<void> _saveAndConnect() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
     try {
+      await _saveSettings();
+
+      // Déconnecter proprement si déjà connecté
+      MQTTService.instance.disconnect();
+
       await MQTTService.instance.connect(
-        broker: _brokerController.text,
-        port: int.parse(_portController.text),
-        username: _usernameController.text,
+        broker: _brokerController.text.trim(),
+        port: int.parse(_portController.text.trim()),
+        username: _usernameController.text.trim(),
         password: _passwordController.text,
         useSSL: _useSSL,
-        onConnectedCallback: reinitializeServices,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
+        onConnectedCallback: () {
+          reinitializeServices();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
+          );
+        },
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('${AppLocalizations.of(context)!.mqttConnectionError}: $e')),
       );
+    } finally {
+      setState(() => _isLoading = false);
     }
-  }
-
-  Future<void> _saveAndConnect() async {
-    await _saveSettings();
-    await _connect();
-  }
-
-  Future<void> _reconnect() async {
-    await _saveAndConnect();
   }
 
   @override
@@ -94,11 +96,18 @@ class _SettingsPageState extends State<SettingsPage> {
               TextFormField(
                 controller: _brokerController,
                 decoration: InputDecoration(labelText: loc.brokerAddress),
+                validator: (v) => (v == null || v.isEmpty) ? loc.fieldRequired : null,
               ),
               TextFormField(
                 controller: _portController,
                 decoration: InputDecoration(labelText: loc.port),
                 keyboardType: TextInputType.number,
+                validator: (v) {
+                  if (v == null || v.isEmpty) return loc.fieldRequired;
+                  final port = int.tryParse(v);
+                  if (port == null || port <= 0) return loc.invalidPort;
+                  return null;
+                },
               ),
               TextFormField(
                 controller: _usernameController,
@@ -123,17 +132,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) => setState(() => _useSSL = value),
               ),
               const SizedBox(height: 20),
+
               ElevatedButton(
-                onPressed: _saveAndConnect,
-                child: Text(loc.saveAndConnect),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: _reconnect,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                ),
-                child: Text(loc.reconnect),
+                onPressed: _isLoading ? null : _saveAndConnect,
+                child: _isLoading
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : Text(loc.saveAndConnect),
               ),
             ],
           ),
@@ -142,5 +150,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
 
 

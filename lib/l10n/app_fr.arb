@@ -22,10 +22,11 @@
   "password": "Mot de passe",
   "sslConnection": "Connexion SSL",
   "saveAndConnect": "Enregistrer et connecter",
-  "reconnect": "Reconnecter",
   "settingsSaved": "Paramètres enregistrés",
   "mqttConnected": "Connecté au broker MQTT",
   "mqttConnectionError": "Erreur de connexion MQTT",
+  "fieldRequired": "Champ obligatoire",
+  "invalidPort": "Port invalide",
 
   "ledControlTitle": "Contrôle LED & Capteurs",
   "ledColor": "Couleur des LEDs",

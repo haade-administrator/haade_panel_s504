@@ -69,9 +69,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveAndConnect => 'Save and Connect';
 
   @override
-  String get reconnect => 'Reconnect';
-
-  @override
   String get settingsSaved => 'Settings saved';
 
   @override
@@ -79,6 +76,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mqttConnectionError => 'MQTT connection error';
+
+  @override
+  String get fieldRequired => 'Field required';
+
+  @override
+  String get invalidPort => 'Invalid port';
 
   @override
   String get ledColor => 'LED Color';

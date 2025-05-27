@@ -215,12 +215,6 @@ abstract class AppLocalizations {
   /// **'Save and Connect'**
   String get saveAndConnect;
 
-  /// No description provided for @reconnect.
-  ///
-  /// In en, this message translates to:
-  /// **'Reconnect'**
-  String get reconnect;
-
   /// No description provided for @settingsSaved.
   ///
   /// In en, this message translates to:
@@ -238,6 +232,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'MQTT connection error'**
   String get mqttConnectionError;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Field required'**
+  String get fieldRequired;
+
+  /// No description provided for @invalidPort.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid port'**
+  String get invalidPort;
 
   /// No description provided for @ledColor.
   ///
