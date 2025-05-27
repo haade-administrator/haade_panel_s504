@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mqtt_hatab">
+    package="com.example.haade_panel_s504">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -10,7 +10,7 @@
 
     <application 
         android:usesCleartextTraffic="true"
-        android:label="mqtt_hatab"
+        android:label="Haade Panel"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher">
 

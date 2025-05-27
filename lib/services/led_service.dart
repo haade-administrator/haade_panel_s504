@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
 
 class LedService {
   static final LedService _instance = LedService._internal();
@@ -58,7 +58,7 @@ class LedService {
   void _publishDiscoveryConfig() {
     const configPayload = '''
 {
-  "name": "Led SMT101",
+  "name": "Led s504",
   "friendly_name": "Led",
   "object_id": "haade_panel_s504_led",
   "unique_id": "haade_panel_s504_led",
@@ -77,9 +77,9 @@ class LedService {
   "supported_color_modes": ["rgb"],
   "device": {
     "identifiers": ["haade_panel_s504"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
-    "manufacturer": "ELC",
+    "name": "Haade Panel s504",
+    "model": "s504",
+    "manufacturer": "HAADE",
     "sw_version": "1.0.3"
   },
   "effect": false

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
 import 'package:flutter/foundation.dart'; // <-- pour ValueNotifier
 
 class SwitchService {
@@ -57,7 +57,7 @@ class SwitchService {
     _discoveryRelayPublished = true;
 
     const relay1Config = '''{
-      "name": "Relais 1 SMT101",
+      "name": "Relais 1 s504",
       "state_topic": "haade_panel_s504/switch/relay1/state",
       "command_topic": "haade_panel_s504/switch/relay1/set",
       "object_id": "haade_panel_s504_relay1",
@@ -73,15 +73,15 @@ class SwitchService {
       "state_off": "OFF",
       "device": {
         "identifiers": ["haade_panel_s504"],
-        "name": "Tablette SMT",
-        "model": "SMT101",
-        "manufacturer": "ELC",
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
         "sw_version": "1.0.3"
       }
     }''';
 
     const relay2Config = '''{
-      "name": "Relais 2 SMT101",
+      "name": "Relais 2 s504",
       "state_topic": "haade_panel_s504/switch/relay2/state",
       "command_topic": "haade_panel_s504/switch/relay2/set",
       "object_id": "haade_panel_s504_relay2",
@@ -97,9 +97,9 @@ class SwitchService {
       "state_off": "OFF",
       "device": {
         "identifiers": ["haade_panel_s504"],
-        "name": "Tablette SMT",
-        "model": "SMT101",
-        "manufacturer": "ELC",
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
         "sw_version": "1.0.3"
       }
     }''';

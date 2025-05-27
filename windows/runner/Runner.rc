@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "mqtt_hatab" "\0"
+            VALUE "FileDescription", "haade_panel_s504" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "mqtt_hatab" "\0"
+            VALUE "InternalName", "haade_panel_s504" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "mqtt_hatab.exe" "\0"
-            VALUE "ProductName", "mqtt_hatab" "\0"
+            VALUE "OriginalFilename", "haade_panel_s504.exe" "\0"
+            VALUE "ProductName", "haade_panel_s504" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

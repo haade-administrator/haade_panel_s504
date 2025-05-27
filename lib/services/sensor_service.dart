@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
 
 class SensorService {
   static final SensorService _instance = SensorService._internal();
@@ -112,7 +112,7 @@ class SensorService {
 
     const tempConfig = '''
 {
-  "name": "Temperature SMT101",
+  "name": "Temperature s504",
   "friendly_name": "Temperature",
   "object_id": "haade_panel_s504_temperature",
   "unique_id": "haade_panel_s504_temperature",
@@ -127,8 +127,8 @@ class SensorService {
   "unit_of_measurement": "C",
   "device": {
     "identifiers": ["haade_panel_s504"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
+    "name": "Haade Panel s504",
+    "model": "s504",
     "sw_version": "1.0.3"
   }
 }
@@ -136,7 +136,7 @@ class SensorService {
 
     const humConfig = '''
 {
-  "name": "Humidity SMT101",
+  "name": "Humidity s504",
   "friendly_name": "Humidity",
   "object_id": "haade_panel_s504_humidity",
   "unique_id": "haade_panel_s504_humidity",
@@ -151,8 +151,8 @@ class SensorService {
   "unit_of_measurement": "%",
   "device": {
     "identifiers": ["haade_panel_s504"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
+    "name": "Haade Panel s504",
+    "model": "s504",
     "sw_version": "1.0.3"
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart'; // Import traduction
-import 'package:mqtt_hatab/services/io_service.dart';
+import 'package:haade_panel_s504/services/io_service.dart';
 
 class IoPage extends StatefulWidget {
   const IoPage({super.key});

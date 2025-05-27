@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mqtt_hatab"
+    namespace = "com.example.haade_panel_s504"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
     compileOptions {
@@ -20,7 +20,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.mqtt_hatab"
+        applicationId = "com.example.haade_panel_s504"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

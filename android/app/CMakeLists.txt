@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-project("mqtt_hatab")
+project("haade_panel_s504")
 
 # Déclare les bibliothèques natives importées (présentes dans jniLibs)
 add_library(jnielc SHARED IMPORTED)

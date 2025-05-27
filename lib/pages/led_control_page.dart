@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:mqtt_hatab/services/led_service.dart';
+import 'package:haade_panel_s504/services/led_service.dart';
 import '../l10n/app_localizations.dart';
 
 class LedControlPage extends StatefulWidget {

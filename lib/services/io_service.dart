@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
 
 class IoService {
   static final IoService instance = IoService._internal();
@@ -118,9 +118,9 @@ class IoService {
       },
       "device": {
         "identifiers": ["haade_panel_s504"],
-        "name": "Tablette SMT",
-        "model": "SMT101",
-        "manufacturer": "ELC",
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
         "sw_version": "1.0.3"
       }
     }''';
@@ -140,9 +140,9 @@ class IoService {
       },
       "device": {
         "identifiers": ["haade_panel_s504"],
-        "name": "Tablette SMT",
-        "model": "SMT101",
-        "manufacturer": "ELC",
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
         "sw_version": "1.0.3"
       }
     }''';

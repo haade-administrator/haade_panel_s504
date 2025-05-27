@@ -1,4 +1,4 @@
-package com.example.mqtt_hatab
+package com.example.haade_panel_s504
 
 class VirtualTerminal(id: String, command: String, path: String) {
 

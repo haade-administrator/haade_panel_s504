@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'pages/home_page.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
-import 'package:mqtt_hatab/services/sensor_service.dart';
-import 'package:mqtt_hatab/services/led_service.dart';
-import 'package:mqtt_hatab/services/switch_service.dart';
-import 'package:mqtt_hatab/services/io_service.dart';
-import 'package:mqtt_hatab/services/light_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/sensor_service.dart';
+import 'package:haade_panel_s504/services/led_service.dart';
+import 'package:haade_panel_s504/services/switch_service.dart';
+import 'package:haade_panel_s504/services/io_service.dart';
+import 'package:haade_panel_s504/services/light_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../l10n/app_localizations.dart';
 
@@ -41,7 +41,7 @@ void reinitializeServices() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  static const platform = MethodChannel('com.example.mqtt_hatab/background');
+  static const platform = MethodChannel('com.example.haade_panel_s504/background');
 
   /// Fonction pour minimiser l'application (Android)
   static Future<void> minimizeApp() async {

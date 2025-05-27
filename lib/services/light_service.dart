@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
 
 class LightService {
   static final LightService instance = LightService._internal();
   LightService._internal();
 
-  static const _eventChannel = EventChannel('com.example.mqtt_hatab/LightSensorService');
+  static const _eventChannel = EventChannel('com.example.haade_panel_s504/LightSensorService');
 
   final ValueNotifier<double> luxNotifier = ValueNotifier(0.0);
   double _threshold = 50.0;
@@ -55,7 +55,7 @@ class LightService {
     const topic = 'homeassistant/sensor/haade_panel_s504_lux/config';
     const payload = '''
 {
-  "name": "Lux SMT101",
+  "name": "Lux s504",
   "friendly_name": "Luminosity",
   "state_topic": "haade_panel_s504/sensor/lux",
   "unit_of_measurement": "lx",
@@ -69,8 +69,8 @@ class LightService {
   },
   "device": {
     "identifiers": ["haade_panel_s504"],
-    "name": "Tablette SMT",
-    "model": "SMT101",
+    "name": "Haade Panel s504",
+    "model": "s504",
     "sw_version": "1.0.3"
   }
 }

@@ -1,4 +1,4 @@
-package com.example.mqtt_hatab
+package com.example.haade_panel_s504
 
 import android.os.Bundle
 import android.os.Handler
@@ -10,7 +10,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import com.sys.gpio.gpioJni
-import com.example.mqtt_hatab.LightSensorService
+import com.example.haade_panel_s504.LightSensorService
 import io.flutter.plugin.common.EventChannel
 
 class MainActivity : FlutterActivity() {
@@ -165,7 +165,7 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.mqtt_hatab/background")
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.haade_panel_s504/background")
     .setMethodCallHandler { call, result ->
         if (call.method == "minimizeApp") {
             moveTaskToBack(true)
@@ -177,7 +177,7 @@ class MainActivity : FlutterActivity() {
 
 
         // EventChannel pour envoyer les valeurs de luminosité à Flutter
-        EventChannel(messenger, "com.example.mqtt_hatab/LightSensorService").setStreamHandler(
+        EventChannel(messenger, "com.example.haade_panel_s504/LightSensorService").setStreamHandler(
             object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     lightEventSink = events

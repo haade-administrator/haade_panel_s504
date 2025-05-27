@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mqtt_hatab/services/light_service.dart';
+import 'package:haade_panel_s504/services/light_service.dart';
 import '../../l10n/app_localizations.dart';
 
 class LightSensorPage extends StatefulWidget {

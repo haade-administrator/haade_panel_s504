@@ -44,8 +44,8 @@ jobs:
           EXT="${FILE_NAME##*.}"
           BASE="${FILE_NAME%.*}"
           
-          # Remplacer 'app-release' par 'mqtt_hatab' dans BASE
-          BASE="${BASE/app-release/mqtt_hatab}"
+          # Remplacer 'app-release' par 'haade_panel_s504' dans BASE
+          BASE="${BASE/app-release/haade_panel_s504}"
           
           NEW_NAME="${BASE}-${TAG}.${EXT}"
           mv "${APK_PATH}" "build/app/outputs/flutter-apk/${NEW_NAME}"

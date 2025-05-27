@@ -1,4 +1,4 @@
-package com.example.mqtt_hatab
+package com.example.haade_panel_s504
 
 import android.content.BroadcastReceiver
 import android.content.Context

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
-import 'package:mqtt_hatab/main.dart' show reinitializeServices;
+import 'package:haade_panel_s504/services/mqtt_service.dart';
+import 'package:haade_panel_s504/main.dart' show reinitializeServices;
 import '../l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {

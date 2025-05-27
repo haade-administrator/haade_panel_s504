@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get title => 'ELC SMT MQTT Tablet Control';
+  String get title => 'Haade Panel s504';
 
   @override
   String get minimizeAppTooltip => 'Minimize the application';

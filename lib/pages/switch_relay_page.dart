@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart'; // Import de la classe de localisation
-import 'package:mqtt_hatab/services/switch_service.dart';
+import 'package:haade_panel_s504/services/switch_service.dart';
 
 class SwitchRelayPage extends StatefulWidget {
   const SwitchRelayPage({super.key});

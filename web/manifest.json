@@ -1,6 +1,6 @@
 {
-    "name": "mqtt_hatab",
-    "short_name": "mqtt_hatab",
+    "name": "haade_panel_s504",
+    "short_name": "haade_panel_s504",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

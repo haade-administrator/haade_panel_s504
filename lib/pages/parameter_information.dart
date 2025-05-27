@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
-import 'package:mqtt_hatab/pages/sensors/light_sensor_page.dart';
-import 'package:mqtt_hatab/pages/sensors/sensor_reader_page.dart';
+import 'package:haade_panel_s504/pages/sensors/light_sensor_page.dart';
+import 'package:haade_panel_s504/pages/sensors/sensor_reader_page.dart';
 
 class ParameterInformationPage extends StatelessWidget {
   const ParameterInformationPage({super.key});

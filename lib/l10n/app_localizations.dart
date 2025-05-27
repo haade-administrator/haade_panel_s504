@@ -98,7 +98,7 @@ abstract class AppLocalizations {
   /// No description provided for @title.
   ///
   /// In en, this message translates to:
-  /// **'ELC SMT MQTT Tablet Control'**
+  /// **'Haade Panel s504'**
   String get title;
 
   /// No description provided for @minimizeAppTooltip.

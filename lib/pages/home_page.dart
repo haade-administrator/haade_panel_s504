@@ -4,9 +4,9 @@ import 'led_control_page.dart';
 import 'parameter_information.dart';
 import 'switch_relay_page.dart';
 import 'io_page.dart';
-import 'package:mqtt_hatab/services/mqtt_service.dart';
-import 'package:mqtt_hatab/services/sensor_service.dart';
-import 'package:mqtt_hatab/services/led_service.dart';
+import 'package:haade_panel_s504/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/sensor_service.dart';
+import 'package:haade_panel_s504/services/led_service.dart';
 import '../main.dart'; // Import pour accéder à MyApp.minimizeApp()
 import '../l10n/app_localizations.dart';
 
