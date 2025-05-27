@@ -1,9 +1,9 @@
 {
   "@@locale": "fr",
+  "title": "Contrôle MQTT Tablette",
 
   "minimizeAppTooltip": "Minimiser l'application",
   "appWillMinimize": "L'application va se minimiser",
-  "mqttTabletControlTitle": "Contrôle MQTT Tablette",
   "mqttSettingsTitle": "Paramètres MQTT",
   "mqttSettingsSubtitle": "Configurer la connexion au broker",
   "ledControlTitle": "Contrôle LEDs",
@@ -14,6 +14,45 @@
   "ioButtonControlSubtitle": "Contrôle des boutons in/out",
   "parameterInformationTitle": "Paramètres et Informatons",
   "parameterInformationSubtitle": "Capteurs de températures, humidités, luminosités",
+
+  "mqttSettings": "Paramètres MQTT",
+  "brokerAddress": "Adresse du broker",
+  "port": "Port",
+  "username": "Nom d’utilisateur",
+  "password": "Mot de passe",
+  "sslConnection": "Connexion SSL",
+  "saveAndConnect": "Enregistrer et connecter",
+  "reconnect": "Reconnecter",
+  "settingsSaved": "Paramètres enregistrés",
+  "mqttConnected": "Connecté au broker MQTT",
+  "mqttConnectionError": "Erreur de connexion MQTT",
+
+  "ledControlTitle": "Contrôle LED & Capteurs",
+  "ledColor": "Couleur des LEDs",
+  "brightnessLabel": "Luminosité",
+  "ledOnLabel": "LED allumée",
+
+  "relayControl": "Contrôle des relais",
+  "relay1Label": "Relais 1 (IN1)",
+  "relay2Label": "Relais 2 (IN2)",
+
+  "ioControlTitle": "Contrôle IO (Entrées / Sorties)",
+  "io1Label": "IO1 (Bouton 1)",
+  "io2Label": "IO2 (Bouton 2)",
+  "modeOutput": "Mode : Sortie (Poussoir)",
+  "modeInput": "Mode : Entrée",
+  "active": "ACTIF",
+  "inactive": "INACTIF",
+  "triggerIo": "Déclencher IO{ioNumber}",
+  "@triggerIo": {
+    "placeholders": {
+      "ioNumber": {}
+    }
+  },
+
+  "sensorSettings": "Paramètres Capteurs",
+  "tempHumidity": "Temp/Humidité",
+  "brightness": "Luminosité",
 
   "temperature": "Température",
   "humidity": "Humidité",

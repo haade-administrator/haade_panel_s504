@@ -9,13 +9,13 @@ class AppLocalizationsFr extends AppLocalizations {
   AppLocalizationsFr([String locale = 'fr']) : super(locale);
 
   @override
+  String get title => 'Contrôle MQTT Tablette';
+
+  @override
   String get minimizeAppTooltip => 'Minimiser l\'application';
 
   @override
   String get appWillMinimize => 'L\'application va se minimiser';
-
-  @override
-  String get mqttTabletControlTitle => 'Contrôle MQTT Tablette';
 
   @override
   String get mqttSettingsTitle => 'Paramètres MQTT';
@@ -24,7 +24,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mqttSettingsSubtitle => 'Configurer la connexion au broker';
 
   @override
-  String get ledControlTitle => 'Contrôle LEDs';
+  String get ledControlTitle => 'Contrôle LED & Capteurs';
 
   @override
   String get ledControlSubtitle => 'Allumer/Éteindre et changer la couleur';
@@ -46,6 +46,92 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get parameterInformationSubtitle => 'Capteurs de températures, humidités, luminosités';
+
+  @override
+  String get mqttSettings => 'Paramètres MQTT';
+
+  @override
+  String get brokerAddress => 'Adresse du broker';
+
+  @override
+  String get port => 'Port';
+
+  @override
+  String get username => 'Nom d’utilisateur';
+
+  @override
+  String get password => 'Mot de passe';
+
+  @override
+  String get sslConnection => 'Connexion SSL';
+
+  @override
+  String get saveAndConnect => 'Enregistrer et connecter';
+
+  @override
+  String get reconnect => 'Reconnecter';
+
+  @override
+  String get settingsSaved => 'Paramètres enregistrés';
+
+  @override
+  String get mqttConnected => 'Connecté au broker MQTT';
+
+  @override
+  String get mqttConnectionError => 'Erreur de connexion MQTT';
+
+  @override
+  String get ledColor => 'Couleur des LEDs';
+
+  @override
+  String get brightnessLabel => 'Luminosité';
+
+  @override
+  String get ledOnLabel => 'LED allumée';
+
+  @override
+  String get relayControl => 'Contrôle des relais';
+
+  @override
+  String get relay1Label => 'Relais 1 (IN1)';
+
+  @override
+  String get relay2Label => 'Relais 2 (IN2)';
+
+  @override
+  String get ioControlTitle => 'Contrôle IO (Entrées / Sorties)';
+
+  @override
+  String get io1Label => 'IO1 (Bouton 1)';
+
+  @override
+  String get io2Label => 'IO2 (Bouton 2)';
+
+  @override
+  String get modeOutput => 'Mode : Sortie (Poussoir)';
+
+  @override
+  String get modeInput => 'Mode : Entrée';
+
+  @override
+  String get active => 'ACTIF';
+
+  @override
+  String get inactive => 'INACTIF';
+
+  @override
+  String triggerIo(Object ioNumber) {
+    return 'Déclencher IO$ioNumber';
+  }
+
+  @override
+  String get sensorSettings => 'Paramètres Capteurs';
+
+  @override
+  String get tempHumidity => 'Temp/Humidité';
+
+  @override
+  String get brightness => 'Luminosité';
 
   @override
   String get temperature => 'Température';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
+import '../l10n/app_localizations.dart';
 
 class LedControlPage extends StatefulWidget {
   const LedControlPage({super.key});
@@ -26,8 +27,10 @@ class _LedControlPageState extends State<LedControlPage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Contrôle LED & Capteurs')),
+      appBar: AppBar(title: Text(loc.ledControlTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -35,7 +38,7 @@ class _LedControlPageState extends State<LedControlPage> {
           children: [
             const SizedBox(height: 20),
 
-            Text('Couleur des LEDs', style: Theme.of(context).textTheme.titleLarge),
+            Text(loc.ledColor, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
 
             ValueListenableBuilder<Color>(
@@ -59,7 +62,7 @@ class _LedControlPageState extends State<LedControlPage> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Luminosité : ${(brightness * 100).round()}%'),
+                    Text('${loc.brightnessLabel} : ${(brightness * 100).round()}%'),
                     Slider(
                       value: brightness,
                       min: 0.0,
@@ -79,7 +82,7 @@ class _LedControlPageState extends State<LedControlPage> {
               builder: (context, isOn, _) {
                 return Row(
                   children: [
-                    const Text("LED allumée"),
+                    Text(loc.ledOnLabel),
                     Switch(
                       value: isOn,
                       onChanged: (val) => _ledService.isOn.value = val,
@@ -94,6 +97,7 @@ class _LedControlPageState extends State<LedControlPage> {
     );
   }
 }
+
 
 
 

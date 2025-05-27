@@ -8,6 +8,7 @@ import 'package:mqtt_hatab/services/mqtt_service.dart';
 import 'package:mqtt_hatab/services/sensor_service.dart';
 import 'package:mqtt_hatab/services/led_service.dart';
 import '../main.dart'; // Import pour accéder à MyApp.minimizeApp()
+import '../l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,46 +35,47 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_drop_down_circle, color: Colors.white),
-        tooltip: 'Minimiser l\'application',
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('L\'application va se minimiser'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          Future.delayed(const Duration(seconds: 2), () {
-            MyApp.minimizeApp();
-          });
-        },
-      ),
-      title: const Text(
-        'Contrôle MQTT Tablette',
-        style: TextStyle(color: Colors.white),
-      ),
-      centerTitle: true,
-      backgroundColor: const Color.fromARGB(255, 61, 61, 61),
-      actions: [
-        ValueListenableBuilder<bool>(
-          valueListenable: mqtt.isConnected,
-          builder: (context, connected, child) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.circle,
-                color: connected ? Colors.green : Colors.red,
-                size: 18,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_drop_down_circle, color: Colors.white),
+          tooltip: loc.minimizeAppTooltip,
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loc.appWillMinimize),
+                duration: const Duration(seconds: 2),
               ),
             );
+            Future.delayed(const Duration(seconds: 2), () {
+              MyApp.minimizeApp();
+            });
           },
         ),
-      ],
-    ),
-
+        title: Text(
+          loc.title,
+          style: const TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 61, 61, 61),
+        actions: [
+          ValueListenableBuilder<bool>(
+            valueListenable: mqtt.isConnected,
+            builder: (context, connected, child) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Icon(
+                  Icons.circle,
+                  color: connected ? Colors.green : Colors.red,
+                  size: 18,
+                ),
+              );
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -82,40 +84,40 @@ class _HomePageState extends State<HomePage> {
             _buildNavigationCard(
               context,
               icon: Icons.settings,
-              title: 'Paramètres MQTT',
-              subtitle: 'Configurer la connexion au broker',
+              title: loc.mqttSettingsTitle,
+              subtitle: loc.mqttSettingsSubtitle,
               page: const SettingsPage(),
             ),
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
               icon: Icons.lightbulb_outline,
-              title: 'Contrôle LEDs',
-              subtitle: 'Allumer/Éteindre et changer la couleur',
+              title: loc.ledControlTitle,
+              subtitle: loc.ledControlSubtitle,
               page: const LedControlPage(),
             ),
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
               icon: Icons.power_rounded,
-              title: 'Relay switch',
-              subtitle: 'Control switch relay in live',
+              title: loc.relaySwitchTitle,
+              subtitle: loc.relaySwitchSubtitle,
               page: const SwitchRelayPage(),
             ),
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
               icon: Icons.radio_button_checked,
-              title: 'IO Button Control',
-              subtitle: 'Control IO Button in live',
+              title: loc.ioButtonControlTitle,
+              subtitle: loc.ioButtonControlSubtitle,
               page: const IoPage(),
             ),
             const SizedBox(height: 20),
             _buildNavigationCard(
               context,
               icon: Icons.settings,
-              title: 'Parameter and Information',
-              subtitle: 'temp, humidity, lux',
+              title: loc.parameterInformationTitle,
+              subtitle: loc.parameterInformationSubtitle,
               page: const ParameterInformationPage(),
             ),
           ],
@@ -147,6 +149,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
 
 
 

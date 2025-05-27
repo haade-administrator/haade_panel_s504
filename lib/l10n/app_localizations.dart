@@ -95,6 +95,12 @@ abstract class AppLocalizations {
     Locale('fr')
   ];
 
+  /// No description provided for @title.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT Tablet Control'**
+  String get title;
+
   /// No description provided for @minimizeAppTooltip.
   ///
   /// In en, this message translates to:
@@ -106,12 +112,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The application will minimize'**
   String get appWillMinimize;
-
-  /// No description provided for @mqttTabletControlTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'MQTT Tablet Control'**
-  String get mqttTabletControlTitle;
 
   /// No description provided for @mqttSettingsTitle.
   ///
@@ -128,7 +128,7 @@ abstract class AppLocalizations {
   /// No description provided for @ledControlTitle.
   ///
   /// In en, this message translates to:
-  /// **'LED Control'**
+  /// **'LED & Sensor Control'**
   String get ledControlTitle;
 
   /// No description provided for @ledControlSubtitle.
@@ -172,6 +172,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Temperature, Humidity, and Brightness Sensors'**
   String get parameterInformationSubtitle;
+
+  /// No description provided for @mqttSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT Settings'**
+  String get mqttSettings;
+
+  /// No description provided for @brokerAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Broker Address'**
+  String get brokerAddress;
+
+  /// No description provided for @port.
+  ///
+  /// In en, this message translates to:
+  /// **'Port'**
+  String get port;
+
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @sslConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'SSL Connection'**
+  String get sslConnection;
+
+  /// No description provided for @saveAndConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Save and Connect'**
+  String get saveAndConnect;
+
+  /// No description provided for @reconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnect'**
+  String get reconnect;
+
+  /// No description provided for @settingsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved'**
+  String get settingsSaved;
+
+  /// No description provided for @mqttConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to MQTT broker'**
+  String get mqttConnected;
+
+  /// No description provided for @mqttConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT connection error'**
+  String get mqttConnectionError;
+
+  /// No description provided for @ledColor.
+  ///
+  /// In en, this message translates to:
+  /// **'LED Color'**
+  String get ledColor;
+
+  /// No description provided for @brightnessLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get brightnessLabel;
+
+  /// No description provided for @ledOnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'LED On'**
+  String get ledOnLabel;
+
+  /// No description provided for @relayControl.
+  ///
+  /// In en, this message translates to:
+  /// **'Relay Control'**
+  String get relayControl;
+
+  /// No description provided for @relay1Label.
+  ///
+  /// In en, this message translates to:
+  /// **'Relay 1 (IN1)'**
+  String get relay1Label;
+
+  /// No description provided for @relay2Label.
+  ///
+  /// In en, this message translates to:
+  /// **'Relay 2 (IN2)'**
+  String get relay2Label;
+
+  /// No description provided for @ioControlTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'IO Control (Inputs/Outputs)'**
+  String get ioControlTitle;
+
+  /// No description provided for @io1Label.
+  ///
+  /// In en, this message translates to:
+  /// **'IO1 (Button 1)'**
+  String get io1Label;
+
+  /// No description provided for @io2Label.
+  ///
+  /// In en, this message translates to:
+  /// **'IO2 (Button 2)'**
+  String get io2Label;
+
+  /// No description provided for @modeOutput.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode: Output (Push)'**
+  String get modeOutput;
+
+  /// No description provided for @modeInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Mode: Input'**
+  String get modeInput;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'INACTIVE'**
+  String get inactive;
+
+  /// No description provided for @triggerIo.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger IO{ioNumber}'**
+  String triggerIo(Object ioNumber);
+
+  /// No description provided for @sensorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensor Settings'**
+  String get sensorSettings;
+
+  /// No description provided for @tempHumidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Temp/Humidity'**
+  String get tempHumidity;
+
+  /// No description provided for @brightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get brightness;
 
   /// No description provided for @temperature.
   ///
