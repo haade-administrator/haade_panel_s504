@@ -6,6 +6,8 @@ body: |
   - Change decimals to humidity ( no decimals after, )
   - App translate (en, fr)
   - Add automatic minimize app if connected with MQTT after reboot
+  - Add new logo
+  - Init Documentation README.md
 
 
   🐛 Bug Fix :
