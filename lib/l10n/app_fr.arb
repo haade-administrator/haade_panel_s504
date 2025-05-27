@@ -1,6 +1,6 @@
 {
   "@@locale": "fr",
-  "title": "Contrôle MQTT Tablette",
+  "title": "ELC SMT MQTT Controle Tablette",
 
   "minimizeAppTooltip": "Minimiser l'application",
   "appWillMinimize": "L'application va se minimiser",
