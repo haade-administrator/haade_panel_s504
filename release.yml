@@ -7,5 +7,6 @@ body: |
 
 
   🐛 Bug Fix :
+  - error workflow without key.properties
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
