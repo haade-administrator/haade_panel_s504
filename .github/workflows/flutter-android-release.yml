@@ -35,7 +35,9 @@ jobs:
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/haade_android_apk_key.jks
 
       - name: Write key.properties
-        run: echo "${{ secrets.KEY_PROPERTIES }}" > key.properties
+        run: |
+          cd $GITHUB_WORKSPACE
+          echo "${{ secrets.KEY_PROPERTIES }}" > key.properties
 
       - name: Install dependencies
         run: flutter pub get
