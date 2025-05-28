@@ -25,12 +25,17 @@ jobs:
           yq '.body' release.yml >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
           echo "APK_PATH=$(yq '.apk_path' release.yml)" >> $GITHUB_ENV
-        shell: bash
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+
+      - name: Decode keystore file
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/haade_android_apk_key.jks
+
+      - name: Write key.properties
+        run: echo "${{ secrets.KEY_PROPERTIES }}" > key.properties
 
       - name: Install dependencies
         run: flutter pub get
@@ -43,10 +48,7 @@ jobs:
           FILE_NAME="$(basename "${APK_PATH}")"
           EXT="${FILE_NAME##*.}"
           BASE="${FILE_NAME%.*}"
-          
-          # Remplacer 'app-release' par 'haade_panel_s504' dans BASE
           BASE="${BASE/app-release/haade_panel_s504}"
-          
           NEW_NAME="${BASE}-${TAG}.${EXT}"
           mv "${APK_PATH}" "build/app/outputs/flutter-apk/${NEW_NAME}"
           echo "FINAL_APK_PATH=build/app/outputs/flutter-apk/${NEW_NAME}" >> $GITHUB_ENV
@@ -60,3 +62,4 @@ jobs:
           files: ${{ env.FINAL_APK_PATH }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+

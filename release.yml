@@ -3,6 +3,7 @@ name: "Version 1.0.4"
 body: |
   ✨ News :
   - Add button News update app
+  - Add key Release property
 
 
   🐛 Bug Fix :
