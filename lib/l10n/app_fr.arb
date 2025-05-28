@@ -61,9 +61,11 @@
     }
   },
 
-  "sensorSettings": "Paramètres Capteurs",
-  "tempHumidity": "Temp/Humidité",
+  "version": "Version",
+  "tempHumidity": "Température/Humidité",
   "brightness": "Luminosité",
+  "sensorSettings": "Paramètres & Infos",
+
 
   "temperature": "Température",
   "humidity": "Humidité",

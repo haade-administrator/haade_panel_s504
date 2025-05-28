@@ -61,9 +61,10 @@
   }
   },
 
-  "sensorSettings": "Sensor Settings",
-  "tempHumidity": "Temp/Humidity",
+  "version": "Version",
+  "tempHumidity": "Temperature / Humidity",
   "brightness": "Brightness",
+  "sensorSettings": "Settings & Infos",
 
   "temperature": "Temperature",
   "humidity": "Humidity",

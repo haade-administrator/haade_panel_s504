@@ -88,17 +88,14 @@ class _LightSensorPageState extends State<LightSensorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            _buildLuxCard(context),
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
+    return Column(
+      children: [
+        _buildLuxCard(context),
+        const SizedBox(height: 20),
+      ],
     );
   }
 }
+
+
 

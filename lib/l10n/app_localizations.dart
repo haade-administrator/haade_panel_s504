@@ -377,16 +377,16 @@ abstract class AppLocalizations {
   /// **'Trigger IO{ioNumber}'**
   String triggerIo(Object ioNumber);
 
-  /// No description provided for @sensorSettings.
+  /// No description provided for @version.
   ///
   /// In en, this message translates to:
-  /// **'Sensor Settings'**
-  String get sensorSettings;
+  /// **'Version'**
+  String get version;
 
   /// No description provided for @tempHumidity.
   ///
   /// In en, this message translates to:
-  /// **'Temp/Humidity'**
+  /// **'Temperature / Humidity'**
   String get tempHumidity;
 
   /// No description provided for @brightness.
@@ -394,6 +394,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Brightness'**
   String get brightness;
+
+  /// No description provided for @sensorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings & Infos'**
+  String get sensorSettings;
 
   /// No description provided for @temperature.
   ///

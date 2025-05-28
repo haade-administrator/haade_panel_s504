@@ -152,13 +152,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get sensorSettings => 'Sensor Settings';
+  String get version => 'Version';
 
   @override
-  String get tempHumidity => 'Temp/Humidity';
+  String get tempHumidity => 'Temperature / Humidity';
 
   @override
   String get brightness => 'Brightness';
+
+  @override
+  String get sensorSettings => 'Settings & Infos';
 
   @override
   String get temperature => 'Temperature';

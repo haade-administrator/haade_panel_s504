@@ -152,13 +152,16 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get sensorSettings => 'Paramètres Capteurs';
+  String get version => 'Version';
 
   @override
-  String get tempHumidity => 'Temp/Humidité';
+  String get tempHumidity => 'Température/Humidité';
 
   @override
   String get brightness => 'Luminosité';
+
+  @override
+  String get sensorSettings => 'Paramètres & Infos';
 
   @override
   String get temperature => 'Température';
