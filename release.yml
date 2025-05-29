@@ -8,6 +8,6 @@ body: |
 
 
   🐛 Bug Fix :
-  - error workflow without line to found key.properties
+  - error workflow without line key.properties
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
