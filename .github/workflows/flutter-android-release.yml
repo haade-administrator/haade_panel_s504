@@ -32,11 +32,16 @@ jobs:
           channel: stable
 
       - name: Decode keystore file
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > haade_android_apk_key.jks
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/haade_android_apk_key.jks
 
       - name: Write key.properties
         run: |
           echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
+
+      - name: Check if keystore exists
+        run: ls -l android/app
 
       - name: Install dependencies
         run: flutter pub get
