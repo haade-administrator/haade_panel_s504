@@ -36,8 +36,7 @@ jobs:
 
       - name: Write key.properties
         run: |
-          cd $GITHUB_WORKSPACE
-          echo "${{ secrets.KEY_PROPERTIES }}" > key.properties
+          echo "${{ secrets.KEY_PROPERTIES }}" > android/key.properties
 
       - name: Install dependencies
         run: flutter pub get
