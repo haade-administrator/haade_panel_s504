@@ -1,13 +1,11 @@
-tag: v1.0.4
-name: "Version 1.0.4"
+tag: v1.0.5
+name: "Version 1.0.5"
 body: |
   ✨ News :
-  - Add button News update app
-  - Add key Release property
-  - change screen parameter and information
 
 
   🐛 Bug Fix :
-  - error workflow key.properties
+  - remove error JAVA 11
+  - FIX error connection MQTT
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
