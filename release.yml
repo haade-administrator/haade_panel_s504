@@ -7,5 +7,6 @@ body: |
   🐛 Bug Fix :
   - remove error JAVA 11
   - FIX error connection MQTT
+  - remove java 17 link to gradle.properties
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
