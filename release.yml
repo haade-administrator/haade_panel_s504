@@ -1,12 +1,11 @@
-tag: v1.0.5
-name: "Version 1.0.5"
+tag: v1.0.6
+name: "Version 1.0.6"
 body: |
   ✨ News :
 
 
   🐛 Bug Fix :
-  - remove error JAVA 11
-  - FIX error connection MQTT
-  - remove java 17 link to gradle.properties
+  - remove error connect after reconnect MQTT
+  - remove context code
   
 apk_path: build/app/outputs/flutter-apk/app-release.apk
