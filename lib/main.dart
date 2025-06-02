@@ -18,10 +18,11 @@ Future<void> main() async {
     onConnectedCallback: () {
       reinitializeServices();
 
-      // 🔽 Délai pour laisser Flutter rendre au moins un frame avant de minimiser
-      Future.delayed(const Duration(seconds: 2), () {
-        MyApp.minimizeApp();
-      });
+      // 🔽 Délai pour laisser Flutter rendre au moins un frame avant de minimiser option à décommenter pour minimiser après lancement
+
+      // Future.delayed(const Duration(seconds: 2), () {
+      //   MyApp.minimizeApp();
+      // });
     },
   );
 
