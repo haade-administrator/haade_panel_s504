@@ -188,6 +188,9 @@ class MQTTService {
     isConnected.value = true;
     _reconnectTimer?.cancel(); // On arrête les tentatives si connecté
     _reconnectTimer = null;
+    _resubscribeAllTopics();
+    _isListening = false; // ← important pour permettre _setupListener de se relancer
+    _setupListener();     // ← relance l’écoute MQTT
     _onConnectedCallback?.call();
   }
 
@@ -212,6 +215,15 @@ class MQTTService {
 
   void onSubscribed(String topic) {
     print('📡 Abonné au topic : $topic');
+  }
+
+  void _resubscribeAllTopics() {
+  if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) return;
+
+  for (final topic in _listeners.keys) {
+    _client!.subscribe(topic, MqttQos.atMostOnce);
+    print('🔄 Resouscription au topic : $topic');
+   }
   }
 }
 
