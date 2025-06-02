@@ -14,16 +14,16 @@ class _IoPageState extends State<IoPage> {
   final bool isOutput1 = false; // IO1 en mode entrée
   final bool isOutput2 = true;  // IO2 en mode sortie
 
-  bool _manualState1 = false;
-  bool _manualState2 = false;
+  // bool _manualState1 = false;
+  // bool _manualState2 = false;
 
   @override
   void initState() {
     super.initState();
 
     // Initialiser l'état manuel depuis les notifiers
-    _manualState1 = IoService.instance.io1StateNotifier.value;
-    _manualState2 = IoService.instance.io2StateNotifier.value;
+    // _manualState1 = IoService.instance.io1StateNotifier.value;
+    // _manualState2 = IoService.instance.io2StateNotifier.value;
   }
 
   Widget _buildIoCard({

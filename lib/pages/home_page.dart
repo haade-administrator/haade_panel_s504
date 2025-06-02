@@ -51,18 +51,22 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Méthode pour lancer l'URL externe
   Future<void> _launchUpdateUrl() async {
-    if (_updateUrl == null) return;
-    final uri = Uri.parse(_updateUrl!);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.updateLaunchFailed)),
-        );
-      }
-    }
+  if (_updateUrl == null) return;
+  final uri = Uri.parse(_updateUrl!);
+
+  final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  if (!mounted) return; // ✅ Protection après await
+
+  if (!success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.updateLaunchFailed),
+      ),
+    );
   }
+}
+
 
   // Re-vérifier la mise à jour manuellement
   Future<void> _manualCheckUpdate() async {

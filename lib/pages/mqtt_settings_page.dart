@@ -8,10 +8,10 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  SettingsPageState createState() => SettingsPageState(); // ✅
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class SettingsPageState extends State<SettingsPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _brokerController = TextEditingController();
   final TextEditingController _portController = TextEditingController();
@@ -48,38 +48,42 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _saveAndConnect() async {
-    if (!_formKey.currentState!.validate()) return;
+  if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+  setState(() => _isLoading = true);
 
-    try {
-      await _saveSettings();
+  try {
+    await _saveSettings();
 
-      // Déconnecter proprement si déjà connecté
-      MQTTService.instance.disconnect();
+    MQTTService.instance.disconnect();
 
-      await MQTTService.instance.connect(
-        broker: _brokerController.text.trim(),
-        port: int.parse(_portController.text.trim()),
-        username: _usernameController.text.trim(),
-        password: _passwordController.text,
-        useSSL: _useSSL,
-        onConnectedCallback: () {
-          reinitializeServices();
+    await MQTTService.instance.connect(
+      broker: _brokerController.text.trim(),
+      port: int.parse(_portController.text.trim()),
+      username: _usernameController.text.trim(),
+      password: _passwordController.text,
+      useSSL: _useSSL,
+      onConnectedCallback: () {
+        if (!mounted) return; // ✅ Protection essentielle
+        reinitializeServices();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
-          );
-        },
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${AppLocalizations.of(context)!.mqttConnectionError}: $e')),
-      );
-    } finally {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
+        );
+      },
+    );
+  } catch (e) {
+    if (!mounted) return; // ✅ Protection ici aussi
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${AppLocalizations.of(context)!.mqttConnectionError}: $e')),
+    );
+  } finally {
+    if (mounted) {
       setState(() => _isLoading = false);
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
