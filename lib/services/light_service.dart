@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:haade_panel_s504/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/notification.dart';
 
 class LightService {
   static final LightService instance = LightService._internal();
@@ -47,8 +48,7 @@ class LightService {
   }
 
   void wakeUpTablet() {
-    print('💡 Réveil tablette car luminosité > seuil ($_threshold lx)');
-    // TODO: appel à un MethodChannel pour réveiller physiquement la tablette
+    NotificationService().showNotification('Réveil tablette','Luminosité > seuil ($_threshold lx)',);
   }
 
   void publishDiscoveryConfig() {

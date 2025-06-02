@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:haade_panel_s504/services/mqtt_service.dart';
+import 'package:haade_panel_s504/services/notification.dart';
+
 
 class IoService {
   static final IoService instance = IoService._internal();
@@ -62,7 +64,8 @@ class IoService {
         notifier.value = isPressed;
         final payload = isPressed ? 'ON' : 'OFF';
 
-        print('MQTT → $topic = $payload (retain: true)');
+        NotificationService().showNotification('MQTT', '$topic = $payload');
+
         MQTTService.instance.publish(topic, payload, retain: true);
 
         // 💡 Optionnel : déclenche un relais si appui bouton détecté
@@ -71,12 +74,14 @@ class IoService {
               ? 'haade_panel_s504/switch/relay1/set'
               : 'haade_panel_s504/switch/relay2/set';
 
-          print('MQTT → $relayTopic = ON (triggered by IO$ioNumber)');
+          
+          NotificationService().showNotification('Relais activé', 'IO$ioNumber → $relayTopic = ON');
+
           MQTTService.instance.publish(relayTopic, 'ON', retain: false);
         }
       }
     } on PlatformException catch (e) {
-      print('Erreur readState($ioNumber): $e');
+      NotificationService().showNotification('Erreur readState$ioNumber', e.message ?? '$e');
     }
   }
 
@@ -85,7 +90,7 @@ class IoService {
     try {
       await _platform.invokeMethod('setHigh', {'io': ioNumber});
     } on PlatformException catch (e) {
-      print('Erreur setHigh($ioNumber): $e');
+      NotificationService().showNotification('Erreur setHigh$ioNumber', e.message ?? '$e');
     }
   }
 
@@ -94,7 +99,7 @@ class IoService {
     try {
       await _platform.invokeMethod('setLow', {'io': ioNumber});
     } on PlatformException catch (e) {
-      print('Erreur setLow($ioNumber): $e');
+      NotificationService().showNotification('Erreur setLow$ioNumber', e.message ?? '$e');
     }
   }
 
