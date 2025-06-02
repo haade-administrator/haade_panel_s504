@@ -1,10 +1,13 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 typedef MessageHandler = void Function(String topic, String message);
+
+Timer? _reconnectTimer;
 
 class MQTTService {
   // 🔁 Singleton
@@ -183,12 +186,28 @@ class MQTTService {
   void onConnected() {
     print('✅ Connecté au broker MQTT');
     isConnected.value = true;
+    _reconnectTimer?.cancel(); // On arrête les tentatives si connecté
+    _reconnectTimer = null;
     _onConnectedCallback?.call();
   }
 
   void onDisconnected() {
     print('❌ Déconnecté du broker MQTT');
     isConnected.value = false;
+      if (_reconnectTimer == null || !_reconnectTimer!.isActive) {
+    _reconnectTimer = Timer.periodic(Duration(seconds: 10), (timer) async {
+      print('🔁 Tentative de reconnexion MQTT...');
+      try {
+        await autoConnectIfConfigured(onConnectedCallback: _onConnectedCallback);
+        if (isConnected.value) {
+          print('✅ Reconnexion réussie');
+          timer.cancel(); // On arrête le timer si ça a marché
+        }
+      } catch (e) {
+        print('⏳ Nouvelle tentative dans 10s : $e');
+      }
+    });
+  }
   }
 
   void onSubscribed(String topic) {
