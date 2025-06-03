@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:haade_panel_s504/services/notification.dart';
 
 typedef MessageHandler = void Function(String topic, String message);
 
@@ -66,7 +67,7 @@ class MQTTService {
       await _client!.connect();
       _setupListener();
     } catch (e) {
-      print('❌ Erreur de connexion MQTT : $e');
+      NotificationService().showNotification('MQTT', 'Erreur de connection MQTT : $e');
       _client!.disconnect();
       rethrow;
     }
@@ -114,7 +115,7 @@ class MQTTService {
           onConnectedCallback: onConnectedCallback,
         );
       } catch (e) {
-        print('⚠️ Connexion automatique échouée : $e');
+        NotificationService().showNotification('MQTT', 'Connexion automatique échouée : $e');
       }
     }
   }
@@ -142,12 +143,12 @@ class MQTTService {
   /// Publication sur un topic
   void publish(String topic, String message, {bool retain = false}) {
     if (_client == null) {
-      print('❌ MQTT client not initialized. Cannot publish to $topic');
+      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot publish to $topic');
       return;
     }
 
     if (_client!.connectionStatus?.state != MqttConnectionState.connected) {
-      print('❌ MQTT client not connected. Cannot publish to $topic');
+      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot publish to $topic');
       return;
     }
 
@@ -160,7 +161,7 @@ class MQTTService {
   /// Souscription à un topic
   void subscribe(String topic, void Function(String) onMessage) {
     if (_client == null) {
-      print('❌ MQTT client not initialized. Cannot subscribe to $topic');
+      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot subscribe to $topic');
       return;
     }
 
@@ -177,6 +178,7 @@ class MQTTService {
     if (_client?.connectionStatus?.state == MqttConnectionState.connected) {
       _client!.disconnect();
       print('🔌 Déconnecté proprement');
+      NotificationService().showNotification('MQTT', '🔌 Déconnecté proprement');
     }
     isConnected.value = false;
     _isListening = false;
@@ -184,7 +186,7 @@ class MQTTService {
 
   /// Callbacks MQTT
   void onConnected() {
-    print('✅ Connecté au broker MQTT');
+    NotificationService().showNotification('MQTT', '🔌 Connecté au broker MQTT');
     isConnected.value = true;
     _reconnectTimer?.cancel(); // On arrête les tentatives si connecté
     _reconnectTimer = null;
@@ -195,26 +197,26 @@ class MQTTService {
   }
 
   void onDisconnected() {
-    print('❌ Déconnecté du broker MQTT');
+    NotificationService().showNotification('MQTT', '🔌 Déconnecté du broker MQTT');
     isConnected.value = false;
       if (_reconnectTimer == null || !_reconnectTimer!.isActive) {
     _reconnectTimer = Timer.periodic(Duration(seconds: 10), (timer) async {
-      print('🔁 Tentative de reconnexion MQTT...');
+      NotificationService().showNotification('MQTT', '🔁 Tentative de reconnexion MQTT...');
       try {
         await autoConnectIfConfigured(onConnectedCallback: _onConnectedCallback);
         if (isConnected.value) {
-          print('✅ Reconnexion réussie');
+          NotificationService().showNotification('MQTT', '✅ Reconnexion réussie');
           timer.cancel(); // On arrête le timer si ça a marché
         }
       } catch (e) {
-        print('⏳ Nouvelle tentative dans 10s : $e');
+        NotificationService().showNotification('MQTT', '⏳ Nouvelle tentative dans 10s : $e');
       }
     });
   }
   }
 
   void onSubscribed(String topic) {
-    print('📡 Abonné au topic : $topic');
+    NotificationService().showNotification('MQTT', '📡 Abonné au topic : $topic');
   }
 
   void _resubscribeAllTopics() {
@@ -222,7 +224,7 @@ class MQTTService {
 
   for (final topic in _listeners.keys) {
     _client!.subscribe(topic, MqttQos.atMostOnce);
-    print('🔄 Resouscription au topic : $topic');
+    NotificationService().showNotification('MQTT', '🔄 Resouscription au topic : $topic');
    }
   }
 }
