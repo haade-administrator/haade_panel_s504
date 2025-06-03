@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:haade_panel_s504/services/mqtt_service.dart';
-import 'package:flutter/foundation.dart'; // <-- pour ValueNotifier
+import 'package:flutter/foundation.dart'; // pour ValueNotifier
+import 'package:haade_panel_s504/services/notification.dart'; // <-- Ajouté
 
 class SwitchService {
   static final SwitchService instance = SwitchService._internal();
@@ -18,22 +19,18 @@ class SwitchService {
 
   final String _availabilityTopic = 'haade_panel_s504/switch/availability';
 
-  // ValueNotifier pour suivre l’état des relais en temps réel
   final ValueNotifier<bool> relay1StateNotifier = ValueNotifier<bool>(false);
   final ValueNotifier<bool> relay2StateNotifier = ValueNotifier<bool>(false);
 
   bool _discoveryRelayPublished = false;
 
-  /// Initialise le service : publie la config, les états et s’abonne aux topics MQTT.
   Future<void> initialize() async {
-
     relay1StateNotifier.value = false;
     relay2StateNotifier.value = false;
 
     _publishDiscoveryRelayConfigs();
 
     MQTTService.instance.publish(_availabilityTopic, 'online', retain: true);
-
     _publishRelayStates(retain: true);
 
     MQTTService.instance.subscribe(_relay1TopicSet, (String message) {
@@ -109,7 +106,11 @@ class SwitchService {
   }
 
   Future<void> _onMessage(String topic, String message) async {
-    print('SwitchService MQTT received: $topic => $message');
+    await NotificationService().showNotification(
+      'MQTT Switch',
+      'Reçu : $topic => $message',
+    );
+
     final isOn = (message.toUpperCase() == 'ON');
 
     if (topic == _relay1TopicSet) {
@@ -119,7 +120,6 @@ class SwitchService {
     }
   }
 
-  /// Modifie l'état du relais physiquement et publie l'état si demandé.
   Future<void> setRelayState(int relayNumber, bool state, {bool publishState = true}) async {
     try {
       await _platform.invokeMethod('setRelayState', {
@@ -141,19 +141,22 @@ class SwitchService {
         }
       }
     } on PlatformException catch (e) {
-      print('Erreur SwitchService setRelayState: $e');
+      await NotificationService().showNotification(
+        'Erreur relais',
+        'setRelayState: $e',
+      );
     }
   }
 
-  /// Met à jour l'état de disponibilité de la tablette
   Future<void> setAvailability(bool online) async {
-  MQTTService.instance.publish(_availabilityTopic, online ? 'ON' : 'OFF', retain: true);
-}
+    MQTTService.instance.publish(_availabilityTopic, online ? 'ON' : 'OFF', retain: true);
+  }
 
   void dispose() {
     MQTTService.instance.publish(_availabilityTopic, 'offline', retain: true);
   }
 }
+
 
 
 

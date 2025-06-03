@@ -177,7 +177,6 @@ class MQTTService {
   void disconnect() {
     if (_client?.connectionStatus?.state == MqttConnectionState.connected) {
       _client!.disconnect();
-      print('🔌 Déconnecté proprement');
       NotificationService().showNotification('MQTT', '🔌 Déconnecté proprement');
     }
     isConnected.value = false;
