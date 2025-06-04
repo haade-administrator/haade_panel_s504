@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'pages/home_page.dart';
 import 'package:haade_panel_s504/services/mqtt_service.dart';
 import 'package:haade_panel_s504/services/sensor_service.dart';
@@ -7,12 +8,19 @@ import 'package:haade_panel_s504/services/led_service.dart';
 import 'package:haade_panel_s504/services/switch_service.dart';
 import 'package:haade_panel_s504/services/io_service.dart';
 import 'package:haade_panel_s504/services/light_service.dart';
+import 'package:haade_panel_s504/services/notification.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import '../l10n/app_localizations.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await NotificationService().initialize();
+
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  }
 
   await MQTTService.instance.autoConnectIfConfigured(
     onConnectedCallback: () {

@@ -122,10 +122,12 @@ class SwitchService {
 
   Future<void> setRelayState(int relayNumber, bool state, {bool publishState = true}) async {
     try {
+
       await _platform.invokeMethod('setRelayState', {
         'relay': relayNumber,
         'state': state,
       });
+
 
       final payload = state ? 'ON' : 'OFF';
 
