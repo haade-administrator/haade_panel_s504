@@ -10,8 +10,8 @@ import 'package:haade_panel_s504/services/io_service.dart';
 import 'package:haade_panel_s504/services/light_service.dart';
 import 'package:haade_panel_s504/services/notification.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:haade_panel_s504/services/app_localizations_helper.dart';
 import '../l10n/app_localizations.dart';
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,12 +22,15 @@ Future<void> main() async {
     await Permission.notification.request();
   }
 
+  // 🔆 Démarrage immédiat du capteur de lumière
+  LightService.instance.startSensor();
+  LightService.instance.publishDiscoveryConfig();
+
   await MQTTService.instance.autoConnectIfConfigured(
     onConnectedCallback: () {
       reinitializeServices();
 
-      // 🔽 Délai pour laisser Flutter rendre au moins un frame avant de minimiser option à décommenter pour minimiser après lancement
-
+      // 🔽 Optionnel : minimiser après démarrage (si décommenté)
       // Future.delayed(const Duration(seconds: 2), () {
       //   MyApp.minimizeApp();
       // });
@@ -37,15 +40,13 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-
 /// Relance tous les services dépendant du MQTT
 void reinitializeServices() {
   SensorService().initialize();
   LedService().initialize();
   SwitchService.instance.initialize();
   IoService.instance.initialize();
-  LightService.instance.startSensor();
-  LightService.instance.publishDiscoveryConfig();
+  LightService.instance.publishDiscoveryConfig(); // OK ici, mais plus de startSensor()
 }
 
 class MyApp extends StatelessWidget {
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLocalizationsHelper.setLocalizations(AppLocalizations.of(context)!);
     return MaterialApp(
       title: 'Tablette MQTT',
       theme: ThemeData(
@@ -71,16 +73,16 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
       debugShowCheckedModeBanner: false,
 
-      // 🔤 Configuration de la localisation
+      // 🔤 Localisation
       localizationsDelegates: const [
-        AppLocalizations.delegate, // ton fichier généré automatiquement
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en'), // anglais
-        Locale('fr'), // français
+        Locale('en'),
+        Locale('fr'),
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (final supportedLocale in supportedLocales) {
@@ -93,6 +95,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
 
 

@@ -1,10 +1,10 @@
-tag: v1.0.7
-name: "Version 1.0.7"
+tag: v1.0.8
+name: "Version 1.0.8"
 body: |
   ✨ News :
-  - ADD Notifications systems to android
+
 
 
   🐛 Bug Fix :
-  - remove print lessage of all files
+  - fix error bug notification initialization (main)
 apk_path: build/app/outputs/flutter-apk/app-release.apk
