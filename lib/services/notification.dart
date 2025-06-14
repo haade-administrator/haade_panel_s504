@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:haade_panel_s504/services/app_localizations_helper.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -15,42 +16,42 @@ class NotificationService {
     await _notificationsPlugin.initialize(settings);
   }
 
+  /// ➤ Getters dynamiques pour inclure la traduction complète
+  AndroidNotificationDetails get switchDetails => AndroidNotificationDetails(
+        'notify_switch_state',
+        AppLocalizationsHelper.loc.notificationSwitch,
+        channelDescription: AppLocalizationsHelper.loc.notificationDescriptionSwitch,
+        importance: Importance.high,
+        priority: Priority.high,
+      );
 
-  static const AndroidNotificationDetails _switchDetails = AndroidNotificationDetails(
-    'notify_switch_state',
-    'Notifications switch',
-    channelDescription: 'Notifications pour l’état des Switch',
-    importance: Importance.high,
-    priority: Priority.high,
-  );
-  /// ➤ Définir les canaux Android
-  static const AndroidNotificationDetails _ioDetails = AndroidNotificationDetails(
-    'notify_io_state',
-    'Notifications I/O',
-    channelDescription: 'Notifications pour l’état des IOs',
-    importance: Importance.high,
-    priority: Priority.high,
-  );
+  AndroidNotificationDetails get ioDetails => AndroidNotificationDetails(
+        'notify_io_state',
+        AppLocalizationsHelper.loc.notificationIo,
+        channelDescription: AppLocalizationsHelper.loc.notificationDescriptionIo,
+        importance: Importance.high,
+        priority: Priority.high,
+      );
 
-  static const AndroidNotificationDetails _luminosityDetails = AndroidNotificationDetails(
-    'notify_luminosity_state',
-    'Notifications Light sensor',
-    channelDescription: 'Notifications pour l’état du capteur de luminosité',
-    importance: Importance.high,
-    priority: Priority.high,
-  );
+  AndroidNotificationDetails get luminosityDetails => AndroidNotificationDetails(
+        'notify_luminosity_state',
+        AppLocalizationsHelper.loc.notificationLuminosity,
+        channelDescription: AppLocalizationsHelper.loc.notificationDescriptionLuminosity,
+        importance: Importance.high,
+        priority: Priority.high,
+      );
 
-  static const AndroidNotificationDetails _defaultDetails = AndroidNotificationDetails(
-    'default_channel',
-    'Default Mqtt Notifications',
-    channelDescription: 'MQTT et Notifications par défaut',
-    importance: Importance.high,
-    priority: Priority.high,
-  );
+  AndroidNotificationDetails get defaultDetails => AndroidNotificationDetails(
+        'default_channel',
+        AppLocalizationsHelper.loc.notificationDefault,
+        channelDescription: AppLocalizationsHelper.loc.notificationDescriptionDefault,
+        importance: Importance.high,
+        priority: Priority.high,
+      );
 
   /// ➤ Notification générique (canal par défaut)
   Future<void> showDefaultNotification(String title, String body) async {
-    const details = NotificationDetails(android: _defaultDetails);
+    final details = NotificationDetails(android: defaultDetails);
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
@@ -59,8 +60,9 @@ class NotificationService {
     );
   }
 
+  /// ➤ Notification pour Switch
   Future<void> showSwNotification(String title, String body) async {
-    const details = NotificationDetails(android: _switchDetails);
+    final details = NotificationDetails(android: switchDetails);
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
@@ -71,7 +73,7 @@ class NotificationService {
 
   /// ➤ Notification pour IO
   Future<void> showIoNotification(String title, String body) async {
-    const details = NotificationDetails(android: _ioDetails);
+    final details = NotificationDetails(android: ioDetails);
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
@@ -82,7 +84,7 @@ class NotificationService {
 
   /// ➤ Notification pour capteur de luminosité
   Future<void> showLuminosityNotification(String title, String body) async {
-    const details = NotificationDetails(android: _luminosityDetails);
+    final details = NotificationDetails(android: luminosityDetails);
     await _notificationsPlugin.show(
       DateTime.now().millisecondsSinceEpoch ~/ 1000,
       title,
@@ -91,4 +93,6 @@ class NotificationService {
     );
   }
 }
+
+
 

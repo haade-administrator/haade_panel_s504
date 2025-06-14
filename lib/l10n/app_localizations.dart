@@ -269,6 +269,12 @@ abstract class AppLocalizations {
   /// **'Settings saved'**
   String get settingsSaved;
 
+  /// No description provided for @mqttInitError.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT client not initialized. Call connect() first.'**
+  String get mqttInitError;
+
   /// No description provided for @mqttConnected.
   ///
   /// In en, this message translates to:
@@ -418,6 +424,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trigger IO{ioNumber}'**
   String triggerIo(Object ioNumber);
+
+  /// No description provided for @notificationSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Notification'**
+  String get notificationSwitch;
+
+  /// No description provided for @notificationDescriptionSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when switch change state'**
+  String get notificationDescriptionSwitch;
+
+  /// No description provided for @notificationIo.
+  ///
+  /// In en, this message translates to:
+  /// **'IO Notification'**
+  String get notificationIo;
+
+  /// No description provided for @notificationDescriptionIo.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when IO change state'**
+  String get notificationDescriptionIo;
+
+  /// No description provided for @notificationLuminosity.
+  ///
+  /// In en, this message translates to:
+  /// **'Luminosity Notification'**
+  String get notificationLuminosity;
+
+  /// No description provided for @notificationDescriptionLuminosity.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when luminosity change state'**
+  String get notificationDescriptionLuminosity;
+
+  /// No description provided for @notificationDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default Notification'**
+  String get notificationDefault;
+
+  /// No description provided for @notificationDescriptionDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when default & MQTT change state'**
+  String get notificationDescriptionDefault;
 
   /// No description provided for @version.
   ///

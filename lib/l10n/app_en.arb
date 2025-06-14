@@ -33,6 +33,7 @@
   "sslConnection": "SSL Connection",
   "saveAndConnect": "Save and Connect",
   "settingsSaved": "Settings saved",
+  "mqttInitError": "MQTT client not initialized. Call connect() first.",
   "mqttConnected": "Connected to MQTT broker",
   "mqttDisconnected": "Disconnected from MQTT broker",
   "mqttAttempt": "Attempting to reconnect MQTT",
@@ -67,6 +68,15 @@
   "ioNumber": {}
   }
   },
+
+  "notificationSwitch": "Switch Notification",
+  "notificationDescriptionSwitch": "Notify when switch change state",
+  "notificationIo": "IO Notification",
+  "notificationDescriptionIo": "Notify when IO change state",
+  "notificationLuminosity":  "Luminosity Notification",
+  "notificationDescriptionLuminosity": "Notify when luminosity change state",
+  "notificationDefault": "Default Notification",
+  "notificationDescriptionDefault": "Notify when default & MQTT change state",
 
   "version": "Version",
   "tempHumidity": "Temperature / Humidity",

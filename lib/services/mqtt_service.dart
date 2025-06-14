@@ -22,7 +22,7 @@ class MQTTService {
   MqttServerClient? _client;
   MqttServerClient get client {
     if (_client == null) {
-      throw Exception('MQTT client not initialized. Call connect() first.');
+      throw Exception(AppLocalizationsHelper.loc.mqttInitError);
     }
     return _client!;
   }
@@ -69,7 +69,7 @@ class MQTTService {
       await _client!.connect();
       _setupListener();
     } catch (e) {
-      NotificationService().showDefaultNotification('MQTT', 'Erreur de connection MQTT : $e');
+      NotificationService().showDefaultNotification('MQTT', '${AppLocalizationsHelper.loc.mqttConnectionError} : $e');
       _client!.disconnect();
       rethrow;
     }
@@ -117,7 +117,7 @@ class MQTTService {
           onConnectedCallback: onConnectedCallback,
         );
       } catch (e) {
-        NotificationService().showDefaultNotification('MQTT', 'Connexion automatique échouée : $e');
+        NotificationService().showDefaultNotification('MQTT', '${AppLocalizationsHelper.loc.mqttAutoConnectionError} : $e');
       }
     }
   }

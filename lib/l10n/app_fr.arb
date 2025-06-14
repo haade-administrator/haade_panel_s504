@@ -33,6 +33,7 @@
   "sslConnection": "Connexion SSL",
   "saveAndConnect": "Enregistrer et connecter",
   "settingsSaved": "Paramètres enregistrés",
+  "mqttInitError": "Client MQTT non initialisé. Appelez d'abord connect().",
   "mqttConnected": "Connecté au broker MQTT",
   "mqttDisconnected": "Déconnecté du broker MQTT",
   "mqttAttempt": "Tentative de reconnexion MQTT",
@@ -67,6 +68,15 @@
       "ioNumber": {}
     }
   },
+
+  "notificationSwitch": "Notification de commutation",
+  "notificationDescriptionSwitch": "Notifier lorsque le commutateur change d'état",
+  "notificationIo": "Notification d'E/S",
+  "notificationDescriptionIo": "Notifier lorsque l'état des E/S change",
+  "notificationLuminosity": "Notification de luminosité",
+  "notificationDescriptionLuminosity": "Notifier lorsque la luminosité change d'état",
+  "notificationDefault": "Notification par défaut",
+  "notificationDescriptionDefault": "Notifier lorsque les valeurs par défaut et MQTT changent d'état",
 
   "version": "Version",
   "tempHumidity": "Température/Humidité",

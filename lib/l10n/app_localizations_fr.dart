@@ -96,6 +96,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSaved => 'Paramètres enregistrés';
 
   @override
+  String get mqttInitError => 'Client MQTT non initialisé. Appelez d\'abord connect().';
+
+  @override
   String get mqttConnected => 'Connecté au broker MQTT';
 
   @override
@@ -171,6 +174,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String triggerIo(Object ioNumber) {
     return 'Déclencher IO$ioNumber';
   }
+
+  @override
+  String get notificationSwitch => 'Notification de commutation';
+
+  @override
+  String get notificationDescriptionSwitch => 'Notifier lorsque le commutateur change d\'état';
+
+  @override
+  String get notificationIo => 'Notification d\'E/S';
+
+  @override
+  String get notificationDescriptionIo => 'Notifier lorsque l\'état des E/S change';
+
+  @override
+  String get notificationLuminosity => 'Notification de luminosité';
+
+  @override
+  String get notificationDescriptionLuminosity => 'Notifier lorsque la luminosité change d\'état';
+
+  @override
+  String get notificationDefault => 'Notification par défaut';
+
+  @override
+  String get notificationDescriptionDefault => 'Notifier lorsque les valeurs par défaut et MQTT changent d\'état';
 
   @override
   String get version => 'Version';
