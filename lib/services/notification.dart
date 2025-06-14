@@ -42,8 +42,8 @@ class NotificationService {
 
   static const AndroidNotificationDetails _defaultDetails = AndroidNotificationDetails(
     'default_channel',
-    'Default Notifications',
-    channelDescription: 'Notifications par défaut',
+    'Default Mqtt Notifications',
+    channelDescription: 'MQTT et Notifications par défaut',
     importance: Importance.high,
     priority: Priority.high,
   );
