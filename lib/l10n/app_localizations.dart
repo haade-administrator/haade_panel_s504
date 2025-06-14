@@ -275,11 +275,53 @@ abstract class AppLocalizations {
   /// **'Connected to MQTT broker'**
   String get mqttConnected;
 
+  /// No description provided for @mqttDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected from MQTT broker'**
+  String get mqttDisconnected;
+
+  /// No description provided for @mqttAttempt.
+  ///
+  /// In en, this message translates to:
+  /// **'Attempting to reconnect MQTT'**
+  String get mqttAttempt;
+
+  /// No description provided for @mqttReconnectSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnection successful'**
+  String get mqttReconnectSuccess;
+
+  /// No description provided for @mqttNewTentative.
+  ///
+  /// In en, this message translates to:
+  /// **'New attempt in 10s:'**
+  String get mqttNewTentative;
+
   /// No description provided for @mqttConnectionError.
   ///
   /// In en, this message translates to:
   /// **'MQTT connection error'**
   String get mqttConnectionError;
+
+  /// No description provided for @mqttAutoConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT Auto-Connection Failed'**
+  String get mqttAutoConnectionError;
+
+  /// No description provided for @mqttInitializedError.
+  ///
+  /// In en, this message translates to:
+  /// **'MQTT client not initialized. Cannot publish to'**
+  String get mqttInitializedError;
+
+  /// No description provided for @mqttConnectionState.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanly disconnected'**
+  String get mqttConnectionState;
 
   /// No description provided for @fieldRequired.
   ///

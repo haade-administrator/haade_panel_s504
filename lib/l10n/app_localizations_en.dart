@@ -99,7 +99,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mqttConnected => 'Connected to MQTT broker';
 
   @override
+  String get mqttDisconnected => 'Disconnected from MQTT broker';
+
+  @override
+  String get mqttAttempt => 'Attempting to reconnect MQTT';
+
+  @override
+  String get mqttReconnectSuccess => 'Reconnection successful';
+
+  @override
+  String get mqttNewTentative => 'New attempt in 10s:';
+
+  @override
   String get mqttConnectionError => 'MQTT connection error';
+
+  @override
+  String get mqttAutoConnectionError => 'MQTT Auto-Connection Failed';
+
+  @override
+  String get mqttInitializedError => 'MQTT client not initialized. Cannot publish to';
+
+  @override
+  String get mqttConnectionState => 'Cleanly disconnected';
 
   @override
   String get fieldRequired => 'Field required';
