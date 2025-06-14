@@ -6,6 +6,8 @@
 
 [![Haade Panel s504 SMT-101 Model](assets/description/haade-panel-s504.png)](https://s.click.aliexpress.com/e/_omyM8Ge)
 
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
+
 It enables complete remote control and monitoring of the tablet’s built-in hardware (RGB LEDs, relays, I/O pins, temperature, humidity, light sensor) and the screen — all integrated with your Home Assistant via MQTT.
 
 ---
@@ -22,7 +24,7 @@ It enables complete remote control and monitoring of the tablet’s built-in har
 - ✅ Shows local notifications for important MQTT events
 - ✅ Multi-language support with `.arb` translation files
 
----
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
 ## ⚙️ Requirements
 
@@ -34,7 +36,7 @@ It enables complete remote control and monitoring of the tablet’s built-in har
 - MQTT broker (e.g. Mosquitto or Home Assistant MQTT Add-on)
 - Visual Studio Code or Android Studio
 
----
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
 ## 🚀 Quick Start
 
@@ -86,6 +88,7 @@ flutter build apk --release
 ```bash
 build/app/outputs/flutter-apk/app-release.apk
 ```
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
 ## 🧪 Debugging & Troubleshooting
 
@@ -117,6 +120,8 @@ Grant the app permissions to access sensors, GPIO, and wake locks if needed.
 
 ✅ MQTT Connectivity:
 Check broker credentials and verify topics using MQTT Explorer or Home Assistant MQTT integration.
+
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
 ## 📡 MQTT Topics
 
@@ -165,6 +170,8 @@ lib/
 cp lib/l10n/app_en.arb lib/l10n/app_es.arb
 ```
 
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
+
 ## 📄 License
 This project is licensed under the MIT License.
 
@@ -177,4 +184,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 ## 👨‍💻 Maintainer
 Developed by HAADE
 Feel free to open issues, contribute or submit pull requests!
+
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
