@@ -11,6 +11,7 @@ import '../main.dart'; // Import pour accéder à MyApp.minimizeApp()
 import '../l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:haade_panel_s504/services/update_checker.dart';
+import 'package:haade_panel_s504/services/app_localizations_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,13 +24,18 @@ class _HomePageState extends State<HomePage> {
   final MQTTService mqtt = MQTTService.instance;
   final LedService ledService = LedService();
 
-  // État local pour savoir si une mise à jour est dispo et URL correspondante
   bool _updateAvailable = false;
   String? _updateUrl;
 
   @override
   void initState() {
     super.initState();
+
+    // ✅ Initialiser AppLocalizationsHelper ici, quand le contexte est dispo
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppLocalizationsHelper.setLocalizations(AppLocalizations.of(context)!);
+    });
+
     SensorService().initialize();
     _checkUpdateOnStart();
   }
