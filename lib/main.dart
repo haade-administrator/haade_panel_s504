@@ -10,7 +10,6 @@ import 'package:haade_panel_s504/services/io_service.dart';
 import 'package:haade_panel_s504/services/light_service.dart';
 import 'package:haade_panel_s504/services/notification.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:haade_panel_s504/services/app_localizations_helper.dart';
 import '../l10n/app_localizations.dart';
 
 Future<void> main() async {
@@ -64,7 +63,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppLocalizationsHelper.setLocalizations(AppLocalizations.of(context)!);
     return MaterialApp(
       title: 'Tablette MQTT',
       theme: ThemeData(
