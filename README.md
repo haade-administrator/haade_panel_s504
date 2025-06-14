@@ -1,6 +1,6 @@
-## 🚀 Connect Haade Panel s504 to HomeAssistant via MQTT connect
+## 🚀 Connect Haade Panel s504 ( elc SMT ) to HomeAssistant via MQTT connect
 
-# SMT101 MQTT Control App
+## SMT101 MQTT Control App
 
 **SMT101 MQTT Control App** is a custom Flutter application designed to run on an Android wall-mounted tablet (SMT 101 model).  
 
