@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:haade_panel_s504/services/notification.dart';
+import 'package:haade_panel_s504/services/app_localizations_helper.dart';
 
 typedef MessageHandler = void Function(String topic, String message);
 
@@ -16,6 +17,7 @@ class MQTTService {
   factory MQTTService() => _instance;
   static MQTTService get instance => _instance;
   MQTTService._internal();
+  bool _hasShownConnectionError = false;
 
   MqttServerClient? _client;
   MqttServerClient get client {
@@ -140,30 +142,36 @@ class MQTTService {
     _isListening = true;
   }
 
-  /// Publication sur un topic
-  void publish(String topic, String message, {bool retain = false}) {
-    if (_client == null) {
-      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot publish to $topic');
-      return;
+/// Publication sur un topic
+void publish(String topic, String message, {bool retain = false}) {
+  if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
+    if (!_hasShownConnectionError) {
+      NotificationService().showNotification(
+        'MQTT',
+        'Le client MQTT est déconnecté. Impossible de publier sur "$topic".',
+      );
+      _hasShownConnectionError = true;
     }
-
-    if (_client!.connectionStatus?.state != MqttConnectionState.connected) {
-      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot publish to $topic');
-      return;
-    }
-
-    final builder = MqttClientPayloadBuilder();
-    builder.addString(message);
-    _client!.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!,
-        retain: retain);
+    return;
   }
 
-  /// Souscription à un topic
-  void subscribe(String topic, void Function(String) onMessage) {
-    if (_client == null) {
-      NotificationService().showNotification('MQTT', 'MQTT client not initialized. Cannot subscribe to $topic');
-      return;
+  final builder = MqttClientPayloadBuilder();
+  builder.addString(message);
+  _client!.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!, retain: retain);
+}
+
+/// Souscription à un topic
+void subscribe(String topic, void Function(String) onMessage) {
+  if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
+    if (!_hasShownConnectionError) {
+      NotificationService().showNotification(
+        'MQTT',
+        'Le client MQTT est déconnecté. Impossible de souscrire à "$topic".',
+      );
+      _hasShownConnectionError = true;
     }
+    return;
+  }
 
     _client!.subscribe(topic, MqttQos.atMostOnce);
     _listeners[topic] = onMessage;
@@ -186,6 +194,7 @@ class MQTTService {
   /// Callbacks MQTT
   void onConnected() {
     NotificationService().showNotification('MQTT', '🔌 Connecté au broker MQTT');
+    _hasShownConnectionError = false;
     isConnected.value = true;
     _reconnectTimer?.cancel(); // On arrête les tentatives si connecté
     _reconnectTimer = null;
@@ -196,11 +205,11 @@ class MQTTService {
   }
 
   void onDisconnected() {
-    NotificationService().showNotification('MQTT', '🔌 Déconnecté du broker MQTT');
+    NotificationService().showNotification('MQTT', AppLocalizationsHelper.loc.mqttDisconnected);
     isConnected.value = false;
       if (_reconnectTimer == null || !_reconnectTimer!.isActive) {
     _reconnectTimer = Timer.periodic(Duration(seconds: 10), (timer) async {
-      NotificationService().showNotification('MQTT', '🔁 Tentative de reconnexion MQTT...');
+    //  NotificationService().showNotification('MQTT', '🔁 Tentative de reconnexion MQTT...');
       try {
         await autoConnectIfConfigured(onConnectedCallback: _onConnectedCallback);
         if (isConnected.value) {
