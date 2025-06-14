@@ -19,7 +19,7 @@ class AppForegroundService : Service() {
 
     private fun createNotification(): Notification {
         val channelId = "app_foreground_service_channel"
-        val channelName = "Service principal"
+        val channelName = "MQTT Service"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val chan = NotificationChannel(
