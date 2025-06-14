@@ -2,9 +2,19 @@ tag: v1.0.8
 name: "Version 1.0.8"
 body: |
   ✨ News :
+  - ADD notification for led control
+  - ADD translation for notification
+  - CHANGE notification system
 
 
 
   🐛 Bug Fix :
-  - fix error bug notification initialization (main)
+  - FIX error bug notification initialization (main)
+  - FIX error light control page with home-assistant
+  - FIX warning notification
+  - FIX error notification
+
+  ✨ Next Release :
+  - ADD more translation
+  - REMOVE ScaffoldMessenger
 apk_path: build/app/outputs/flutter-apk/app-release.apk
