@@ -2,7 +2,7 @@
 
 **SMT101 MQTT Control App** is a custom Flutter application designed to run on an Android wall-mounted tablet (SMT 101 model).  
 
-===> [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge){: target="_blank"} <===
+**===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
 [![Haade Panel s504 SMT-101 Model](assets/description/haade-panel-s504.png)](https://s.click.aliexpress.com/e/_omyM8Ge)
 
