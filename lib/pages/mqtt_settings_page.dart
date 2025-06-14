@@ -8,7 +8,7 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  SettingsPageState createState() => SettingsPageState(); // ✅
+  SettingsPageState createState() => SettingsPageState();
 }
 
 class SettingsPageState extends State<SettingsPage> {
@@ -48,42 +48,41 @@ class SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _saveAndConnect() async {
-  if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
-  setState(() => _isLoading = true);
+    setState(() => _isLoading = true);
 
-  try {
-    await _saveSettings();
+    try {
+      await _saveSettings();
 
-    MQTTService.instance.disconnect();
+      MQTTService.instance.disconnect();
 
-    await MQTTService.instance.connect(
-      broker: _brokerController.text.trim(),
-      port: int.parse(_portController.text.trim()),
-      username: _usernameController.text.trim(),
-      password: _passwordController.text,
-      useSSL: _useSSL,
-      onConnectedCallback: () {
-        if (!mounted) return; // ✅ Protection essentielle
-        reinitializeServices();
+      await MQTTService.instance.connect(
+        broker: _brokerController.text.trim(),
+        port: int.parse(_portController.text.trim()),
+        username: _usernameController.text.trim(),
+        password: _passwordController.text,
+        useSSL: _useSSL,
+        onConnectedCallback: () {
+          if (!mounted) return;
+          reinitializeServices();
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(AppLocalizations.of(context)!.mqttConnected)),
         );
-      },
-    );
-  } catch (e) {
+        },
+      );
+    } catch (e) {
     if (!mounted) return; // ✅ Protection ici aussi
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${AppLocalizations.of(context)!.mqttConnectionError}: $e')),
     );
-  } finally {
-    if (mounted) {
-      setState(() => _isLoading = false);
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -136,7 +135,6 @@ class SettingsPageState extends State<SettingsPage> {
                 onChanged: (value) => setState(() => _useSSL = value),
               ),
               const SizedBox(height: 20),
-
               ElevatedButton(
                 onPressed: _isLoading ? null : _saveAndConnect,
                 child: _isLoading
@@ -154,6 +152,7 @@ class SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
 
 
 
