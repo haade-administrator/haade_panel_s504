@@ -64,7 +64,7 @@ class IoService {
         notifier.value = isPressed;
         final payload = isPressed ? 'ON' : 'OFF';
 
-        NotificationService().showNotification('MQTT', '$topic = $payload');
+        NotificationService().showIoNotification('MQTT', '$topic = $payload');
 
         MQTTService.instance.publish(topic, payload, retain: true);
 
@@ -75,13 +75,13 @@ class IoService {
               : 'haade_panel_s504/switch/relay2/set';
 
           
-          NotificationService().showNotification('Relais activé', 'IO$ioNumber → $relayTopic = ON');
+          NotificationService().showIoNotification('Relais activé', 'IO$ioNumber → $relayTopic = ON');
 
           MQTTService.instance.publish(relayTopic, 'ON', retain: false);
         }
       }
     } on PlatformException catch (e) {
-      NotificationService().showNotification('Erreur readState$ioNumber', e.message ?? '$e');
+      NotificationService().showIoNotification('Erreur readState$ioNumber', e.message ?? '$e');
     }
   }
 
@@ -90,7 +90,7 @@ class IoService {
     try {
       await _platform.invokeMethod('setHigh', {'io': ioNumber});
     } on PlatformException catch (e) {
-      NotificationService().showNotification('Erreur setHigh$ioNumber', e.message ?? '$e');
+      NotificationService().showIoNotification('Erreur setHigh$ioNumber', e.message ?? '$e');
     }
   }
 
@@ -99,7 +99,7 @@ class IoService {
     try {
       await _platform.invokeMethod('setLow', {'io': ioNumber});
     } on PlatformException catch (e) {
-      NotificationService().showNotification('Erreur setLow$ioNumber', e.message ?? '$e');
+      NotificationService().showIoNotification('Erreur setLow$ioNumber', e.message ?? '$e');
     }
   }
 

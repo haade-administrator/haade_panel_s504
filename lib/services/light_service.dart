@@ -48,7 +48,7 @@ class LightService {
   }
 
   void wakeUpTablet() {
-    NotificationService().showNotification('Réveil tablette','Luminosité > seuil ($_threshold lx)',);
+    NotificationService().showLuminosityNotification('Réveil tablette','Luminosité > seuil ($_threshold lx)',);
   }
 
   void publishDiscoveryConfig() {

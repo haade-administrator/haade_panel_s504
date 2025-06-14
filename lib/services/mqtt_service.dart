@@ -69,7 +69,7 @@ class MQTTService {
       await _client!.connect();
       _setupListener();
     } catch (e) {
-      NotificationService().showNotification('MQTT', 'Erreur de connection MQTT : $e');
+      NotificationService().showDefaultNotification('MQTT', 'Erreur de connection MQTT : $e');
       _client!.disconnect();
       rethrow;
     }
@@ -117,7 +117,7 @@ class MQTTService {
           onConnectedCallback: onConnectedCallback,
         );
       } catch (e) {
-        NotificationService().showNotification('MQTT', 'Connexion automatique échouée : $e');
+        NotificationService().showDefaultNotification('MQTT', 'Connexion automatique échouée : $e');
       }
     }
   }
@@ -146,7 +146,7 @@ class MQTTService {
 void publish(String topic, String message, {bool retain = false}) {
   if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
     if (!_hasShownConnectionError) {
-      NotificationService().showNotification(
+      NotificationService().showDefaultNotification(
         'MQTT',
         'Le client MQTT est déconnecté. Impossible de publier sur "$topic".',
       );
@@ -164,7 +164,7 @@ void publish(String topic, String message, {bool retain = false}) {
 void subscribe(String topic, void Function(String) onMessage) {
   if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
     if (!_hasShownConnectionError) {
-      NotificationService().showNotification(
+      NotificationService().showDefaultNotification(
         'MQTT',
         'Le client MQTT est déconnecté. Impossible de souscrire à "$topic".',
       );
@@ -185,7 +185,7 @@ void subscribe(String topic, void Function(String) onMessage) {
   void disconnect() {
     if (_client?.connectionStatus?.state == MqttConnectionState.connected) {
       _client!.disconnect();
-      NotificationService().showNotification('MQTT', '🔌 Déconnecté proprement');
+      NotificationService().showDefaultNotification('MQTT', '🔌 Déconnecté proprement');
     }
     isConnected.value = false;
     _isListening = false;
@@ -193,7 +193,7 @@ void subscribe(String topic, void Function(String) onMessage) {
 
   /// Callbacks MQTT
   void onConnected() {
-    NotificationService().showNotification('MQTT', '🔌 Connecté au broker MQTT');
+    NotificationService().showDefaultNotification('MQTT', '🔌 Connecté au broker MQTT');
     _hasShownConnectionError = false;
     isConnected.value = true;
     _reconnectTimer?.cancel(); // On arrête les tentatives si connecté
@@ -205,26 +205,26 @@ void subscribe(String topic, void Function(String) onMessage) {
   }
 
   void onDisconnected() {
-    NotificationService().showNotification('MQTT', AppLocalizationsHelper.loc.mqttDisconnected);
+    NotificationService().showDefaultNotification('MQTT', AppLocalizationsHelper.loc.mqttDisconnected);
     isConnected.value = false;
       if (_reconnectTimer == null || !_reconnectTimer!.isActive) {
     _reconnectTimer = Timer.periodic(Duration(seconds: 10), (timer) async {
-    //  NotificationService().showNotification('MQTT', '🔁 Tentative de reconnexion MQTT...');
+      NotificationService().showDefaultNotification('MQTT', AppLocalizationsHelper.loc.mqttAttempt);
       try {
         await autoConnectIfConfigured(onConnectedCallback: _onConnectedCallback);
         if (isConnected.value) {
-          NotificationService().showNotification('MQTT', '✅ Reconnexion réussie');
+          NotificationService().showDefaultNotification('MQTT', AppLocalizationsHelper.loc.mqttReconnectSuccess);
           timer.cancel(); // On arrête le timer si ça a marché
         }
       } catch (e) {
-        NotificationService().showNotification('MQTT', '⏳ Nouvelle tentative dans 10s : $e');
+        NotificationService().showDefaultNotification('MQTT', '${AppLocalizationsHelper.loc.mqttNewTentative} $e');
       }
     });
   }
   }
 
   void onSubscribed(String topic) {
-    NotificationService().showNotification('MQTT', '📡 Abonné au topic : $topic');
+    NotificationService().showDefaultNotification('MQTT', '📡 Abonné au topic : $topic');
   }
 
   void _resubscribeAllTopics() {
@@ -232,7 +232,7 @@ void subscribe(String topic, void Function(String) onMessage) {
 
   for (final topic in _listeners.keys) {
     _client!.subscribe(topic, MqttQos.atMostOnce);
-    NotificationService().showNotification('MQTT', '🔄 Resouscription au topic : $topic');
+    NotificationService().showDefaultNotification('MQTT', '🔄 Resouscription au topic : $topic');
    }
   }
 }

@@ -106,7 +106,7 @@ class SwitchService {
   }
 
   Future<void> _onMessage(String topic, String message) async {
-    await NotificationService().showNotification(
+    await NotificationService().showSwNotification(
       'MQTT Switch',
       'Reçu : $topic => $message',
     );
@@ -143,7 +143,7 @@ class SwitchService {
         }
       }
     } on PlatformException catch (e) {
-      await NotificationService().showNotification(
+      await NotificationService().showSwNotification(
         'Erreur relais',
         'setRelayState: $e',
       );
