@@ -7,16 +7,57 @@ class NotificationService {
 
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  /// ➤ Initialisation du plugin
+  /// ➤ Initialisation du plugin avec des noms de canaux **figés**
   Future<void> initialize() async {
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const settings = InitializationSettings(android: androidSettings);
     await _notificationsPlugin.initialize(settings);
+
+    // Création manuelle des canaux avec des NOMS STATIQUES
+    final androidPlugin = _notificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidPlugin != null) {
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'notify_switch_state',
+          'Switch',
+          description: 'Notifications for switch states',
+          importance: Importance.high,
+        ),
+      );
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'notify_io_state',
+          'I/O',
+          description: 'Notifications for I/O states',
+          importance: Importance.high,
+        ),
+      );
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'notify_luminosity_state',
+          'Luminosity',
+          description: 'Notifications for light sensor',
+          importance: Importance.high,
+        ),
+      );
+      await androidPlugin.createNotificationChannel(
+        const AndroidNotificationChannel(
+          'default_channel',
+          'Default',
+          description: 'General notifications',
+          importance: Importance.high,
+        ),
+      );
+    }
   }
 
-  /// ➤ Getters dynamiques pour inclure la traduction complète
+  /// ➤ Détails de notification — descriptions traduites (OK)
   AndroidNotificationDetails get switchDetails => AndroidNotificationDetails(
         'notify_switch_state',
         AppLocalizationsHelper.loc.notificationSwitch,
@@ -49,7 +90,7 @@ class NotificationService {
         priority: Priority.high,
       );
 
-  /// ➤ Notification générique (canal par défaut)
+  /// ➤ Notifications spécialisées
   Future<void> showDefaultNotification(String title, String body) async {
     final details = NotificationDetails(android: defaultDetails);
     await _notificationsPlugin.show(
@@ -60,7 +101,6 @@ class NotificationService {
     );
   }
 
-  /// ➤ Notification pour Switch
   Future<void> showSwNotification(String title, String body) async {
     final details = NotificationDetails(android: switchDetails);
     await _notificationsPlugin.show(
@@ -71,7 +111,6 @@ class NotificationService {
     );
   }
 
-  /// ➤ Notification pour IO
   Future<void> showIoNotification(String title, String body) async {
     final details = NotificationDetails(android: ioDetails);
     await _notificationsPlugin.show(
@@ -82,7 +121,6 @@ class NotificationService {
     );
   }
 
-  /// ➤ Notification pour capteur de luminosité
   Future<void> showLuminosityNotification(String title, String body) async {
     final details = NotificationDetails(android: luminosityDetails);
     await _notificationsPlugin.show(
@@ -93,6 +131,8 @@ class NotificationService {
     );
   }
 }
+
+
 
 
 

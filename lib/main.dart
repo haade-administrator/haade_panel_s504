@@ -15,21 +15,34 @@ import '../l10n/app_localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // ✅ Initialize local notifications
   await NotificationService().initialize();
 
+  // ✅ Request notification permission
   if (await Permission.notification.isDenied) {
     await Permission.notification.request();
   }
 
-  // 🔆 Démarrage immédiat du capteur de lumière
+  // ✅ Request microphone permission
+  if (await Permission.microphone.isDenied) {
+    await Permission.microphone.request();
+  }
+
+  // ✅ Request phone permission
+  if (await Permission.phone.isDenied) {
+    await Permission.phone.request();
+  }
+
+  // 🔆 Start light sensor immediately
   LightService.instance.startSensor();
   LightService.instance.publishDiscoveryConfig();
 
+  // ✅ Connect to MQTT if configured
   await MQTTService.instance.autoConnectIfConfigured(
     onConnectedCallback: () {
       reinitializeServices();
 
-      // 🔽 Optionnel : minimiser après démarrage (si décommenté)
+      // 🔽 Optional: minimize after startup
       // Future.delayed(const Duration(seconds: 2), () {
       //   MyApp.minimizeApp();
       // });

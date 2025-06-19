@@ -1,17 +1,12 @@
-tag: v1.0.8
-name: "Version 1.0.8"
+tag: v1.0.9
+name: "Version 1.0.9"
 body: |
   ✨ News :
-  - ADD notification for led control
-  - ADD translation for notification
-  - CHANGE notification system
+  - ADD Microphone & Phone Permissions
 
 
 
   🐛 Bug Fix :
-  - FIX error bug notification initialization (main)
-  - FIX error light control page with home-assistant
-  - FIX warning notification
   - FIX error notification
 
   ✨ Next Release :

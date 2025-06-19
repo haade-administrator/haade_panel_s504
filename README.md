@@ -172,6 +172,14 @@ cp lib/l10n/app_en.arb lib/l10n/app_es.arb
 
 **===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
+## 📞 Microphone & Phone Permissions
+
+This app requests:
+- `RECORD_AUDIO` — to use the built-in microphone.
+- `READ_PHONE_STATE` and `CALL_PHONE` — to read phone status and initiate calls if needed.
+
+These are declared in `AndroidManifest.xml` and requested dynamically at runtime using the [`permission_handler`](https://pub.dev/packages/permission_handler) package.
+
 ## 📄 License
 This project is licensed under the MIT License.
 
