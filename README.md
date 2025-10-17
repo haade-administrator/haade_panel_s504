@@ -51,9 +51,10 @@ cd smt101_mqtt_app
 
 ## 🚀 flutter into docker
 
-docker build . -t flutter_docker
-docker run -i -p 8080:9000 -td flutter_docker
-access http://localhost:8080
+```bash
+docker build -t flutter-android .
+docker run --rm -it -v $(pwd):/app flutter-android
+```
 
 # METHOD 2 - Install flutter + dependances on PC
 
@@ -88,10 +89,13 @@ pm list receivers -d | grep gallery
 flutter run
 ```
 
-### 5️⃣ Build a Release APK
+### 5️⃣ Build a Release APK in local
 
 ```bash
-flutter build apk --release
+flutter clean
+flutter pub get
+flutter build apk --debug   # pour tests locaux
+flutter build apk --release # si tu as la key.properties générée par GitHub Actions
 ```
 
 **The signed APK will be located here:**
