@@ -38,6 +38,12 @@ It enables complete remote control and monitoring of the tablet’s built-in har
 
 **===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
 
+## 🚀 flutter into docker
+
+docker build . -t flutter_docker
+docker run -i -p 8080:9000 -td flutter_docker
+access http://localhost:8080
+
 ## 🚀 Quick Start
 
 ### 1️⃣ Clone the Repository
