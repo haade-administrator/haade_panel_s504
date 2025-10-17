@@ -42,7 +42,7 @@ RUN yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses
 RUN sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-33" "build-tools;33.0.2" "ndk;27.0.12077973"
 
 # Configurer Flutter pour Android
-RUN flutter doctor --android-licenses --yes
+RUN flutter doctor --android-licenses
 RUN flutter precache
 
 # Vérification
