@@ -12,7 +12,8 @@ val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 } else {
-    throw GradleException("Le fichier key.properties est introuvable à la racine du projet.")
+    // Pas d'exception, on build en debug local
+    println("⚠️ key.properties introuvable, la release locale utilisera la clé debug.")
 }
 
 android {
@@ -47,25 +48,35 @@ android {
     }
 
     signingConfigs {
-    create("release") {
-        keyAlias = keystoreProperties["keyAlias"]?.toString()
-        keyPassword = keystoreProperties["keyPassword"]?.toString()
-        storePassword = keystoreProperties["storePassword"]?.toString()
-
-        val storeFilePath = keystoreProperties["storeFile"]?.toString()
-        if (storeFilePath != null) {
-            storeFile = file(storeFilePath)
-        } else {
-            throw GradleException("storeFile manquant dans key.properties")
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"]?.toString()
+                keyPassword = keystoreProperties["keyPassword"]?.toString()
+                storePassword = keystoreProperties["storePassword"]?.toString()
+                val storeFilePath = keystoreProperties["storeFile"]?.toString()
+                if (storeFilePath != null) {
+                    storeFile = file(storeFilePath)
+                } else {
+                    throw GradleException("storeFile manquant dans key.properties")
+                }
+            } else {
+                // fallback debug si key.properties absent
+                println("⚠️ Release fallback vers debug signing")
+            }
         }
-      }
-    }   
+    }
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = if (keystorePropertiesFile.exists())
+                signingConfigs.getByName("release")
+            else
+                signingConfigs.getByName("debug") // fallback debug local
             isMinifyEnabled = false
             isShrinkResources = false
+        }
+        getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 
