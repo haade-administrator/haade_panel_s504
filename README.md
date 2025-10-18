@@ -53,12 +53,10 @@ cd smt101_mqtt_app
 
 ```bash
 docker build -t flutter-android .
-docker run --rm -it -v $(pwd):/app flutter-android
 ```
 **Dans VS Code :**
 Appuie sur F1
-Tape “**Dev Containers: Reopen in Container**” (anciennement Remote-Containers).
-Sélectionne le dossier racine de ton projet.
+Tape “**Dev Containers: Reopen in Container**”
 **VS Code va :**
 Construire le container (ou le réutiliser si déjà construit).
 Monter ton projet dans /app.
@@ -225,4 +223,8 @@ Developed by HAADE
 Feel free to open issues, contribute or submit pull requests!
 
 **===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
+
+
+## archive
+ r run --rm -it -v $(pwd):/app flutter-android
 
