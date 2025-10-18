@@ -3,7 +3,10 @@
   "build": {
     "dockerfile": "../Dockerfile"
   },
-  "workspaceFolder": "/app",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
   "extensions": [
     "dart-code.flutter",
     "dart-code.dart-code"
@@ -14,4 +17,5 @@
   },
   "remoteUser": "root"
 }
+
 

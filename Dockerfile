@@ -1,3 +1,6 @@
+# ========================
+# Flutter + Android + Dart + Linux + Web
+# ========================
 FROM ubuntu:22.04
 
 # ---------- ENV ----------
@@ -6,27 +9,19 @@ ENV FLUTTER_HOME=/opt/flutter
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV PATH=$PATH:$FLUTTER_HOME/bin:$FLUTTER_HOME/bin/cache/dart-sdk/bin:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools:$ANDROID_SDK_ROOT/emulator
 
-# ---------- INSTALL SYSTEM DEPENDENCIES ----------
+# ---------- SYSTEM DEPENDENCIES ----------
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl unzip git wget zip xz-utils file \
     libglu1-mesa openjdk-17-jdk python3 python3-pip ca-certificates \
     cmake ninja-build pkg-config clang \
-    lib32stdc++6 lib32z1 \
-    libgtk-3-dev mesa-utils \
-    chromium-browser \
+    libgtk-3-dev mesa-utils lib32stdc++6 lib32z1 \
+    wget gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Chrome pour Flutter Web
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb \
-    && apt-get update \
-    && apt-get install -y /tmp/chrome.deb \
-    && rm /tmp/chrome.deb
-
-
-# ---------- INSTALL FLUTTER ----------
+# ---------- FLUTTER ----------
 RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME
 
-# ---------- INSTALL ANDROID SDK ----------
+# ---------- ANDROID SDK ----------
 RUN mkdir -p $ANDROID_SDK_ROOT/cmdline-tools
 RUN curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o /tmp/cmdline-tools.zip && \
     unzip -q /tmp/cmdline-tools.zip -d $ANDROID_SDK_ROOT/cmdline-tools && \
@@ -48,13 +43,22 @@ RUN flutter precache
 RUN yes | flutter doctor --android-licenses
 RUN flutter doctor -v
 
-# ---------- PROJECT DEPENDENCIES ----------
-WORKDIR /app
+# ---------- CHROME POUR FLUTTER WEB ----------
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /tmp/chrome.deb \
+    && apt-get update \
+    && apt-get install -y /tmp/chrome.deb \
+    && rm /tmp/chrome.deb
+
+# ---------- WORKSPACE ----------
+WORKDIR /workspace
+
+# ---------- INSTALL PROJECT DEPENDENCIES ----------
+# Copier pubspec pour Docker cache
 COPY pubspec.yaml pubspec.lock* ./
 RUN flutter pub get || true
 
 # ---------- VOLUME ----------
-VOLUME ["/app"]
+VOLUME ["/workspace"]
+
+# ---------- DEFAULT CMD ----------
 CMD [ "bash" ]
-
-
