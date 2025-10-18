@@ -55,6 +55,21 @@ cd smt101_mqtt_app
 docker build -t flutter-android .
 docker run --rm -it -v $(pwd):/app flutter-android
 ```
+**Dans VS Code :**
+Appuie sur F1
+Tape “**Dev Containers: Reopen in Container**” (anciennement Remote-Containers).
+Sélectionne le dossier racine de ton projet.
+**VS Code va :**
+Construire le container (ou le réutiliser si déjà construit).
+Monter ton projet dans /app.
+Utiliser le SDK Flutter et Dart présents dans le container.
+
+**Pour terminer:**
+
+```bash
+flutter doctor -v
+flutter pub get
+```
 
 # METHOD 2 - Install flutter + dependances on PC
 
