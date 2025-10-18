@@ -1,0 +1,17 @@
+{
+  "name": "Flutter Android Dev",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "workspaceFolder": "/app",
+  "extensions": [
+    "dart-code.flutter",
+    "dart-code.dart-code"
+  ],
+  "settings": {
+    "dart.sdkPath": "/opt/flutter/bin/cache/dart-sdk",
+    "flutter.sdkPath": "/opt/flutter"
+  },
+  "remoteUser": "root"
+}
+

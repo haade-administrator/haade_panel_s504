@@ -62,6 +62,7 @@ docker run --rm -it -v $(pwd):/app flutter-android
 ### 2️⃣ Install Dependencies
 
 ```bash
+flutter clean 
 flutter pub get
 ```
 
