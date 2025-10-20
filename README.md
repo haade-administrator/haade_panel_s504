@@ -52,7 +52,7 @@ cd smt101_mqtt_app
 ## 🚀 flutter into docker
 
 ```bash
-docker build -t flutter-android .
+docker build --no-cache -t flutter-android .
 ```
 **Dans VS Code :**
 Appuie sur F1
@@ -84,7 +84,7 @@ flutter pub get
 Connect via USB or ensure it’s visible to adb.
 
 ```bash
-flutter device
+flutter devices
 ```
 
 **connect to tablet:**

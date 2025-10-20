@@ -7,6 +7,11 @@
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
   ],
+  "runArgs": [
+    "--device=/dev/bus/usb:/dev/bus/usb",         // donne accès à l’USB
+    "--privileged",                               // nécessaire pour ADB et certains accès hardware
+    "--network=host"                              // permet ADB en Wi-Fi (adb connect IP:5555)
+  ],
   "extensions": [
     "dart-code.flutter",
     "dart-code.dart-code"
@@ -15,7 +20,9 @@
     "dart.sdkPath": "/opt/flutter/bin/cache/dart-sdk",
     "flutter.sdkPath": "/opt/flutter"
   },
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "postCreateCommand": "adb start-server || true"
 }
+
 
 

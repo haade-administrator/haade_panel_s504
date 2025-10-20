@@ -14,9 +14,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl unzip git wget zip xz-utils file \
     libglu1-mesa openjdk-17-jdk python3 python3-pip ca-certificates \
     cmake ninja-build pkg-config clang \
-    libgtk-3-dev mesa-utils lib32stdc++6 lib32z1 \
+    lib32stdc++6 lib32z1 \
     wget gnupg \
+    libgtk-3-dev \
+    liblzma-dev \
+    libstdc++-12-dev \
+    libblkid-dev \
+    android-tools-adb \
+    liblzma5 \
+    mesa-utils \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y locales
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 # ---------- FLUTTER ----------
 RUN git clone https://github.com/flutter/flutter.git -b stable $FLUTTER_HOME
@@ -48,6 +61,9 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
     && apt-get update \
     && apt-get install -y /tmp/chrome.deb \
     && rm /tmp/chrome.deb
+
+# Fix pour Flutter Web (détection de Chrome)
+ENV CHROME_EXECUTABLE=/usr/bin/google-chrome-stable
 
 # ---------- WORKSPACE ----------
 WORKDIR /workspace
