@@ -101,6 +101,10 @@ pm list receivers -d | grep gallery
 ### 4️⃣ Run in Debug Mode
 ```bash
 flutter run
+
+# for chrome launch
+
+flutter run -d web-server
 ```
 
 ### 5️⃣ Build a Release APK in local
