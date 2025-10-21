@@ -30,7 +30,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateAvailableTitle => 'Update available';
 
   @override
-  String get updateAvailableContent => 'A new version of the application is available. Would you like to download it?';
+  String get updateAvailableContent =>
+      'A new version of the application is available. Would you like to download it?';
 
   @override
   String get cancel => 'Cancel';
@@ -69,7 +70,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get parameterInformationTitle => 'Settings and Information';
 
   @override
-  String get parameterInformationSubtitle => 'Temperature, Humidity, and Brightness Sensors';
+  String get parameterInformationSubtitle =>
+      'Temperature, Humidity, and Brightness Sensors';
 
   @override
   String get mqttSettings => 'MQTT Settings';
@@ -96,7 +98,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsSaved => 'Settings saved';
 
   @override
-  String get mqttInitError => 'MQTT client not initialized. Call connect() first.';
+  String get mqttInitError =>
+      'MQTT client not initialized. Call connect() first.';
 
   @override
   String get mqttConnected => 'Connected to MQTT broker';
@@ -120,7 +123,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mqttAutoConnectionError => 'MQTT Auto-Connection Failed';
 
   @override
-  String get mqttInitializedError => 'MQTT client not initialized. Cannot publish to';
+  String get mqttInitializedError =>
+      'MQTT client not initialized. Cannot publish to';
 
   @override
   String get mqttConnectionState => 'Cleanly disconnected';
@@ -191,13 +195,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationLuminosity => 'Luminosity Notification';
 
   @override
-  String get notificationDescriptionLuminosity => 'Notify when luminosity change state';
+  String get notificationDescriptionLuminosity =>
+      'Notify when luminosity change state';
 
   @override
   String get notificationDefault => 'Default Notification';
 
   @override
-  String get notificationDescriptionDefault => 'Notify when default & MQTT change state';
+  String get notificationDescriptionDefault =>
+      'Notify when default & MQTT change state';
 
   @override
   String get version => 'Version';

@@ -30,7 +30,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateAvailableTitle => 'Mise à jour disponible';
 
   @override
-  String get updateAvailableContent => 'Une nouvelle version de l\'application est disponible.\nSouhaitez-vous la télécharger ?';
+  String get updateAvailableContent =>
+      'Une nouvelle version de l\'application est disponible.\nSouhaitez-vous la télécharger ?';
 
   @override
   String get cancel => 'Annuler';
@@ -69,7 +70,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get parameterInformationTitle => 'Paramètres et Informatons';
 
   @override
-  String get parameterInformationSubtitle => 'Capteurs de températures, humidités, luminosités';
+  String get parameterInformationSubtitle =>
+      'Capteurs de températures, humidités, luminosités';
 
   @override
   String get mqttSettings => 'Paramètres MQTT';
@@ -96,7 +98,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get settingsSaved => 'Paramètres enregistrés';
 
   @override
-  String get mqttInitError => 'Client MQTT non initialisé. Appelez d\'abord connect().';
+  String get mqttInitError =>
+      'Client MQTT non initialisé. Appelez d\'abord connect().';
 
   @override
   String get mqttConnected => 'Connecté au broker MQTT';
@@ -120,7 +123,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get mqttAutoConnectionError => 'MQTT Connexion automatique échouée';
 
   @override
-  String get mqttInitializedError => 'Client MQTT non initialisé. Impossible de publier sur';
+  String get mqttInitializedError =>
+      'Client MQTT non initialisé. Impossible de publier sur';
 
   @override
   String get mqttConnectionState => 'Déconnecté proprement';
@@ -179,25 +183,29 @@ class AppLocalizationsFr extends AppLocalizations {
   String get notificationSwitch => 'Notification de commutation';
 
   @override
-  String get notificationDescriptionSwitch => 'Notifier lorsque le commutateur change d\'état';
+  String get notificationDescriptionSwitch =>
+      'Notifier lorsque le commutateur change d\'état';
 
   @override
   String get notificationIo => 'Notification d\'E/S';
 
   @override
-  String get notificationDescriptionIo => 'Notifier lorsque l\'état des E/S change';
+  String get notificationDescriptionIo =>
+      'Notifier lorsque l\'état des E/S change';
 
   @override
   String get notificationLuminosity => 'Notification de luminosité';
 
   @override
-  String get notificationDescriptionLuminosity => 'Notifier lorsque la luminosité change d\'état';
+  String get notificationDescriptionLuminosity =>
+      'Notifier lorsque la luminosité change d\'état';
 
   @override
   String get notificationDefault => 'Notification par défaut';
 
   @override
-  String get notificationDescriptionDefault => 'Notifier lorsque les valeurs par défaut et MQTT changent d\'état';
+  String get notificationDescriptionDefault =>
+      'Notifier lorsque les valeurs par défaut et MQTT changent d\'état';
 
   @override
   String get version => 'Version';
