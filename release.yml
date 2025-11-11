@@ -1,13 +1,13 @@
-tag: v1.0.9
-name: "Version 1.0.9"
+tag: v1.1.0
+name: "Version 1.1.0"
 body: |
   ✨ News :
-  - ADD Microphone & Phone Permissions
+  - ADD options in code to display bar led / relay, button and parameter
 
 
 
   🐛 Bug Fix :
-  - FIX error notification
+  - remove led control an switch panel
 
   ✨ Next Release :
   - ADD more translation

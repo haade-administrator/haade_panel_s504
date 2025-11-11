@@ -126,7 +126,7 @@ class IoService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.0.9"
+        "sw_version": "1.1.0"
       }
     }''';
 
@@ -148,7 +148,7 @@ class IoService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.0.9"
+        "sw_version": "1.1.0"
       }
     }''';
 

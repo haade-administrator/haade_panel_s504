@@ -27,6 +27,12 @@ class _HomePageState extends State<HomePage> {
   bool _updateAvailable = false;
   String? _updateUrl;
 
+  // 👇 Flags pour activer/désactiver facilement les pages
+  final bool _enableLedPage = false;
+  final bool _enableSwitchPage = false;
+  final bool _enableIoPage = true;
+  final bool _enableParameterPage = true;
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +52,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  // Vérification initiale de la mise à jour dès le lancement
   Future<void> _checkUpdateOnStart() async {
     final url = await UpdateChecker.checkForUpdate();
     if (mounted) {
@@ -58,23 +63,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _launchUpdateUrl() async {
-  if (_updateUrl == null) return;
-  final uri = Uri.parse(_updateUrl!);
+    if (_updateUrl == null) return;
+    final uri = Uri.parse(_updateUrl!);
 
-  final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
-  if (!mounted) return; // ✅ Protection après await
+    final success = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!mounted) return;
 
-  if (!success) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(AppLocalizations.of(context)!.updateLaunchFailed),
-      ),
-    );
+    if (!success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.updateLaunchFailed),
+        ),
+      );
+    }
   }
-}
 
-
-  // Re-vérifier la mise à jour manuellement
   Future<void> _manualCheckUpdate() async {
     final url = await UpdateChecker.checkForUpdate();
     if (!mounted) return;
@@ -151,7 +154,8 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Text(
                   loc.newVersionAvailable,
-                  style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      color: Colors.redAccent, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -191,37 +195,41 @@ class _HomePageState extends State<HomePage> {
               page: const SettingsPage(),
             ),
             const SizedBox(height: 20),
-            _buildNavigationCard(
-              context,
-              icon: Icons.lightbulb_outline,
-              title: loc.ledControlTitle,
-              subtitle: loc.ledControlSubtitle,
-              page: const LedControlPage(),
-            ),
+            if (_enableLedPage)
+              _buildNavigationCard(
+                context,
+                icon: Icons.lightbulb_outline,
+                title: loc.ledControlTitle,
+                subtitle: loc.ledControlSubtitle,
+                page: const LedControlPage(),
+              ),
             const SizedBox(height: 20),
-            _buildNavigationCard(
-              context,
-              icon: Icons.power_rounded,
-              title: loc.relaySwitchTitle,
-              subtitle: loc.relaySwitchSubtitle,
-              page: const SwitchRelayPage(),
-            ),
+            if (_enableSwitchPage)
+              _buildNavigationCard(
+                context,
+                icon: Icons.power_rounded,
+                title: loc.relaySwitchTitle,
+                subtitle: loc.relaySwitchSubtitle,
+                page: const SwitchRelayPage(),
+              ),
             const SizedBox(height: 20),
-            _buildNavigationCard(
-              context,
-              icon: Icons.radio_button_checked,
-              title: loc.ioButtonControlTitle,
-              subtitle: loc.ioButtonControlSubtitle,
-              page: const IoPage(),
-            ),
+            if (_enableIoPage)
+              _buildNavigationCard(
+                context,
+                icon: Icons.radio_button_checked,
+                title: loc.ioButtonControlTitle,
+                subtitle: loc.ioButtonControlSubtitle,
+                page: const IoPage(),
+              ),
             const SizedBox(height: 20),
-            _buildNavigationCard(
-              context,
-              icon: Icons.settings,
-              title: loc.parameterInformationTitle,
-              subtitle: loc.parameterInformationSubtitle,
-              page: const ParameterInformationPage(),
-            ),
+            if (_enableParameterPage)
+              _buildNavigationCard(
+                context,
+                icon: Icons.settings,
+                title: loc.parameterInformationTitle,
+                subtitle: loc.parameterInformationSubtitle,
+                page: const ParameterInformationPage(),
+              ),
           ],
         ),
       ),
@@ -251,9 +259,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-
-
-
-
