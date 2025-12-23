@@ -199,8 +199,37 @@ lib/
 
 1️⃣ Copy the default **app_en.arb**
 
+cp lib/l10n/app_en.arb lib/l10n/app_fr.arb
+
+Translate the values in app_fr.arb:
+
+```json
+Copier le code
+{
+  "@@locale": "fr",
+  "appTitle": "Contrôle SMT101",
+  "mqttConnected": "Connecté au broker MQTT",
+  "mqttDisconnected": "Déconnecté du broker MQTT",
+  "ledControl": "Contrôle des LEDs",
+  "sensorData": "Données capteurs"
+}
+```
+
+Rebuild the localization files:
+
 ```bash
-cp lib/l10n/app_en.arb lib/l10n/app_es.arb
+flutter gen-l10n
+```
+
+Update **MaterialApp in main.dart:**
+
+```dart
+return MaterialApp(
+  localizationsDelegates: AppLocalizations.localizationsDelegates,
+  supportedLocales: AppLocalizations.supportedLocales,
+  locale: Locale('fr'), // Or dynamically based on system
+  ...
+);
 ```
 
 **===>** [**Smart Home Panel SMT 101**](https://s.click.aliexpress.com/e/_omyM8Ge) **<===**
