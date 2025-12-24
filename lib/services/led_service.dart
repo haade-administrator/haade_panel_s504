@@ -1,6 +1,5 @@
-// lib/services/led_service.dart
-
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:haade_panel_s504/services/mqtt_service.dart';
@@ -58,15 +57,13 @@ class LedService {
   void _publishDiscoveryConfig() {
     const configPayload = '''
 {
-  "name": "Led s504",
-  "friendly_name": "Led",
-  "object_id": "haade_panel_s504_led",
+  "name": "Led",
   "unique_id": "haade_panel_s504_led",
   "state_topic": "haade_panel_s504/led/state",
   "command_topic": "haade_panel_s504/led/set",
   "availability": 
     {
-      "topic": "haade_panel_s504/led/availability",
+      "topic": "haade_panel_s504/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     },
@@ -80,7 +77,7 @@ class LedService {
     "name": "Haade Panel s504",
     "model": "s504",
     "manufacturer": "HAADE",
-    "sw_version": "1.1.0"
+    "sw_version": "1.1.8"
   },
   "effect": false
 }
@@ -141,7 +138,7 @@ class LedService {
 
   void _handleMQTTMessage(String message) {
     try {
-      final data = Map<String, dynamic>.from(MQTTService.instance.parseJson(message));
+      final data = jsonDecode(message) as Map<String, dynamic>;
       final state = data['state'];
       final r = data['color']?['r'] ?? selectedColor.value.red;
       final g = data['color']?['g'] ?? selectedColor.value.green;
