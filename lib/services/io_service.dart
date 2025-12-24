@@ -109,15 +109,15 @@ class IoService {
     _discoveryPublished = true;
 
     const io1Config = '''{
-      "name": "IO1 (Bouton 1)",
+      "name": "IO1 (Button 1)",
       "state_topic": "haade_panel_s504/binary_sensor/io1/state",
-      "object_id": "haade_panel_s504_io1",
       "unique_id": "haade_panel_s504_io1",
       "device_class": "occupancy",
+      "enabled_by_default": false,
       "payload_on": "ON",
       "payload_off": "OFF",
       "availability": {
-        "topic": "haade_panel_s504/binary_sensor/availability",
+        "topic": "haade_panel_s504/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -126,20 +126,20 @@ class IoService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.1.0"
+        "sw_version": "1.1.8"
       }
     }''';
 
     const io2Config = '''{
-      "name": "IO2 (Bouton 2)",
+      "name": "IO2 (Button 2)",
       "state_topic": "haade_panel_s504/binary_sensor/io2/state",
-      "object_id": "haade_panel_s504_io2",
       "unique_id": "haade_panel_s504_io2",
       "device_class": "occupancy",
+      "enabled_by_default": false,
       "payload_on": "ON",
       "payload_off": "OFF",
       "availability": {
-        "topic": "haade_panel_s504/binary_sensor/availability",
+        "topic": "haade_panel_s504/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -148,7 +148,7 @@ class IoService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.1.0"
+        "sw_version": "1.1.8"
       }
     }''';
 
