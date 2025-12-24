@@ -29,7 +29,7 @@ class SensorService {
           temperature.value = roundedTemp;
           MQTTService.instance.publish(
             'haade_panel_s504/sensor/temperature',
-            roundedTemp.toStringAsFixed(1),
+            '{"temperature": ${roundedTemp.toStringAsFixed(1)}}',
             retain: true,
           );
           break;
@@ -39,7 +39,7 @@ class SensorService {
           humidity.value = roundedHum.toDouble();
           MQTTService.instance.publish(
             'haade_panel_s504/sensor/humidity',
-            roundedHum.toString(),
+            '{"humidity": ${roundedHum.toString()}}',
             retain: true,
           );
           break;
@@ -92,12 +92,12 @@ class SensorService {
 
         MQTTService.instance.publish(
           'haade_panel_s504/sensor/temperature',
-          roundedTemp.toStringAsFixed(1),
+          '{"temperature": ${roundedTemp.toStringAsFixed(1)}}',
           retain: true,
         );
         MQTTService.instance.publish(
           'haade_panel_s504/sensor/humidity',
-          roundedHum.toString(),
+          '{"humidity": ${roundedHum.toString()}}',
           retain: true,
         );
       }
@@ -112,38 +112,36 @@ class SensorService {
 
     const tempConfig = '''
 {
-  "name": "Temperature s504",
-  "friendly_name": "Temperature",
-  "object_id": "haade_panel_s504_temperature",
+  "name": "Temperature",
   "unique_id": "haade_panel_s504_temperature",
   "state_topic": "haade_panel_s504/sensor/temperature",
+  "value_template": "{{ value_json.temperature }}",
   "availability": 
     {
-      "topic": "haade_panel_s504/sensor/availability",
+      "topic": "haade_panel_s504/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     },
   "device_class": "temperature",
-  "unit_of_measurement": "C",
+  "unit_of_measurement": "\\u00B0C",
   "device": {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.1.0"
+    "sw_version": "1.1.8"
   }
 }
 ''';
 
     const humConfig = '''
 {
-  "name": "Humidity s504",
-  "friendly_name": "Humidity",
-  "object_id": "haade_panel_s504_humidity",
+  "name": "Humidity",
   "unique_id": "haade_panel_s504_humidity",
   "state_topic": "haade_panel_s504/sensor/humidity",
+  "value_template": "{{ value_json.humidity }}",
   "availability": 
     {
-      "topic": "haade_panel_s504/sensor/availability",
+      "topic": "haade_panel_s504/availability",
       "payload_available": "online",
       "payload_not_available": "offline"
     },
@@ -153,7 +151,7 @@ class SensorService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.1.0"
+    "sw_version": "1.1.8"
   }
 }
 ''';

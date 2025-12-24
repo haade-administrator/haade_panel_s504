@@ -38,7 +38,7 @@ class LightService {
 
     MQTTService.instance.publish(
       'haade_panel_s504/sensor/lux',
-      lux.toStringAsFixed(1),
+      '{"lux": ${lux.toStringAsFixed(1)}}',
       retain: true,
     );
 
@@ -55,15 +55,15 @@ class LightService {
     const topic = 'homeassistant/sensor/haade_panel_s504_lux/config';
     const payload = '''
 {
-  "name": "Lux s504",
-  "friendly_name": "Luminosity",
+  "name": "Luminosity",
   "state_topic": "haade_panel_s504/sensor/lux",
+  "value_template": "{{ value_json.lux }}",
   "unit_of_measurement": "lx",
   "device_class": "illuminance",
+  "enabled_by_default": false,
   "unique_id": "haade_panel_s504_lux",
-  "object_id": "haade_panel_s504_lux",
   "availability": {
-    "topic": "haade_panel_s504/sensor/availability",
+    "topic": "haade_panel_s504/availability",
     "payload_available": "online",
     "payload_not_available": "offline"
   },
@@ -71,7 +71,7 @@ class LightService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.1.0"
+    "sw_version": "1.1.8"
   }
 }
 ''';
