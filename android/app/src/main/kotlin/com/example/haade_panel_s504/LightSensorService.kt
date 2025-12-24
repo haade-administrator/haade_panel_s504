@@ -6,8 +6,12 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
+import io.flutter.plugin.common.MethodChannel
 
-class LightSensorService(private val context: Context) : SensorEventListener {
+class LightSensorService(
+    private val context: Context,
+    private val methodChannel: MethodChannel
+) : SensorEventListener {
 
     private var sensorManager: SensorManager? = null
     private var lightSensor: Sensor? = null
@@ -41,15 +45,14 @@ class LightSensorService(private val context: Context) : SensorEventListener {
         lastValue = value
         Log.d("LightSensorService", "Current light level: $value lx")
 
-        (context as? MainActivity)?.sendLightToFlutter(value)
+        // Envoie vers Flutter via MethodChannel
+        methodChannel.invokeMethod("onLightChanged", value)
 
         if (value > threshold) {
             Log.d("LightSensorService", "Light level above threshold ($threshold lx)")
-            // Action à définir si besoin, le WakeLock est supprimé
         }
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        // Optionnel : rien à faire ici
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 }
+

@@ -34,13 +34,12 @@ class _LightSensorPageState extends State<LightSensorPage> {
   void initState() {
     super.initState();
     LightService.instance.setThreshold(_threshold);
-    LightService.instance.startSensor();
+    LightService.instance.initialize();
     LightService.instance.publishDiscoveryConfig();
   }
 
   @override
   void dispose() {
-    LightService.instance.stopSensor();
     super.dispose();
   }
 
