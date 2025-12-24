@@ -1,13 +1,17 @@
-tag: v1.1.0
-name: "Version 1.1.0"
+tag: v1.1.8
+name: "Version 1.1.8"
 body: |
   ✨ News :
-  - ADD options in code to display bar led / relay, button and parameter
-
+  - ADD Offline S504 after power outage, shutdown, or tablet crash
+  - ADD deaf notification except for MQTT crashes
+  - ADD HA JSON template for sensor
+  - ADD LWT to mqtt service
 
 
   🐛 Bug Fix :
-  - remove led control an switch panel
+  - Fix error Temperature sensor
+  - Optimize json mqtt + encode to Led Service
+  - Optimize json mqtt to IO service + disabled by default
 
   ✨ Next Release :
   - ADD more translation
