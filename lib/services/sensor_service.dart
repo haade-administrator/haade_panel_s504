@@ -1,5 +1,3 @@
-// lib/services/sensor_service.dart
-
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -128,7 +126,7 @@ class SensorService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.1.8"
+    "sw_version": "1.1.9"
   }
 }
 ''';
@@ -151,7 +149,7 @@ class SensorService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.1.8"
+    "sw_version": "1.1.9"
   }
 }
 ''';

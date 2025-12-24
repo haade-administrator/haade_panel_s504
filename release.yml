@@ -1,17 +1,12 @@
-tag: v1.1.8
-name: "Version 1.1.8"
+tag: v1.1.9
+name: "Version 1.1.9"
 body: |
   ✨ News :
-  - ADD Offline S504 after power outage, shutdown, or tablet crash
-  - ADD deaf notification except for MQTT crashes
-  - ADD HA JSON template for sensor
-  - ADD LWT to mqtt service
+  - REMOVE permission no necessary ( video, phone, audio )
 
 
   🐛 Bug Fix :
-  - Fix error Temperature sensor
-  - Optimize json mqtt + encode to Led Service
-  - Optimize json mqtt to IO service + disabled by default
+  - remove error lux when minimize functions
 
   ✨ Next Release :
   - ADD more translation
