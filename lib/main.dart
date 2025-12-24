@@ -34,7 +34,7 @@ Future<void> main() async {
   }
 
   // 🔆 Start light sensor immediately
-  LightService.instance.startSensor();
+  LightService.instance.initialize();
   LightService.instance.publishDiscoveryConfig();
 
   // ✅ Connect to MQTT if configured
