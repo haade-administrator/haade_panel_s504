@@ -198,6 +198,16 @@ lib/
  ├── pages/             # Flutter UI pages
  └── widgets/           # Reusable UI widgets
 
+## How to add the switch and LED tab to the Android application
+
+Go to **Lib > Pages / home_page.dart** and change result
+
+  // 👇 Flags pour activer/désactiver facilement les pages
+  final bool _enableLedPage = true;
+  final bool _enableSwitchPage = true;
+  final bool _enableIoPage = true;
+  final bool _enableParameterPage = true;
+
 ## 🌍 How to Add a New Translation
 
 1️⃣ Copy the default **app_en.arb**
