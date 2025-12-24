@@ -99,11 +99,14 @@ pm list receivers -d | grep gallery
 ```
 
 ### 4️⃣ Run in Debug Mode
+
 ```bash
 flutter run
+```
 
 # for chrome launch
 
+```bash
 flutter run -d web-server
 ```
 
