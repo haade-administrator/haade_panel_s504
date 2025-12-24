@@ -27,7 +27,7 @@ class NotificationService {
           'notify_switch_state',
           'Switch',
           description: 'Notifications for switch states',
-          importance: Importance.high,
+          importance: Importance.low,
         ),
       );
       await androidPlugin.createNotificationChannel(
@@ -35,7 +35,7 @@ class NotificationService {
           'notify_io_state',
           'I/O',
           description: 'Notifications for I/O states',
-          importance: Importance.high,
+          importance: Importance.low,
         ),
       );
       await androidPlugin.createNotificationChannel(
@@ -43,7 +43,7 @@ class NotificationService {
           'notify_luminosity_state',
           'Luminosity',
           description: 'Notifications for light sensor',
-          importance: Importance.high,
+          importance: Importance.low,
         ),
       );
       await androidPlugin.createNotificationChannel(
