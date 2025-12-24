@@ -54,13 +54,12 @@ class SwitchService {
     _discoveryRelayPublished = true;
 
     const relay1Config = '''{
-      "name": "Relais 1 s504",
+      "name": "Relay 1",
+      "unique_id": "haade_panel_s504_relay_1",
       "state_topic": "haade_panel_s504/switch/relay1/state",
       "command_topic": "haade_panel_s504/switch/relay1/set",
-      "object_id": "haade_panel_s504_relay1",
-      "unique_id": "haade_panel_s504_relay1",
       "availability": {
-        "topic": "haade_panel_s504/switch/availability",
+        "topic": "haade_panel_s504/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -73,18 +72,17 @@ class SwitchService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.1.0"
+        "sw_version": "1.1.8"
       }
     }''';
 
     const relay2Config = '''{
-      "name": "Relais 2 s504",
+      "name": "Relay 2",
+      "unique_id": "haade_panel_s504_relay_2",
       "state_topic": "haade_panel_s504/switch/relay2/state",
       "command_topic": "haade_panel_s504/switch/relay2/set",
-      "object_id": "haade_panel_s504_relay2",
-      "unique_id": "haade_panel_s504_relay2",
       "availability": {
-        "topic": "haade_panel_s504/switch/availability",
+        "topic": "haade_panel_s504/availability",
         "payload_available": "online",
         "payload_not_available": "offline"
       },
@@ -97,7 +95,7 @@ class SwitchService {
         "name": "Haade Panel s504",
         "model": "s504",
         "manufacturer": "HAADE",
-        "sw_version": "1.1.0"
+        "sw_version": "1.1.8"
       }
     }''';
 
