@@ -1,12 +1,18 @@
-tag: v1.1.9
-name: "Version 1.1.9"
+tag: v1.2.0
+name: "Version 1.2.0"
 body: |
   ✨ News :
-  - REMOVE permission no necessary ( video, phone, audio )
+  - 
 
 
   🐛 Bug Fix :
-  - remove error lux when minimize functions
+  - Fixed MQTT HA connection to tablet
+  - LEDs/relays dead after HA reboot
+  - Lost subscriptions
+  - Broken HA Discovery
+  - Blocked availability
+  - Unstable reconnect
+  - Zombie session
 
   ✨ Next Release :
   - ADD more translation

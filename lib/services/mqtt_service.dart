@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -11,35 +12,57 @@ typedef MessageHandler = void Function(String topic, String message);
 Timer? _reconnectTimer;
 Timer? _heartbeatTimer;
 
+/// Interface pour les services notifiés après reconnexion MQTT
+abstract class MqttReconnectAware {
+  void onMqttReconnected();
+}
+
 class MQTTService {
-  // 🔁 Singleton
+  // -------------------- SINGLETON --------------------
   static final MQTTService _instance = MQTTService._internal();
   factory MQTTService() => _instance;
   static MQTTService get instance => _instance;
   MQTTService._internal();
 
-  bool _hasShownConnectionError = false;
+  // -------------------- CLIENT --------------------
   MqttServerClient? _client;
 
+  /// Subscription MQTT (ANTI-LEAK)
+  StreamSubscription<List<MqttReceivedMessage<MqttMessage>>>?
+      _updatesSubscription;
+
+  bool _hasShownConnectionError = false;
+
+  /// Listeners par topic
   final Map<String, void Function(String)> _listeners = {};
-  bool _isListening = false;
-  MessageHandler? _onMessage;
+
+  /// Callback global
   VoidCallback? _onConnectedCallback;
 
-  /// 🟢/🔴 État de connexion pour UI
+  /// Callback messages non gérés
+  MessageHandler? _onMessage;
+
+  /// État de connexion pour l'UI
   final ValueNotifier<bool> isConnected = ValueNotifier(false);
 
-  /// Topic global LWT
+  /// Availability globale
   final String globalAvailabilityTopic = 'haade_panel_s504/availability';
 
-  MqttServerClient get client {
-    if (_client == null) {
-      throw Exception(AppLocalizationsHelper.loc.mqttInitError);
+  /// Services à notifier après reconnexion
+  final List<MqttReconnectAware> _reconnectAwareServices = [];
+
+  /// ClientId unique
+  late final String _clientId =
+      'haade_panel_s504_${Random().nextInt(999999)}';
+
+  // -------------------- REGISTER SERVICES --------------------
+  void registerReconnectAware(MqttReconnectAware service) {
+    if (!_reconnectAwareServices.contains(service)) {
+      _reconnectAwareServices.add(service);
     }
-    return _client!;
   }
 
-  /// Connexion principale avec LWT global
+  // -------------------- CONNECT --------------------
   Future<void> connect({
     required String broker,
     required int port,
@@ -49,91 +72,132 @@ class MQTTService {
     MessageHandler? onMessage,
     VoidCallback? onConnectedCallback,
   }) async {
+    // 🔥 Nettoyage complet avant reconnexion
+    await _cleanupClient();
+
     _onMessage = onMessage;
     _onConnectedCallback = onConnectedCallback;
 
-    _client = MqttServerClient(broker, 'tablette_flutter_client')
+    _client = MqttServerClient(broker, _clientId)
       ..port = port
       ..secure = useSSL
-      ..logging(on: true)
+      ..logging(on: false)
       ..keepAlivePeriod = 20
-      ..onDisconnected = onDisconnected
-      ..onConnected = onConnected
-      ..onSubscribed = onSubscribed;
+      ..onDisconnected = _onDisconnected
+      ..onConnected = _onConnected
+      ..onSubscribed = _onSubscribed;
 
-    // LWT global
     final connMessage = MqttConnectMessage()
-        .withClientIdentifier('tablette_flutter_client')
+        .withClientIdentifier(_clientId)
         .authenticateAs(username, password)
         .startClean()
         .withWillTopic(globalAvailabilityTopic)
-        .withWillMessage('offline') // sera publié si déconnexion brutale
-        .withWillQos(MqttQos.atLeastOnce);
+        .withWillMessage('offline')
+        .withWillQos(MqttQos.atLeastOnce)
+        .withWillRetain();
 
     _client!.connectionMessage = connMessage;
 
     try {
       await _client!.connect();
       _setupListener();
-
-      // Publier online dès la connexion
       publish(globalAvailabilityTopic, 'online', retain: true);
-
-      // Heartbeat pour maintenir l'état online
       _startHeartbeat();
     } catch (e) {
       NotificationService().showDefaultNotification(
         'MQTT',
         '${AppLocalizationsHelper.loc.mqttConnectionError} : $e',
       );
-      _client!.disconnect();
+      await _cleanupClient();
       rethrow;
     }
   }
 
-  /// Heartbeat périodique pour "online"
+  // -------------------- CLEANUP --------------------
+  Future<void> _cleanupClient() async {
+    _heartbeatTimer?.cancel();
+    _reconnectTimer?.cancel();
+
+    await _updatesSubscription?.cancel();
+    _updatesSubscription = null;
+
+    _client?.disconnect();
+    _client = null;
+
+    isConnected.value = false;
+  }
+
+  // -------------------- HEARTBEAT --------------------
   void _startHeartbeat() {
     _heartbeatTimer?.cancel();
-    _heartbeatTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+    _heartbeatTimer =
+        Timer.periodic(const Duration(seconds: 30), (_) {
       if (isConnected.value) {
         publish(globalAvailabilityTopic, 'online', retain: true);
       }
     });
   }
 
-  /// Publication
+  // -------------------- PUBLISH --------------------
   void publish(String topic, String message, {bool retain = false}) {
-    if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) {
+    if (_client?.connectionStatus?.state !=
+        MqttConnectionState.connected) {
       if (!_hasShownConnectionError) {
         NotificationService().showDefaultNotification(
           'MQTT',
-          'Le client MQTT est déconnecté. Impossible de publier sur "$topic".',
+          'Client MQTT déconnecté → publish ignoré ($topic)',
         );
         _hasShownConnectionError = true;
       }
       return;
     }
+
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);
-    _client!.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!, retain: retain);
+
+    _client!.publishMessage(
+      topic,
+      MqttQos.atLeastOnce,
+      builder.payload!,
+      retain: retain,
+    );
   }
 
-  /// Souscription
+  // -------------------- SUBSCRIBE --------------------
   void subscribe(String topic, void Function(String) onMessage) {
-    if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) return;
-    _client!.subscribe(topic, MqttQos.atMostOnce);
     _listeners[topic] = onMessage;
+
+    if (_client?.connectionStatus?.state ==
+        MqttConnectionState.connected) {
+      _client!.subscribe(topic, MqttQos.atLeastOnce);
+    }
+
     _setupListener();
   }
 
-  /// Écouteur global
-  void _setupListener() {
-    if (_isListening || _client?.updates == null) return;
+  void _resubscribeAllTopics() {
+    if (_client?.connectionStatus?.state !=
+        MqttConnectionState.connected) return;
 
-    _client!.updates!.listen((List<MqttReceivedMessage<MqttMessage>> events) {
-      final recMess = events[0].payload as MqttPublishMessage;
-      final payload = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
-      final topic = events[0].topic;
+    for (final topic in _listeners.keys) {
+      _client!.subscribe(topic, MqttQos.atLeastOnce);
+    }
+  }
+
+  // -------------------- LISTENER --------------------
+  void _setupListener() {
+    if (_client?.updates == null) return;
+
+    // 🔥 ANTI-LEAK : un seul listener actif
+    _updatesSubscription?.cancel();
+
+    _updatesSubscription =
+        _client!.updates!.listen((events) {
+      final recMess = events.first.payload as MqttPublishMessage;
+      final payload =
+          MqttPublishPayload.bytesToStringAsString(
+              recMess.payload.message);
+      final topic = events.first.topic;
 
       if (_listeners.containsKey(topic)) {
         _listeners[topic]!(payload);
@@ -141,53 +205,67 @@ class MQTTService {
         _onMessage?.call(topic, payload);
       }
     });
-
-    _isListening = true;
   }
 
-  /// Callbacks
-  void onConnected() {
-    NotificationService().showDefaultNotification('MQTT', '🔌 Connecté au broker MQTT');
-    _hasShownConnectionError = false;
+  // -------------------- CALLBACKS --------------------
+  void _onConnected() {
     isConnected.value = true;
+    _hasShownConnectionError = false;
     _reconnectTimer?.cancel();
+
+    _setupListener();
+    publish(globalAvailabilityTopic, 'online', retain: true);
     _resubscribeAllTopics();
+
+    for (final service in _reconnectAwareServices) {
+      try {
+        service.onMqttReconnected();
+      } catch (e) {
+        debugPrint('Reconnect error on $service → $e');
+      }
+    }
+
     _onConnectedCallback?.call();
+
+    NotificationService()
+        .showDefaultNotification('MQTT', '🔌 Connecté');
   }
 
-  void onDisconnected() {
-    NotificationService().showDefaultNotification('MQTT', AppLocalizationsHelper.loc.mqttDisconnected);
+  void _onDisconnected() {
     isConnected.value = false;
     _heartbeatTimer?.cancel();
 
-    // Reconnexion automatique
+    _updatesSubscription?.cancel();
+    _updatesSubscription = null;
+
+    NotificationService().showDefaultNotification(
+      'MQTT',
+      AppLocalizationsHelper.loc.mqttDisconnected,
+    );
+
     if (_reconnectTimer == null || !_reconnectTimer!.isActive) {
-      _reconnectTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
-        NotificationService().showDefaultNotification('MQTT', AppLocalizationsHelper.loc.mqttAttempt);
+      _reconnectTimer =
+          Timer.periodic(const Duration(seconds: 10), (_) async {
         try {
-          await autoConnectIfConfigured(onConnectedCallback: _onConnectedCallback);
-          if (isConnected.value) timer.cancel();
-        } catch (e) {
-          NotificationService().showDefaultNotification('MQTT', '${AppLocalizationsHelper.loc.mqttNewTentative} $e');
-        }
+          await autoConnectIfConfigured(
+              onConnectedCallback: _onConnectedCallback);
+        } catch (_) {}
       });
     }
   }
 
-  void onSubscribed(String topic) {
-    NotificationService().showDefaultNotification('MQTT', '📡 Abonné au topic : $topic');
+  void _onSubscribed(String topic) {
+    debugPrint('MQTT subscribed → $topic');
   }
 
-  void _resubscribeAllTopics() {
-    if (_client == null || _client!.connectionStatus?.state != MqttConnectionState.connected) return;
-    for (final topic in _listeners.keys) {
-      _client!.subscribe(topic, MqttQos.atMostOnce);
-      NotificationService().showDefaultNotification('MQTT', '🔄 Resouscription au topic : $topic');
-    }
-  }
+  // -------------------- AUTO CONNECT --------------------
+  Future<void> autoConnectIfConfigured(
+      {VoidCallback? onConnectedCallback}) async {
+    if (_client?.connectionStatus?.state ==
+        MqttConnectionState.connecting) return;
 
-  Future<void> autoConnectIfConfigured({VoidCallback? onConnectedCallback}) async {
     final prefs = await SharedPreferences.getInstance();
+
     final broker = prefs.getString('mqtt_broker');
     final port = prefs.getInt('mqtt_port');
     final username = prefs.getString('mqtt_username');
@@ -198,33 +276,25 @@ class MQTTService {
         port != null &&
         username != null &&
         password != null) {
-      try {
-        await connect(
-          broker: broker,
-          port: port,
-          username: username,
-          password: password,
-          useSSL: useSSL,
-          onConnectedCallback: onConnectedCallback,
-        );
-      } catch (e) {
-        NotificationService().showDefaultNotification('MQTT', '${AppLocalizationsHelper.loc.mqttAutoConnectionError} : $e');
-      }
+      await connect(
+        broker: broker,
+        port: port,
+        username: username,
+        password: password,
+        useSSL: useSSL,
+        onConnectedCallback: onConnectedCallback,
+      );
     }
   }
 
-  /// Déconnexion propre (éviter de publier offline si l’app continue en arrière-plan)
-  void disconnect() {
-    if (_client?.connectionStatus?.state == MqttConnectionState.connected) {
-      _client!.disconnect();
-      NotificationService().showDefaultNotification('MQTT', '🔌 Déconnecté proprement');
-    }
-    isConnected.value = false;
-    _isListening = false;
-    _heartbeatTimer?.cancel();
-    _heartbeatTimer = null;
+  // -------------------- DISCONNECT --------------------
+  void disconnect() async {
+    await _cleanupClient();
   }
 }
+
+
+
 
 
 
