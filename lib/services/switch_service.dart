@@ -69,8 +69,50 @@ class SwitchService implements MqttReconnectAware {
     if (_discoveryRelayPublished) return;
     _discoveryRelayPublished = true;
 
-    const relay1Config = '''{ ... }'''; // ton JSON complet
-    const relay2Config = '''{ ... }'''; // ton JSON complet
+    const relay1Config = '''{
+      "name": "Relay 1",
+      "unique_id": "haade_panel_s504_relay_1",
+      "state_topic": "haade_panel_s504/switch/relay1/state",
+      "command_topic": "haade_panel_s504/switch/relay1/set",
+      "availability": {
+        "topic": "haade_panel_s504/availability",
+        "payload_available": "online",
+        "payload_not_available": "offline"
+      },
+      "payload_on": "ON",
+      "payload_off": "OFF",
+      "state_on": "ON",
+      "state_off": "OFF",
+      "device": {
+        "identifiers": ["haade_panel_s504"],
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
+        "sw_version": "1.2.1"
+      }
+    }''';
+    const relay2Config = '''{
+      "name": "Relay 2",
+      "unique_id": "haade_panel_s504_relay_2",
+      "state_topic": "haade_panel_s504/switch/relay2/state",
+      "command_topic": "haade_panel_s504/switch/relay2/set",
+      "availability": {
+        "topic": "haade_panel_s504/availability",
+        "payload_available": "online",
+        "payload_not_available": "offline"
+      },
+      "payload_on": "ON",
+      "payload_off": "OFF",
+      "state_on": "ON",
+      "state_off": "OFF",
+      "device": {
+        "identifiers": ["haade_panel_s504"],
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
+        "sw_version": "1.2.1"
+      }
+    }''';
 
     MQTTService.instance.publish(
       'homeassistant/switch/haade_panel_s504_relay1/config',

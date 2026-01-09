@@ -126,7 +126,7 @@ class SensorService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.2.0"
+    "sw_version": "1.2.1"
   }
 }
 ''';
@@ -149,7 +149,7 @@ class SensorService {
     "identifiers": ["haade_panel_s504"],
     "name": "Haade Panel s504",
     "model": "s504",
-    "sw_version": "1.2.0"
+    "sw_version": "1.2.1"
   }
 }
 ''';

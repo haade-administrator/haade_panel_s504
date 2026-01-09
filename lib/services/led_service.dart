@@ -51,7 +51,32 @@ class LedService implements MqttReconnectAware {
   }
 
   void _publishDiscoveryConfig() {
-    const configPayload = '''{ ... }'''; // ton JSON complet
+    const configPayload = 
+    '''{
+      "name": "Led",
+      "unique_id": "haade_panel_s504_led",
+      "state_topic": "haade_panel_s504/led/state",
+      "command_topic": "haade_panel_s504/led/set",
+      "availability": 
+        {
+          "topic": "haade_panel_s504/availability",
+          "payload_available": "online",
+          "payload_not_available": "offline"
+        },
+      "schema": "json",
+      "brightness": true,
+      "brightness_scale": 255,
+      "color_mode": true,
+      "supported_color_modes": ["rgb"],
+      "device": {
+        "identifiers": ["haade_panel_s504"],
+        "name": "Haade Panel s504",
+        "model": "s504",
+        "manufacturer": "HAADE",
+        "sw_version": "1.2.1"
+      },
+      "effect": false 
+    }''';
     MQTTService.instance.publish('homeassistant/light/haade_panel_s504_led/config', configPayload, retain: true);
   }
 
