@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PanelLink</string>
+    <string name="app_tagline">Home Assistant · MQTT</string>
+    <string name="channel_name">Service du panneau</string>
+
+    <string name="status_starting">Démarrage…</string>
+    <string name="status_not_configured">MQTT n\'est pas configuré</string>
+    <string name="status_connecting">Connexion à %1$s…</string>
+    <string name="status_connected">Connecté à %1$s</string>
+    <string name="status_retry">Pas de connexion : %1$s</string>
+    <string name="pill_connected">En ligne</string>
+    <string name="pill_connecting">Connexion</string>
+    <string name="pill_retry">Hors ligne</string>
+    <string name="pill_not_configured">Non configuré</string>
+
+    <string name="section_status">État</string>
+    <string name="section_mqtt">Broker MQTT</string>
+    <string name="section_device">Home Assistant</string>
+    <string name="section_features">Fonctions</string>
+    <string name="section_startup">Démarrage</string>
+    <string name="section_language">Langue</string>
+
+    <string name="label_host">Adresse du broker</string>
+    <string name="label_port">Port</string>
+    <string name="label_user">Identifiant</string>
+    <string name="label_pass">Mot de passe</string>
+    <string name="tls">Connexion chiffrée (TLS)</string>
+    <string name="tls_desc">Uniquement si le broker écoute en ssl://</string>
+    <string name="label_node_id">ID MQTT</string>
+    <string name="node_id_desc">Unique pour chaque panneau. À changer uniquement pour un autre panneau : les entités de l\'ancien ID sont supprimées de Home Assistant et les automatisations qui les utilisent cessent de fonctionner.</string>
+    <string name="battery_state">Restrictions en arrière-plan</string>
+    <string name="label_device_name">Nom de l\'appareil</string>
+    <string name="device_name_desc">Nom du panneau dans Home Assistant. Les ID des entités ne changent pas.</string>
+    <string name="device_name_default">Panneau mural</string>
+
+    <string name="feature_ths">Température et humidité</string>
+    <string name="feature_ths_desc">Capteur intégré ; aucune consommation entre deux mesures</string>
+    <string name="feature_io">Entrées IO1 / IO2</string>
+    <string name="feature_io_desc">Lit les bornes une fois par seconde</string>
+    <string name="feature_io_relay">Une entrée active son relais</string>
+    <string name="feature_io_relay_desc">IO1 → relais 1, IO2 → relais 2 (entrées activées requises)</string>
+    <string name="feature_lux">Capteur de luminosité</string>
+    <string name="feature_lux_desc">Seulement si le panneau en possède un</string>
+
+    <string name="startup_autostart">Démarrer après un redémarrage</string>
+    <string name="startup_autostart_desc">Le service démarre seul à l\'allumage du panneau</string>
+    <string name="startup_watchdog">Relancer s\'il s\'arrête</string>
+    <string name="startup_watchdog_desc">Vérifie toutes les 15 minutes que le service tourne (si les restrictions sont levées)</string>
+    <string name="startup_battery">Restrictions en arrière-plan</string>
+    <string name="startup_battery_off">Levées — Android ne ralentira pas le service</string>
+    <string name="startup_battery_on">Actives — touchez pour les lever</string>
+    <string name="btn_battery">Lever</string>
+    <string name="battery_ok">Les restrictions sont déjà levées</string>
+
+    <string name="startup_hibernation">Suspension si inutilisée</string>
+    <string name="startup_hibernation_off">Désactivée — Android ne suspendra jamais l\'application</string>
+    <string name="startup_hibernation_on">Activée — Android peut arrêter l\'application après des mois sans ouverture. Touchez et désactivez « Suspendre l\'activité si inutilisée ».</string>
+    <string name="btn_open">Ouvrir</string>
+
+    <string name="language_system">Système</string>
+
+    <string name="tile_mqtt">MQTT</string>
+    <string name="tile_temperature">Température</string>
+    <string name="tile_humidity">Humidité</string>
+    <string name="tile_led">Rétroéclairage</string>
+    <string name="tile_relays">Relais</string>
+    <string name="tile_service">Service</string>
+    <string name="value_on">Allumé</string>
+    <string name="value_off">Éteint</string>
+    <string name="value_running">Actif</string>
+    <string name="value_stopped">Arrêté</string>
+
+    <string name="btn_save">Enregistrer et connecter</string>
+    <string name="btn_test_led">Tester l\'éclairage</string>
+    <string name="btn_close">Fermer</string>
+    <string name="saved">Enregistré</string>
+    <string name="bad_port">Le port doit être un nombre de 1 à 65535</string>
+    <string name="details">Détails</string>
+
+    <string name="entity_led">Rétroéclairage</string>
+    <string name="entity_relay">Relais %1$d</string>
+    <string name="entity_input">Entrée %1$d</string>
+    <string name="entity_temperature">Température</string>
+    <string name="entity_humidity">Humidité</string>
+    <string name="entity_lux">Luminosité</string>
+
+    <string name="reason_auth">identifiant ou mot de passe incorrect</string>
+    <string name="reason_unreachable">broker injoignable</string>
+    <string name="reason_no_answer">le broker ne répond pas</string>
+    <string name="reason_rejected">le broker a refusé l\'abonnement</string>
+    <string name="reason_lost">connexion perdue</string>
+    <string name="bad_host">Saisissez seulement l\'adresse du broker, par ex. 192.168.1.10</string>
+</resources>

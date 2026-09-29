@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PanelLink</string>
+    <string name="app_tagline">Home Assistant · MQTT</string>
+    <string name="channel_name">Panel service</string>
+
+    <string name="status_starting">Starting…</string>
+    <string name="status_not_configured">MQTT is not set up</string>
+    <string name="status_connecting">Connecting to %1$s…</string>
+    <string name="status_connected">Connected to %1$s</string>
+    <string name="status_retry">No connection: %1$s</string>
+    <string name="pill_connected">Online</string>
+    <string name="pill_connecting">Connecting</string>
+    <string name="pill_retry">Offline</string>
+    <string name="pill_not_configured">Not set up</string>
+
+    <string name="section_status">Status</string>
+    <string name="section_mqtt">MQTT broker</string>
+    <string name="section_device">Home Assistant</string>
+    <string name="section_features">Features</string>
+    <string name="section_startup">Startup</string>
+    <string name="section_language">Language</string>
+
+    <string name="label_host">Broker address</string>
+    <string name="label_port">Port</string>
+    <string name="label_user">Username</string>
+    <string name="label_pass">Password</string>
+    <string name="tls">Encrypted connection (TLS)</string>
+    <string name="tls_desc">Only if the broker listens on ssl://</string>
+    <string name="label_node_id">MQTT ID</string>
+    <string name="node_id_desc">Unique per panel. Change it only for another panel: the entities of the old ID are removed from Home Assistant and automations using them stop working.</string>
+    <string name="battery_state">Background limits</string>
+    <string name="label_device_name">Device name</string>
+    <string name="device_name_desc">How the panel appears in Home Assistant. Entity IDs do not change.</string>
+    <string name="device_name_default">Wall Panel</string>
+
+    <string name="feature_ths">Temperature and humidity</string>
+    <string name="feature_ths_desc">Built-in sensor; reading costs nothing between measurements</string>
+    <string name="feature_io">IO1 / IO2 inputs</string>
+    <string name="feature_io_desc">Checks the terminals once per second</string>
+    <string name="feature_io_relay">Input press switches its relay on</string>
+    <string name="feature_io_relay_desc">IO1 → relay 1, IO2 → relay 2 (needs the inputs on)</string>
+    <string name="feature_lux">Light sensor</string>
+    <string name="feature_lux_desc">Only if the panel has one</string>
+
+    <string name="startup_autostart">Start after reboot</string>
+    <string name="startup_autostart_desc">The service starts by itself when the panel boots</string>
+    <string name="startup_watchdog">Restart if stopped</string>
+    <string name="startup_watchdog_desc">Checks every 15 minutes that the service is alive (works when background limits are lifted)</string>
+    <string name="startup_battery">Background limits</string>
+    <string name="startup_battery_off">Off — Android will not throttle the service</string>
+    <string name="startup_battery_on">On — tap to lift them</string>
+    <string name="btn_battery">Lift</string>
+    <string name="battery_ok">Background limits are already off</string>
+
+    <string name="startup_hibernation">Pause when unused</string>
+    <string name="startup_hibernation_off">Off — Android will never pause the app</string>
+    <string name="startup_hibernation_on">On — Android may stop the app after months without opening it. Tap and switch off “Pause app activity if unused”.</string>
+    <string name="btn_open">Open</string>
+
+    <string name="language_system">System</string>
+
+    <string name="tile_mqtt">MQTT</string>
+    <string name="tile_temperature">Temperature</string>
+    <string name="tile_humidity">Humidity</string>
+    <string name="tile_led">Backlight</string>
+    <string name="tile_relays">Relays</string>
+    <string name="tile_service">Service</string>
+    <string name="value_on">On</string>
+    <string name="value_off">Off</string>
+    <string name="value_running">Running</string>
+    <string name="value_stopped">Stopped</string>
+
+    <string name="btn_save">Save and connect</string>
+    <string name="btn_test_led">Test backlight</string>
+    <string name="btn_close">Close</string>
+    <string name="saved">Saved</string>
+    <string name="bad_port">Port must be a number from 1 to 65535</string>
+    <string name="details">Details</string>
+
+    <!-- Entity names shown in Home Assistant -->
+    <string name="entity_led">Backlight</string>
+    <string name="entity_relay">Relay %1$d</string>
+    <string name="entity_input">Input %1$d</string>
+    <string name="entity_temperature">Temperature</string>
+    <string name="entity_humidity">Humidity</string>
+    <string name="entity_lux">Illuminance</string>
+
+    <string name="reason_auth">wrong login or password</string>
+    <string name="reason_unreachable">broker unreachable</string>
+    <string name="reason_no_answer">broker does not answer</string>
+    <string name="reason_rejected">broker refused the subscription</string>
+    <string name="reason_lost">connection lost</string>
+    <string name="bad_host">Enter only the broker address, e.g. 192.168.1.10</string>
+</resources>

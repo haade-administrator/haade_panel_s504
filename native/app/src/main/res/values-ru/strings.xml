@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PanelLink</string>
+    <string name="app_tagline">Home Assistant · MQTT</string>
+    <string name="channel_name">Служба панели</string>
+
+    <string name="status_starting">Запуск…</string>
+    <string name="status_not_configured">MQTT не настроен</string>
+    <string name="status_connecting">Подключение к %1$s…</string>
+    <string name="status_connected">Подключено к %1$s</string>
+    <string name="status_retry">Нет связи: %1$s</string>
+    <string name="pill_connected">На связи</string>
+    <string name="pill_connecting">Подключение</string>
+    <string name="pill_retry">Нет связи</string>
+    <string name="pill_not_configured">Не настроено</string>
+
+    <string name="section_status">Состояние</string>
+    <string name="section_mqtt">MQTT-брокер</string>
+    <string name="section_device">Home Assistant</string>
+    <string name="section_features">Функции</string>
+    <string name="section_startup">Запуск</string>
+    <string name="section_language">Язык</string>
+
+    <string name="label_host">Адрес брокера</string>
+    <string name="label_port">Порт</string>
+    <string name="label_user">Логин</string>
+    <string name="label_pass">Пароль</string>
+    <string name="tls">Шифрованное подключение (TLS)</string>
+    <string name="tls_desc">Только если брокер слушает ssl://</string>
+    <string name="label_node_id">ID для MQTT</string>
+    <string name="node_id_desc">У каждой панели свой. Меняйте только для второй панели: сущности старого ID удалятся из Home Assistant, а автоматизации с ними перестанут работать.</string>
+    <string name="battery_state">Ограничения в фоне</string>
+    <string name="label_device_name">Название устройства</string>
+    <string name="device_name_desc">Так панель называется в Home Assistant. ID сущностей не меняются.</string>
+    <string name="device_name_default">Настенная панель</string>
+
+    <string name="feature_ths">Температура и влажность</string>
+    <string name="feature_ths_desc">Встроенный датчик; между замерами чтение ничего не тратит</string>
+    <string name="feature_io">Входы IO1 / IO2</string>
+    <string name="feature_io_desc">Проверяет клеммы раз в секунду</string>
+    <string name="feature_io_relay">Нажатие на вход включает реле</string>
+    <string name="feature_io_relay_desc">IO1 → реле 1, IO2 → реле 2 (нужны включённые входы)</string>
+    <string name="feature_lux">Датчик освещённости</string>
+    <string name="feature_lux_desc">Только если он есть в панели</string>
+
+    <string name="startup_autostart">Автозапуск после перезагрузки</string>
+    <string name="startup_autostart_desc">Служба сама запускается при включении панели</string>
+    <string name="startup_watchdog">Перезапуск, если остановилась</string>
+    <string name="startup_watchdog_desc">Раз в 15 минут проверяет, что служба жива (работает, когда сняты ограничения фона)</string>
+    <string name="startup_battery">Ограничения в фоне</string>
+    <string name="startup_battery_off">Сняты — Android не будет тормозить службу</string>
+    <string name="startup_battery_on">Включены — нажмите, чтобы снять</string>
+    <string name="btn_battery">Снять</string>
+    <string name="battery_ok">Ограничения фона уже сняты</string>
+
+    <string name="startup_hibernation">Приостановка неиспользуемых</string>
+    <string name="startup_hibernation_off">Отключена — Android не остановит приложение</string>
+    <string name="startup_hibernation_on">Включена — через несколько месяцев без открытия Android может остановить приложение. Нажмите и выключите «Приостанавливать работу, если не используется».</string>
+    <string name="btn_open">Открыть</string>
+
+    <string name="language_system">Системный</string>
+
+    <string name="tile_mqtt">MQTT</string>
+    <string name="tile_temperature">Температура</string>
+    <string name="tile_humidity">Влажность</string>
+    <string name="tile_led">Подсветка</string>
+    <string name="tile_relays">Реле</string>
+    <string name="tile_service">Служба</string>
+    <string name="value_on">Вкл</string>
+    <string name="value_off">Выкл</string>
+    <string name="value_running">Работает</string>
+    <string name="value_stopped">Остановлена</string>
+
+    <string name="btn_save">Сохранить и подключить</string>
+    <string name="btn_test_led">Проверить подсветку</string>
+    <string name="btn_close">Закрыть</string>
+    <string name="saved">Сохранено</string>
+    <string name="bad_port">Порт — число от 1 до 65535</string>
+    <string name="details">Подробности</string>
+
+    <string name="entity_led">Подсветка</string>
+    <string name="entity_relay">Реле %1$d</string>
+    <string name="entity_input">Вход %1$d</string>
+    <string name="entity_temperature">Температура</string>
+    <string name="entity_humidity">Влажность</string>
+    <string name="entity_lux">Освещённость</string>
+
+    <string name="reason_auth">неверный логин или пароль</string>
+    <string name="reason_unreachable">брокер недоступен</string>
+    <string name="reason_no_answer">брокер не отвечает</string>
+    <string name="reason_rejected">брокер отклонил подписку</string>
+    <string name="reason_lost">связь потеряна</string>
+    <string name="bad_host">Введите только адрес брокера, например 192.168.1.10</string>
+</resources>
